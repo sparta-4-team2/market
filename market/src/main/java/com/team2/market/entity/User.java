@@ -3,9 +3,11 @@ package com.team2.market.entity;
 import javax.persistence.*;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity(name="users")
 @Getter
+@NoArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

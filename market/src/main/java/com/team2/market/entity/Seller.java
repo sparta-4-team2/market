@@ -8,19 +8,11 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Product {
+public class Seller {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
-    @Column
-    private String name;
-
-    @Column
-    private Integer price;
-
-    public Product(String name, Integer price) {
-        this.name = name;
-        this.price = price;
-    }
+    
+    @OneToOne
+    private User user;
 }
