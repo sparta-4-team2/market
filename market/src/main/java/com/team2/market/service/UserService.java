@@ -26,4 +26,16 @@ public class UserService implements UserServiceInterface{
         return null;
     }
 
+    @Override
+    public ProfileUpdateResponseDto updateProfile(ProfileUpdateRequestDto requestDto) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public ProfileGetResponseDto getProfile(ProfileGetRequestDto requestDto) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

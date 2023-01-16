@@ -6,4 +6,6 @@ import com.team2.market.dto.users.response.*;
 public interface UserServiceInterface {
     SignupResponseDto createUser(SignupRequestDto requestDto);
     LoginResponseDto login(LoginRequestDto requestDto);
+    ProfileUpdateResponseDto updateProfile(ProfileUpdateRequestDto requestDto);
+    ProfileGetResponseDto getProfile(ProfileGetRequestDto requestDto);
 }
