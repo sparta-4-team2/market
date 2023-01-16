@@ -1,4 +1,4 @@
-package com.team2.market.service;
+package com.team2.market.dto.product.request;
 
 public class ProductOrderRequestDto {
 
