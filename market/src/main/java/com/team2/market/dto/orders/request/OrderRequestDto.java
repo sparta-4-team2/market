@@ -1,5 +1,5 @@
 package com.team2.market.dto.product.request;
 
-public class PostOrderRequestDto {
+public class OrderRequestDto {
 
 }

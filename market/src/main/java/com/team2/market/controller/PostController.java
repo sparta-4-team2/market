@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.team2.market.dto.product.request.*;
 import com.team2.market.dto.product.response.*;
+import com.team2.market.service.OrderService;
 import com.team2.market.service.PostService;
 
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequiredArgsConstructor
 public class PostController {
     private final PostService productService;
+    private final OrderService orderService;
 
     @PostMapping("/posts")
     public PostCreateResponseDto createPost(@RequestBody PostCreateRequestDto requestDto,
@@ -31,8 +33,8 @@ public class PostController {
     
     @GetMapping("/posts/{postid}")
     public PostGetResponseDto getPost(@RequestBody PostGetRequestDto requestDto,
-                                            @PathVariable Long postid,
-                                            HttpServletRequest request)
+                                      @PathVariable Long postid,
+                                      HttpServletRequest request)
     {
         return productService.getPost(requestDto, postid, request);
     }
@@ -40,7 +42,7 @@ public class PostController {
     
     @GetMapping("/posts")
     public List<PostGetResponseDto> getAllPost(@RequestBody PostGetRequestDto requestDto,
-                                                  HttpServletRequest request)
+                                               HttpServletRequest request)
     {
         return productService.getAllPost(requestDto, request);
     }
@@ -64,11 +66,11 @@ public class PostController {
     }
 
     @PostMapping("/posts/{postid}/request")
-    public PostOrderResponseDto postMethodName(@RequestBody PostOrderRequestDto requestDto,
-                                               @PathVariable Long postid,
-                                               HttpServletRequest request) {
+    public OrderResponseDto orderPost(@RequestBody OrderRequestDto requestDto,
+                                          @PathVariable Long postid,
+                                          HttpServletRequest request) {
         
-        return productService.orderProduct(requestDto, postid, request);
+        return orderService.orderPost(requestDto, postid, request);
     }
     
     

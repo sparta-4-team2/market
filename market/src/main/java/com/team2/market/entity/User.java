@@ -42,6 +42,11 @@ public class User {
         this.role = role;
     }
 
+    public void updateProfile(ProfileUpdateRequestDto requestDto) {
+        this.nickname = requestDto.getNickName();
+        this.profileImg = requestDto.getProfileImg();
+    }
+
     public boolean isValidPassword(String password) {
         return this.password.equals(password);
     }
