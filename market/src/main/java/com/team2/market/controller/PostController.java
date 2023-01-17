@@ -6,6 +6,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.web.bind.annotation.*;
 
+import com.team2.market.dto.orders.request.OrderRequestDto;
+import com.team2.market.dto.orders.response.OrderResponseDto;
 import com.team2.market.dto.product.request.*;
 import com.team2.market.dto.product.response.*;
 import com.team2.market.service.OrderService;
@@ -65,13 +67,5 @@ public class PostController {
         return productService.deletePost(requestDto, postid, request);
     }
 
-    @PostMapping("/posts/{postid}/request")
-    public OrderResponseDto orderPost(@RequestBody OrderRequestDto requestDto,
-                                          @PathVariable Long postid,
-                                          HttpServletRequest request) {
-        
-        return orderService.orderPost(requestDto, postid, request);
-    }
-    
     
 }

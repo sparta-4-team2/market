@@ -13,5 +13,4 @@ public interface PostServiceInterface {
     List<PostGetResponseDto> getAllPost(PostGetRequestDto requestDto, HttpServletRequest request);
     PostUpdateResponseDto updatePost(PostUpdateRequestDto requestDto, Long postid, HttpServletRequest request);
     PostDeleteResponseDto deletePost(PostDeleteRequestDto requestDto, Long postid, HttpServletRequest request);
-    PostOrderResponseDto orderProduct(PostOrderRequestDto requestDto, Long postid, HttpServletRequest request);
 }
