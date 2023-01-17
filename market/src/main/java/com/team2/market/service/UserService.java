@@ -4,6 +4,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -15,7 +17,9 @@ import com.team2.market.dto.users.response.LoginResponseDto;
 import com.team2.market.dto.users.response.ProfileGetResponseDto;
 import com.team2.market.dto.users.response.SignupResponseDto;
 import com.team2.market.entity.User;
+import com.team2.market.entity.UserRoleEnum;
 import com.team2.market.repository.UserRepository;
+import com.team2.market.util.jwt.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,7 +30,7 @@ import java.util.Optional;
 public class UserService implements UserServiceInterface{
 
     private final UserRepository userRepository;
-    private final JwtService jwtService;
+    private final JwtUtil jwtService;
 
     @Override
     public void createUser(SignupRequestDto requestDto) {
@@ -43,14 +47,14 @@ public class UserService implements UserServiceInterface{
     }
 
     @Override
-    public void login(LoginRequestDto requestDto, HttpServletResponse request) {
+    public void login(LoginRequestDto requestDto, HttpServletResponse response) {
         User user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(() -> new UsernameNotFoundException("등록된 사용자가 없습니다."));
 
         if (!user.isValidPassword(requestDto.getPassword())) {
             throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
         }
 
-        response.addHeader(JwtService.AUTHORIZATION_HEADER, jwtService.createToken(user.getUsername(), user.getRole()));
+        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtService.createToken(user.getUsername(), user.getRole()));
     }
     @Transactional
     @Override

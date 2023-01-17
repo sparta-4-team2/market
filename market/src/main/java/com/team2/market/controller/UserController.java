@@ -32,17 +32,18 @@ public class UserController {
     }
 
     @PostMapping("/profile")
-    public ProfileUpdateResponseDto updateProfile(@RequestBody ProfileUpdateRequestDto requestDto,
-                                                  HttpServletRequest request) 
+    public ProfileGetResponseDto updateProfile(@RequestBody ProfileUpdateRequestDto requestDto,
+                                                    // 변경해야됨
+                                                  String request) 
     {
-        return userService.updateProfile(requestDto, request);
+        return userService.updateProfile(requestDto, requestDto.getNickName());
     }
 
     
     @GetMapping("/profile")
-    public ProfileGetResponseDto getProfile(@RequestBody ProfileGetRequestDto requestDto,
+    public ProfileGetResponseDto getProfile(/*변경해야되는 사항*/@RequestBody ProfileUpdateRequestDto requestDto,
                                                   HttpServletRequest request) 
     {
-        return userService.getProfile(requestDto, request);
+        return userService.getProfile(requestDto.getNickName());
     }
 }

@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import com.team2.market.dto.users.request.ProfileUpdateRequestDto;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
