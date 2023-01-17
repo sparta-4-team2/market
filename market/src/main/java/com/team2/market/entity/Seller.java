@@ -5,6 +5,9 @@ import javax.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+import java.util.ArrayList;
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -16,4 +19,7 @@ public class Seller {
     @JoinColumn
     @OneToOne
     private User user;
+
+    @OneToMany
+    private List<Post> postlist = new ArrayList<>();
 }
