@@ -1,9 +1,9 @@
 package com.team2.market.service;
 
-public class AdminService implements AdminServiceInterface {
+public class AuthService implements AuthServiceInterface {
 
     @Override
-    public void setAutorization() {
+    public void setAuthorization() {
         // TODO Auto-generated method stub
         
     }
@@ -27,7 +27,7 @@ public class AdminService implements AdminServiceInterface {
     }
 
     @Override
-    public void getRequestAuthorization() {
+    public void requestAuthorization() {
         // TODO Auto-generated method stub
         
     }

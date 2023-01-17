@@ -1,10 +1,10 @@
 package com.team2.market.service;
 
-public interface AdminServiceInterface {
-    void setAutorization();
+public interface AuthServiceInterface {
+    void setAuthorization();
     void getCustomInfo();
     void getSellerInfo();
     void getAllSellers();
-    void getRequestAuthorization();
+    void requestAuthorization();
     
 }
