@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import com.team2.market.dto.users.request.ProfileUpdateRequestDto;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -40,5 +42,10 @@ public class User {
         this.username = username;
         this.password = password;
         this.role = role;
+    }
+
+    public void updateProfile(ProfileUpdateRequestDto requestDto) {
+        this.nickname = requestDto.getNickName();
+        this.profileImg = requestDto.getProfileImg();
     }
 }
