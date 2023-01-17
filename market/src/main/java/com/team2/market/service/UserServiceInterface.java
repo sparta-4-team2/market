@@ -7,8 +7,8 @@ import com.team2.market.dto.users.request.*;
 import com.team2.market.dto.users.response.*;
 
 public interface UserServiceInterface {
-    SignupResponseDto createUser(SignupRequestDto requestDto);
-    LoginResponseDto login(LoginRequestDto requestDto, HttpServletResponse request);
+    void createUser(SignupRequestDto requestDto);
+    void login(LoginRequestDto requestDto, HttpServletResponse request);
     ProfileUpdateResponseDto updateProfile(ProfileUpdateRequestDto requestDto, HttpServletRequest request);
     ProfileGetResponseDto getProfile(ProfileGetRequestDto requestDto, HttpServletRequest request);
 }

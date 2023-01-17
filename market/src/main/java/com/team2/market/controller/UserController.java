@@ -18,15 +18,17 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/signup")
-    public SignupResponseDto signup (@RequestBody SignupRequestDto requestDto) {
-        return userService.createUser(requestDto);
+    public String signup (@RequestBody SignupRequestDto requestDto) {
+        userService.createUser(requestDto);
+        return "회원가입 성공";
     }
 
     @PostMapping("/login")
-    public LoginResponseDto login (@RequestBody LoginRequestDto requestDto,
+    public String login (@RequestBody LoginRequestDto requestDto,
                                     HttpServletResponse response)
     {
-        return userService.login(requestDto, response);
+        userService.login(requestDto, response);
+        return "로그인 성공";
     }
 
     @PostMapping("/profile")
