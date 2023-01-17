@@ -11,6 +11,9 @@ import com.team2.market.dto.product.response.*;
 import com.team2.market.service.PostService;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @RestController
 @RequestMapping("/api")
@@ -59,5 +62,14 @@ public class PostController {
     {
         return productService.deletePost(requestDto, postid, request);
     }
+
+    @PostMapping("/posts/{postid}/request")
+    public PostOrderResponseDto postMethodName(@RequestBody PostOrderRequestDto requestDto,
+                                               @PathVariable Long postid,
+                                               HttpServletRequest request) {
+        
+        return productService.orderProduct(requestDto, postid, request);
+    }
+    
     
 }

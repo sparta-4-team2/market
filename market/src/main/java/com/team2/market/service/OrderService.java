@@ -1,5 +1,5 @@
-package com.team2.market.controller;
+package com.team2.market.service;
 
-public class OrderService {
+public class OrderService implements OrderServiceInterface {
 
 }

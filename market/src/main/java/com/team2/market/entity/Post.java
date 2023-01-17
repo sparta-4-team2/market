@@ -16,9 +16,11 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @JoinColumn
-    @OneToOne
-    private Product product;
+    @Column
+    private String productName;
+
+    @Column 
+    private int price;
 
     @Column
     private String contents;
@@ -26,8 +28,10 @@ public class Post {
     @OneToMany(mappedBy = "post")
     private List<Order> orderlist = new ArrayList<>();
 
-    public Post(Product product, String contents) {
-        this.product = product;
+    public Post(String productName, int price, String contents) {
+        this.productName = productName;
+        this.price = price;
         this.contents = contents;
     }
+
 }

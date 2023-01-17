@@ -49,9 +49,9 @@ public class PostService implements PostServiceInterface{
     }
 
     @Override
-    public void orderProduct(PostOrderRequestDto requestDto, HttpServletRequest request) {
+    public PostOrderResponseDto orderProduct(PostOrderRequestDto requestDto, Long postid, HttpServletRequest request) {
         // TODO Auto-generated method stub
-        
+        return null;
     }
 
 }

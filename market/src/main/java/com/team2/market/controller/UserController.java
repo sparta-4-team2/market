@@ -1,6 +1,7 @@
 package com.team2.market.controller;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.bind.annotation.*;
 
@@ -23,9 +24,9 @@ public class UserController {
 
     @PostMapping("/login")
     public LoginResponseDto login (@RequestBody LoginRequestDto requestDto,
-                                    HttpServletRequest request)
+                                    HttpServletResponse response)
     {
-        return userService.login(requestDto, request);
+        return userService.login(requestDto, response);
     }
 
     @PostMapping("/profile")
