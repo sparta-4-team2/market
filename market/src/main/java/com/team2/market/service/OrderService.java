@@ -5,8 +5,10 @@ import javax.websocket.server.ServerEndpoint;
 
 import org.springframework.stereotype.Service;
 
-import com.team2.market.dto.product.request.PostOrderRequestDto;
-import com.team2.market.dto.product.response.PostOrderResponseDto;
+import com.team2.market.dto.orders.request.OrderGetRequestDto;
+import com.team2.market.dto.orders.request.OrderRequestDto;
+import com.team2.market.dto.orders.response.OrderGetResponseDto;
+import com.team2.market.dto.orders.response.OrderResponseDto;
 import com.team2.market.entity.Order;
 import com.team2.market.entity.Post;
 import com.team2.market.entity.User;
@@ -29,7 +31,7 @@ public class OrderService implements OrderServiceInterface {
 
 
     @Override
-    public PostOrderResponseDto orderPost(PostOrderRequestDto requestDto, Long postid, HttpServletRequest request) {
+    public OrderResponseDto orderPost(OrderRequestDto requestDto, Long postid, HttpServletRequest request) {
         
         // servlet request에서 사용자의 인증 인가 확인
         String token = jwtUtil.resolveToken(request);
@@ -64,6 +66,13 @@ public class OrderService implements OrderServiceInterface {
 
 
     private Post getPost(Long postid) {
+        return null;
+    }
+
+
+    @Override
+    public OrderGetResponseDto getAllOrders(OrderGetRequestDto requestDto, HttpServletRequest request) {
+        // TODO Auto-generated method stub
         return null;
     }
 

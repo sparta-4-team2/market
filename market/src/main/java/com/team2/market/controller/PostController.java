@@ -66,9 +66,9 @@ public class PostController {
     }
 
     @PostMapping("/posts/{postid}/request")
-    public PostOrderResponseDto orderPost(@RequestBody PostOrderRequestDto requestDto,
-                                               @PathVariable Long postid,
-                                               HttpServletRequest request) {
+    public OrderResponseDto orderPost(@RequestBody OrderRequestDto requestDto,
+                                          @PathVariable Long postid,
+                                          HttpServletRequest request) {
         
         return orderService.orderPost(requestDto, postid, request);
     }

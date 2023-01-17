@@ -2,10 +2,14 @@ package com.team2.market.service;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.team2.market.dto.product.request.PostOrderRequestDto;
-import com.team2.market.dto.product.response.PostOrderResponseDto;
+import com.team2.market.dto.orders.request.OrderGetRequestDto;
+import com.team2.market.dto.orders.request.OrderRequestDto;
+import com.team2.market.dto.orders.response.OrderGetResponseDto;
+import com.team2.market.dto.orders.response.OrderResponseDto;
 
 public interface OrderServiceInterface {
 
-    PostOrderResponseDto orderPost(PostOrderRequestDto requestDto, Long postid, HttpServletRequest request);
+    OrderResponseDto orderPost(OrderRequestDto requestDto, Long postid, HttpServletRequest request);
+    OrderGetResponseDto getAllOrders(OrderGetRequestDto requestDto, HttpServletRequest request);
+    
 }
