@@ -48,6 +48,9 @@ public class SecurityConfiguration {
 				.antMatchers(HttpMethod.GET,"/api/profile,/api/posts/**,/api/posts").authenticated()
 				.antMatchers("/api/auth").hasRole("ADMIN")
 			);
+		http.logout()
+				.logoutUrl("/api/logout")
+				.logoutSuccessUrl("/api/login");
 
 		return http.build();
 	}
