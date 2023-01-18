@@ -1,9 +1,13 @@
 package com.team2.market.entity;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.*;
+
+import com.team2.market.type.SaleResultType;
 
 import com.team2.market.dto.product.request.PostCreateRequestDto;
 import lombok.Getter;
@@ -32,6 +36,16 @@ public class Post {
     @OneToMany(mappedBy = "post")
     private List<Order> orderlist = new ArrayList<>();
 
+    @ManyToOne
+    @JoinColumn(name = "seller_id")
+    private Seller seller;
+
+    private SaleResultType forSale; // 판매 진행 or 완료 여부
+
+    private final OffsetDateTime tradeStartTime = OffsetDateTime.now();
+
+    private OffsetDateTime tradeEndTime = OffsetDateTime.of(1, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC);
+
     public Post(String productName, int price, String contents) {
         this.productName = productName;
         this.price = price;
@@ -40,8 +54,8 @@ public class Post {
     public Post(PostCreateRequestDto requestDto, Long id) {
         this.title = requestDto.getTitle();
         this.productName = requestDto.getProductName();
-        this.price = requestDto.getPrice();;
-        this.contents = requestDto.getContents();;
+        this.price = requestDto.getPrice();
+        this.contents = requestDto.getContents();
 
     }
 

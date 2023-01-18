@@ -5,10 +5,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.team2.market.entity.Post;
-import com.team2.market.entity.User;
-import com.team2.market.entity.UserRoleEnum;
-import io.jsonwebtoken.Claims;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +17,7 @@ import com.team2.market.repository.PostRepository;
 import com.team2.market.repository.UserRepository;
 import com.team2.market.util.jwt.JwtUtil;
 
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -109,10 +106,52 @@ public class PostService implements PostServiceInterface{
         }
     }
 
-    @Override
-    public List<PostGetResponseDto> getAllPost(PostGetRequestDto requestDto, HttpServletRequest request) {
-        // TODO Auto-generated method stub
-        return null;
+    @Transactional//전체 상품 조회
+    public List<Post> getAllPost(PostGetRequestDto requestDto, HttpServletRequest request) {
+        // Request에서 Token 가져오기
+        String token = jwtUtil.resolveToken(request);
+        Claims claims;
+
+        // 토큰이 있는 경우에만 상품 조회 가능
+        if (token != null) {
+            // Token 검증
+            if (jwtUtil.validateToken(token)) {
+                // 토큰에서 사용자 정보 가져오기
+                claims = jwtUtil.getUserInfoFromToken(token);
+            } else {
+                throw new IllegalArgumentException("Token Error");
+            }
+
+            // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회
+            User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
+                    () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
+            );
+
+            // 사용자 권한 가져와서 ADMIN,SELLER 이면 전체 조회, BUYER 면 권한 없음
+            UserRoleEnum userRoleEnum = user.getRole();
+            System.out.println("role = " + userRoleEnum);
+
+            List<PostGetRequestDto> list = new ArrayList<>();
+            List<Post> postList;
+
+            if (userRoleEnum == UserRoleEnum.SELLER) {
+                // 사용자 권한이 BUYER가 아닐 경우(SELLER, ADMIN일 경우)
+                postList = postRepository.findAll();
+            } else if (userRoleEnum == UserRoleEnum.ADMIN) {
+                postList = postRepository.findAll();
+            } else {
+                throw new IllegalArgumentException("권한이 없습니다.");
+
+            }
+            for (Post post : postList) {
+                list.add(new PostGetRequestDto(post));
+            }
+
+            return postList;
+
+        } else {
+            return null;
+        }
     }
 
     @Override
