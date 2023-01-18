@@ -1,4 +1,4 @@
-package com.team2.market.dto.product.response;
+package com.team2.market.dto.post.response;
 
 import com.team2.market.entity.Order;
 import com.team2.market.entity.Post;

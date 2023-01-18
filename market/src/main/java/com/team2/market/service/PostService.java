@@ -8,11 +8,11 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.team2.market.dto.product.request.*;
-import com.team2.market.dto.product.response.*;
+import com.team2.market.dto.post.request.*;
+import com.team2.market.dto.post.response.*;
 import com.team2.market.entity.Post;
 import com.team2.market.entity.User;
-import com.team2.market.entity.UserRoleEnum;
+import com.team2.market.entity.types.UserRoleType;
 import com.team2.market.repository.OrderRepository;
 import com.team2.market.repository.PostRepository;
 import com.team2.market.repository.UserRepository;
@@ -81,16 +81,16 @@ public class PostService implements PostServiceInterface{
             );
 
             // 사용자 권한 가져와서 ADMIN 이면 전체 조회, USER 면 본인이 추가한 부분 조회
-            UserRoleEnum userRoleEnum = user.getRole();
+            UserRoleType userRoleEnum = user.getRole();
             System.out.println("role = " + userRoleEnum);
 
             List<PostGetRequestDto> list = new ArrayList<>();
             List<Post> postList;
 
-            if (userRoleEnum == UserRoleEnum.SELLER) {
+            if (userRoleEnum == UserRoleType.SELLER) {
                 // 사용자 권한이 BUYER가 아닐 경우(SELLER, ADMIN일 경우)
                 postList = new ArrayList<>()/* postRepository.findAllById(user.getId()) */;
-            } else if (userRoleEnum == UserRoleEnum.ADMIN) {
+            } else if (userRoleEnum == UserRoleType.ADMIN) {
                 postList = new ArrayList<>() /*  postRepository.findAllById(user.getId()) */;
             } else {
                 throw new IllegalArgumentException("권한이 없습니다.");
@@ -129,16 +129,16 @@ public class PostService implements PostServiceInterface{
             );
 
             // 사용자 권한 가져와서 ADMIN,SELLER 이면 전체 조회, BUYER 면 권한 없음
-            UserRoleEnum userRoleEnum = user.getRole();
+            UserRoleType userRoleEnum = user.getRole();
             System.out.println("role = " + userRoleEnum);
 
             List<PostGetRequestDto> list = new ArrayList<>();
             List<Post> postList;
 
-            if (userRoleEnum == UserRoleEnum.SELLER) {
+            if (userRoleEnum == UserRoleType.SELLER) {
                 // 사용자 권한이 BUYER가 아닐 경우(SELLER, ADMIN일 경우)
                 postList = postRepository.findAll();
-            } else if (userRoleEnum == UserRoleEnum.ADMIN) {
+            } else if (userRoleEnum == UserRoleType.ADMIN) {
                 postList = postRepository.findAll();
             } else {
                 throw new IllegalArgumentException("권한이 없습니다.");

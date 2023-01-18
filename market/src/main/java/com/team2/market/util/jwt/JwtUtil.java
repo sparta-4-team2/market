@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import com.team2.market.entity.types.UserRoleEnum;
+import com.team2.market.entity.types.UserRoleType;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -42,7 +42,7 @@ public class JwtUtil {
     }
 
     // 토큰 생성
-    public String createToken(String username, UserRoleEnum role) {
+    public String createToken(String username, UserRoleType role) {
         Date date = new Date();
         return BEARER_PREFIX +
                 Jwts.builder()

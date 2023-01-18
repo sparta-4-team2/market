@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.*;
 
 import com.team2.market.dto.users.request.ProfileUpdateRequestDto;
+import com.team2.market.entity.types.UserRoleType;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,7 +27,7 @@ public class User {
 
     @Column
     @Enumerated(value = EnumType.STRING)
-    private UserRoleEnum role;
+    private UserRoleType role;
 
     @Column
     private String nickname; // 어플리케이션 내부 글 작성시 표기되는 별명
@@ -38,7 +39,7 @@ public class User {
     private List<Order> orderlist = new ArrayList<>();
 
 
-    public User(String username, String password, UserRoleEnum role) {
+    public User(String username, String password, UserRoleType role) {
         this.username = username;
         this.password = password;
         this.role = role;

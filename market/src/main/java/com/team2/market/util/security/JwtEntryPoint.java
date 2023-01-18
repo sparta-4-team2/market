@@ -1,4 +1,4 @@
-package com.team2.market.security;
+package com.team2.market.util.security;
 
 import java.io.IOException;
 

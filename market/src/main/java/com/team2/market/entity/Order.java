@@ -5,7 +5,7 @@ import java.time.ZoneOffset;
 
 import javax.persistence.*;
 
-import com.team2.market.type.OrderResultType;
+import com.team2.market.dto.types.OrderResultType;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -4,13 +4,18 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.catalina.User;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import com.team2.market.dto.DefaultResponseDto;
 import com.team2.market.dto.orders.request.*;
 import com.team2.market.dto.orders.response.*;
 import com.team2.market.service.OrderService;
+import com.team2.market.util.statics.DefaultResponseEntity;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequiredArgsConstructor
 public class OrderController {
     private final OrderService orderService;
+    private final DefaultResponseEntity responseEntity;
 
     @GetMapping("/orders")
     public void getOrdersForCustomer() {
@@ -43,11 +49,16 @@ public class OrderController {
     }
 
     @PostMapping("/posts/{postid}/request")
-    public OrderResponseDto orderPost(@RequestBody OrderRequestDto requestDto,
+    public ResponseEntity<DefaultResponseDto<OrderResponseDto>> orderPost(@RequestBody OrderRequestDto requestDto,
                                       @PathVariable Long postid,
-                                      @AuthenticationPrincipal UserDetails user) {
+                                      @AuthenticationPrincipal UserDetails userDetails) {
         
-        return orderService.orderPost(requestDto, postid, user.getUsername());
+        OrderResponseDto responseDto = orderService.orderPost(requestDto, postid, userDetails);
+        
+        return responseEntity.setResponseEntity(responseDto, ResponseMessage.ORDER_OK, HttpStatus.OK);
     }
     
+    class ResponseMessage {
+        public static final String ORDER_OK = "주문 요청 성공";
+    }
 }

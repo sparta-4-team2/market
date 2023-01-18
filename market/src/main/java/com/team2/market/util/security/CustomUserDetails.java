@@ -1,4 +1,4 @@
-package com.team2.market.security;
+package com.team2.market.util.security;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -9,7 +9,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.team2.market.entity.User;
-import com.team2.market.entity.UserRoleEnum;
+import com.team2.market.entity.types.UserRoleType;
 
 public class CustomUserDetails implements UserDetails {
 	private final User user;
@@ -20,7 +20,7 @@ public class CustomUserDetails implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		UserRoleEnum role = user.getRole();
+		UserRoleType role = user.getRole();
 		Set<SimpleGrantedAuthority> set = new HashSet<>();
 		set.add(new SimpleGrantedAuthority(role.toString()));
 		return set;

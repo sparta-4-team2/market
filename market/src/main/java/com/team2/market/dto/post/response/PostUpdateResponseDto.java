@@ -1,4 +1,4 @@
-package com.team2.market.dto.product.response;
+package com.team2.market.dto.post.response;
 
 public class PostUpdateResponseDto {
 

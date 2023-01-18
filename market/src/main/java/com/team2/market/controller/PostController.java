@@ -7,8 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import com.team2.market.entity.Post;
 import org.springframework.web.bind.annotation.*;
 
-import com.team2.market.dto.product.request.*;
-import com.team2.market.dto.product.response.*;
+import com.team2.market.dto.post.request.*;
+import com.team2.market.dto.post.response.*;
 import com.team2.market.service.OrderService;
 import com.team2.market.service.PostService;
 

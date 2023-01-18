@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.team2.market.dto.orders.response.UserOrderForm;
+import com.team2.market.dto.types.OrderResultType;
 import com.team2.market.dto.users.request.LoginRequestDto;
 import com.team2.market.dto.users.request.ProfileUpdateRequestDto;
 import com.team2.market.dto.users.request.SignupRequestDto;
@@ -22,10 +23,9 @@ import com.team2.market.dto.users.response.LoginResponseDto;
 import com.team2.market.dto.users.response.ProfileGetResponseDto;
 import com.team2.market.entity.Order;
 import com.team2.market.entity.User;
-import com.team2.market.entity.UserRoleEnum;
+import com.team2.market.entity.types.UserRoleType;
 import com.team2.market.repository.OrderRepository;
 import com.team2.market.repository.UserRepository;
-import com.team2.market.type.OrderResultType;
 import com.team2.market.util.jwt.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -51,13 +51,13 @@ public class UserService implements UserServiceInterface{
         if (found.isPresent()) {
             throw new IllegalArgumentException("중복된 사용자가 존재합니다.");
         }
-        UserRoleEnum role = UserRoleEnum.BUYER;
+        UserRoleType role = UserRoleType.BUYER;
         User user = new User(username, password, role);
         userRepository.save(user);
     }
 
     @Override
-    public String login(LoginRequestDto requestDto, HttpServletResponse response) {
+    public String login(LoginRequestDto requestDto) {
         User user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(() -> new UsernameNotFoundException("등록된 사용자가 없습니다."));
 
         if(!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {

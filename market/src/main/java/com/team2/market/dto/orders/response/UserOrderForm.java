@@ -4,8 +4,8 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.team2.market.dto.types.OrderResultType;
 import com.team2.market.entity.Order;
-import com.team2.market.type.OrderResultType;
 
 import lombok.Getter;
 

@@ -1,4 +1,4 @@
-package com.team2.market.dto.product.request;
+package com.team2.market.dto.post.request;
 
 import lombok.Getter;
 import lombok.Setter;

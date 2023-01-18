@@ -1,4 +1,4 @@
-package com.team2.market.security;
+package com.team2.market.util.security;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
