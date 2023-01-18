@@ -1,9 +1,15 @@
 package com.team2.market.entity;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+
 import javax.persistence.*;
 
-import lombok.NoArgsConstructor;
+import com.team2.market.type.OrderResultType;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+@Getter
 @Entity(name = "orders")
 @NoArgsConstructor
 public class Order {
@@ -18,6 +24,11 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Enumerated(EnumType.STRING)
+    private OrderResultType orderType = OrderResultType.IN_PROGRESS;
+    private final OffsetDateTime tradeStartTime = OffsetDateTime.now();
+    private OffsetDateTime tradeEndTime = OffsetDateTime.of(1, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC);
 
     public Order(Post post, User user) {
         this.post = post;

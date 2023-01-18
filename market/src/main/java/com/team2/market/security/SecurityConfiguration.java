@@ -1,7 +1,6 @@
 package com.team2.market.security;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -45,7 +44,8 @@ public class SecurityConfiguration {
 		http // 추가 적인 api 및 권한 설정 필요
 			.authorizeHttpRequests(auth -> auth
 				.antMatchers("/api/signup,/api/login").permitAll()
-				.antMatchers(HttpMethod.GET,"/api/profile,/api/posts/**,/api/posts").authenticated()
+				.antMatchers("/api/users/profile").authenticated()
+				.antMatchers("/api/seller/profile").hasRole("SELLER")
 				.antMatchers("/api/auth").hasRole("ADMIN")
 			);
 

@@ -1,12 +1,20 @@
 package com.team2.market.controller;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.team2.market.dto.users.request.*;
-import com.team2.market.dto.users.response.*;
+import com.team2.market.dto.users.request.LoginRequestDto;
+import com.team2.market.dto.users.request.ProfileUpdateRequestDto;
+import com.team2.market.dto.users.request.SignupRequestDto;
+import com.team2.market.dto.users.response.ProfileGetResponseDto;
 import com.team2.market.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -31,19 +39,18 @@ public class UserController {
         return "로그인 성공";
     }
 
-    @PostMapping("/profile")
-    public ProfileGetResponseDto updateProfile(@RequestBody ProfileUpdateRequestDto requestDto,
-                                                    // 변경해야됨
-                                                  String request) 
-    {
-        return userService.updateProfile(requestDto, requestDto.getNickName());
+    @PostMapping("/users/profile")
+    public ResponseEntity<ProfileGetResponseDto> updateProfile(@RequestBody ProfileUpdateRequestDto requestDto,
+        @AuthenticationPrincipal UserDetails userDetails) {
+        ProfileGetResponseDto profileDto = userService.updateProfile(requestDto,
+            userDetails.getUsername());
+        return ResponseEntity.ok(profileDto); // Generic dto 변경
     }
 
-    
-    @GetMapping("/profile")
-    public ProfileGetResponseDto getProfile(/*변경해야되는 사항*/@RequestBody ProfileUpdateRequestDto requestDto,
-                                                  HttpServletRequest request) 
-    {
-        return userService.getProfile(requestDto.getNickName());
+    @GetMapping("/users/profile")
+    public ResponseEntity<ProfileGetResponseDto> getProfile(@AuthenticationPrincipal UserDetails userDetails) {
+        ProfileGetResponseDto profileDto = userService.getProfile(userDetails.getUsername());
+        return ResponseEntity.ok(profileDto);
     }
+
 }
