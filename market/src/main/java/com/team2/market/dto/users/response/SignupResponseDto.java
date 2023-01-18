@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SignupResponseDto {
 
+    private final String RESPONSE_MSG = "회원가입 성공";
+
     public SignupResponseDto (SignupRequestDto requestDto) {
 
     }

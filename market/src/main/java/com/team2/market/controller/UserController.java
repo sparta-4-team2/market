@@ -3,8 +3,11 @@ package com.team2.market.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.team2.market.dto.DefualtResponseDto;
 import com.team2.market.dto.users.request.*;
 import com.team2.market.dto.users.response.*;
 import com.team2.market.service.UserService;
@@ -18,15 +21,16 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/signup")
-    public String signup (@RequestBody SignupRequestDto requestDto) {
+    public ResponseEntity<DefualtResponseDto<Void>> signup (@RequestBody SignupRequestDto requestDto) {
         userService.createUser(requestDto);
-        return "회원가입 성공";
+        return setResponseEntity(null, ResponseMessage.SIGNUP_OK, HttpStatus.OK);
     }
 
     @PostMapping("/login")
     public String login (@RequestBody LoginRequestDto requestDto,
                                     HttpServletResponse response)
     {
+        // login 함수의 반환값 Token을 받아야 하고, 그 토큰을 ResponseEntity를 통해 헤더에 추가해주는 방향으로
         userService.login(requestDto, response);
         return "로그인 성공";
     }
@@ -45,5 +49,16 @@ public class UserController {
                                                   HttpServletRequest request) 
     {
         return userService.getProfile(requestDto.getNickName());
+    }
+
+    private <T> ResponseEntity<DefualtResponseDto<T>> setResponseEntity(T data, String msg, HttpStatus status) {
+        DefualtResponseDto<T> defaultResponse = new DefualtResponseDto<>(status.value(), msg, data);
+        ResponseEntity<DefualtResponseDto<T>> ret = new ResponseEntity<>(defaultResponse, status);
+        return ret;
+    }
+
+
+    class ResponseMessage {
+        public static final String SIGNUP_OK = "회원가입 성공";
     }
 }

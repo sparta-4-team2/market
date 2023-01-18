@@ -56,6 +56,7 @@ public class UserService implements UserServiceInterface{
 
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtService.createToken(user.getUsername(), user.getRole()));
     }
+    
     @Transactional
     @Override
     public ProfileGetResponseDto updateProfile(ProfileUpdateRequestDto requestDto, String username) {
