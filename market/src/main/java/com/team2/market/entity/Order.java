@@ -26,8 +26,10 @@ public class Order {
     private User user;
 
     @Enumerated(EnumType.STRING)
-    private OrderResultType orderType = OrderResultType.IN_PROGRESS;
+    private final OrderResultType orderType = OrderResultType.IN_PROGRESS;
+
     private final OffsetDateTime tradeStartTime = OffsetDateTime.now();
+
     private OffsetDateTime tradeEndTime = OffsetDateTime.of(1, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC);
 
     public Order(Post post, User user) {

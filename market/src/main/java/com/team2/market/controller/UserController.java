@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.team2.market.dto.orders.response.UserOrderForm;
 import com.team2.market.dto.users.request.LoginRequestDto;
 import com.team2.market.dto.users.request.ProfileUpdateRequestDto;
 import com.team2.market.dto.users.request.SignupRequestDto;
@@ -23,34 +24,37 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class UserController {
-    private final UserService userService;
+	private final UserService userService;
 
-    @PostMapping("/signup")
-    public String signup (@RequestBody SignupRequestDto requestDto) {
-        userService.createUser(requestDto);
-        return "회원가입 성공";
-    }
+	@PostMapping("/signup")
+	public String signup(@RequestBody SignupRequestDto requestDto) {
+		userService.createUser(requestDto);
+		return "회원가입 성공";
+	}
 
-    @PostMapping("/login")
-    public String login (@RequestBody LoginRequestDto requestDto,
-                                    HttpServletResponse response)
-    {
-        userService.login(requestDto, response);
-        return "로그인 성공";
-    }
+	@PostMapping("/login")
+	public String login(@RequestBody LoginRequestDto requestDto,
+		HttpServletResponse response) {
+		userService.login(requestDto, response);
+		return "로그인 성공";
+	}
 
-    @PostMapping("/users/profile")
-    public ResponseEntity<ProfileGetResponseDto> updateProfile(@RequestBody ProfileUpdateRequestDto requestDto,
-        @AuthenticationPrincipal UserDetails userDetails) {
-        ProfileGetResponseDto profileDto = userService.updateProfile(requestDto,
-            userDetails.getUsername());
-        return ResponseEntity.ok(profileDto); // Generic dto 변경
-    }
+	@PostMapping("/users/profile")
+	public ResponseEntity<ProfileGetResponseDto<UserOrderForm>> updateProfile(
+		@RequestBody ProfileUpdateRequestDto requestDto,
+		@AuthenticationPrincipal UserDetails userDetails) {
+		ProfileGetResponseDto<UserOrderForm> profileDto = userService.updateProfile(
+			requestDto,
+			userDetails.getUsername());
+		return ResponseEntity.ok(profileDto);
+	}
 
-    @GetMapping("/users/profile")
-    public ResponseEntity<ProfileGetResponseDto> getProfile(@AuthenticationPrincipal UserDetails userDetails) {
-        ProfileGetResponseDto profileDto = userService.getProfile(userDetails.getUsername());
-        return ResponseEntity.ok(profileDto);
-    }
+	@GetMapping("/users/profile")
+	public ResponseEntity<ProfileGetResponseDto<UserOrderForm>> getProfile(
+		@AuthenticationPrincipal UserDetails userDetails) {
+		ProfileGetResponseDto<UserOrderForm> profileDto = userService.getProfile(
+			userDetails.getUsername());
+		return ResponseEntity.ok(profileDto);
+	}
 
 }

@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -61,48 +62,51 @@ public class UserService implements UserServiceInterface{
         }
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtService.createToken(user.getUsername(), user.getRole()));
     }
-    @Transactional
-    @Override
-    public ProfileGetResponseDto updateProfile(ProfileUpdateRequestDto requestDto, String username) {
-        User user = userRepository.findByUsername(username)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "세부사항 후에 추가"));
-        user.updateProfile(requestDto);
-
-        PageRequest page = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC,"tradeStartTime"));
-        List<Order> inProgressOrders = orderRepository.findAllByUserAndOrderType(user, OrderResultType.IN_PROGRESS,page);
-        List<Order> successOrders = orderRepository.findAllByUserAndOrderType(user,
-            OrderResultType.SUCCESS, page);
-
-        List<UserOrderForm> progress = inProgressOrders.stream()
-            .map(UserOrderForm::new)
-            .collect(Collectors.toList());
-        List<UserOrderForm> success = successOrders.stream()
-            .map(UserOrderForm::new)
-            .collect(Collectors.toList());
-
-        return new ProfileGetResponseDto(userRepository.save(user), progress, success);
-    }
 
     @Transactional(readOnly = true)
     @Override
-    public ProfileGetResponseDto getProfile(String username) {
-        User user = userRepository.findByUsername(username)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "세부사항 후에 추가"));
+    public ProfileGetResponseDto<UserOrderForm> getProfile(String username) {
+        User user = findByUsername(username);
 
-        PageRequest page = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC,"tradeStartTime"));
-        List<Order> inProgressOrders = orderRepository.findAllByUserAndOrderType(user, OrderResultType.IN_PROGRESS,page);
-        List<Order> successOrders = orderRepository.findAllByUserAndOrderType(user,
-            OrderResultType.SUCCESS, page);
-
-        List<UserOrderForm> progress = inProgressOrders.stream()
-            .map(UserOrderForm::new)
-            .collect(Collectors.toList());
-        List<UserOrderForm> success = successOrders.stream()
-            .map(UserOrderForm::new)
-            .collect(Collectors.toList());
-
-        return new ProfileGetResponseDto(user, progress, success);
+        return getUserOrderFormProfileGetResponseDto(user);
     }
 
+    @Transactional
+    @Override
+    public ProfileGetResponseDto<UserOrderForm> updateProfile(ProfileUpdateRequestDto requestDto, String username) {
+        User user = findByUsername(username);
+        user.updateProfile(requestDto);
 
+        return getUserOrderFormProfileGetResponseDto(user);
+    }
+
+    private User findByUsername(String username) {
+        return userRepository.findByUsername(username)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "세부사항 후에 추가"));
+    }
+
+    @NotNull
+    private ProfileGetResponseDto<UserOrderForm> getUserOrderFormProfileGetResponseDto(User user) {
+        PageRequest pageSortByStartTime = getPageRequest("tradeStartTime");
+        List<UserOrderForm> progress = getUserOrderForms(user, OrderResultType.IN_PROGRESS, pageSortByStartTime);
+
+        PageRequest pageSortByEndTime = getPageRequest("tradeEndTime");
+        List<UserOrderForm> success = getUserOrderForms(user, OrderResultType.SUCCESS,
+            pageSortByEndTime);
+
+        return new ProfileGetResponseDto<>(user, progress, success);
+    }
+
+    @NotNull
+    private PageRequest getPageRequest(String property) {
+        return PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC,property));
+    }
+
+    @NotNull
+    private List<UserOrderForm> getUserOrderForms(User user, OrderResultType type,
+        PageRequest pageSortByStartTime) {
+        List<Order> orders = orderRepository.findAllByUserAndOrderType(user, type,
+            pageSortByStartTime);
+        return UserOrderForm.from(orders);
+    }
 }
