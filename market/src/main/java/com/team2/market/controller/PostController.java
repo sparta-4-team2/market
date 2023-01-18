@@ -6,8 +6,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.web.bind.annotation.*;
 
-import com.team2.market.dto.orders.request.OrderRequestDto;
-import com.team2.market.dto.orders.response.OrderResponseDto;
 import com.team2.market.dto.product.request.*;
 import com.team2.market.dto.product.response.*;
 import com.team2.market.service.OrderService;
@@ -34,9 +32,9 @@ public class PostController {
 
     
     @GetMapping("/posts/{postid}")
-    public PostGetResponseDto getPost(@RequestBody PostGetRequestDto requestDto,
-                                      @PathVariable Long postid,
-                                      HttpServletRequest request)
+    public List<PostGetRequestDto> getPost(@RequestBody PostGetRequestDto requestDto,
+                                           @PathVariable Long postid,
+                                           HttpServletRequest request)
     {
         return productService.getPost(requestDto, postid, request);
     }
