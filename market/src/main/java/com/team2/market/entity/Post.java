@@ -1,5 +1,7 @@
 package com.team2.market.entity;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +29,13 @@ public class Post {
 
     @OneToMany(mappedBy = "post")
     private List<Order> orderlist = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "seller_id")
+    private Seller seller;
+    private boolean forSale; // 판매 진행 or 완료 여부
+    private final OffsetDateTime tradeStartTime = OffsetDateTime.now();
+    private OffsetDateTime tradeEndTime = OffsetDateTime.of(1, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC);
 
     public Post(String productName, int price, String contents) {
         this.productName = productName;

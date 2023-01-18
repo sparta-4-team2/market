@@ -20,6 +20,6 @@ public class Seller {
     @OneToOne
     private User user;
 
-    @OneToMany
-    private List<Post> postlist = new ArrayList<>();
+    @OneToMany(mappedBy = "seller")
+    private List<Post> posts = new ArrayList<>();
 }
