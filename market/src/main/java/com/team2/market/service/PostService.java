@@ -14,8 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.team2.market.dto.product.request.*;
 import com.team2.market.dto.product.response.*;
-import com.team2.market.entity.Post;
-import com.team2.market.entity.User;
 import com.team2.market.repository.OrderRepository;
 import com.team2.market.repository.PostRepository;
 import com.team2.market.repository.UserRepository;
@@ -110,7 +108,7 @@ public class PostService implements PostServiceInterface{
     }
 
     @Override
-    public List<PostGetResponseDto> getAllPost(PostGetRequestDto requestDto, HttpServletRequest request) {
+    public List<Post> getAllPost(PostGetRequestDto requestDto, HttpServletRequest request) {
         // TODO Auto-generated method stub
         return null;
     }
