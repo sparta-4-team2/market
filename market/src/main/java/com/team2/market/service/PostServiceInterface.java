@@ -4,8 +4,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.team2.market.dto.product.request.*;
-import com.team2.market.dto.product.response.*;
+import com.team2.market.dto.post.request.*;
+import com.team2.market.dto.post.response.*;
 import com.team2.market.entity.Post;
 
 public interface PostServiceInterface {

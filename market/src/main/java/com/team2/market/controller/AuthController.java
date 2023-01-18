@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.team2.market.service.AuthService;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RequestParam;
-
 
 @RestController
 @RequiredArgsConstructor

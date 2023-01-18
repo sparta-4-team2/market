@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import com.team2.market.dto.orders.request.*;
@@ -42,10 +44,10 @@ public class OrderController {
 
     @PostMapping("/posts/{postid}/request")
     public OrderResponseDto orderPost(@RequestBody OrderRequestDto requestDto,
-                                          @PathVariable Long postid,
-                                          HttpServletRequest request) {
+                                      @PathVariable Long postid,
+                                      @AuthenticationPrincipal UserDetails user) {
         
-        return orderService.orderPost(requestDto, postid, request);
+        return orderService.orderPost(requestDto, postid, user.getUsername());
     }
     
 }

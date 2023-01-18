@@ -7,9 +7,9 @@ import java.util.List;
 
 import javax.persistence.*;
 
-import com.team2.market.type.SaleResultType;
+import com.team2.market.dto.post.request.PostCreateRequestDto;
+import com.team2.market.dto.types.SaleResultType;
 
-import com.team2.market.dto.product.request.PostCreateRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

@@ -11,7 +11,7 @@ import com.team2.market.dto.orders.response.OrderResponseDto;
 
 public interface OrderServiceInterface {
 
-    OrderResponseDto orderPost(OrderRequestDto requestDto, Long postid, HttpServletRequest request);
+    OrderResponseDto orderPost(OrderRequestDto requestDto, Long postid, String username);
     List<OrderGetResponseDto> getAllOrders(OrderGetRequestDto requestDto, HttpServletRequest request);
     
 }

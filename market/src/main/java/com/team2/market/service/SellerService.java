@@ -10,13 +10,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.team2.market.dto.post.response.SellerPostForm;
+import com.team2.market.dto.types.SaleResultType;
 import com.team2.market.dto.users.request.ProfileUpdateRequestDto;
 import com.team2.market.dto.users.response.ProfileGetResponseDto;
 import com.team2.market.entity.Post;
 import com.team2.market.entity.Seller;
 import com.team2.market.repository.PostRepository;
 import com.team2.market.repository.SellerRepository;
-import com.team2.market.type.SaleResultType;
 
 import lombok.RequiredArgsConstructor;
 

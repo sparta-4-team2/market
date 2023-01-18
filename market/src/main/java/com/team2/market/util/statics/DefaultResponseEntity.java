@@ -10,6 +10,10 @@ import com.team2.market.dto.DefaultResponseDto;
 @Component
 public class DefaultResponseEntity {
     
+    /*
+    * 
+    * 
+    */
     public <T> ResponseEntity<DefaultResponseDto<T>> setResponseEntity(T data, String msg, HttpStatus status) {
         DefaultResponseDto<T> defaultResponse = new DefaultResponseDto<>(status.value(), msg, data);
         ResponseEntity<DefaultResponseDto<T>> ret = new ResponseEntity<>(defaultResponse, status);
