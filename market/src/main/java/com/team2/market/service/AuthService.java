@@ -1,6 +1,7 @@
 package com.team2.market.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -70,7 +71,8 @@ public class AuthService implements AuthServiceInterface {
     }
 
     public List<RequestAuthResponseDto> getAllRequset() {
-        return null;
+        List<AuthRequest> requests = authRequestRepository.findAll();
+        return requests.stream().map(RequestAuthResponseDto::new).collect(Collectors.toList());
     }
 
 }

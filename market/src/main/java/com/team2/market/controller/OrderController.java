@@ -5,14 +5,12 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.catalina.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import com.team2.market.dto.DefaultResponseDto;
 import com.team2.market.dto.orders.request.*;
 import com.team2.market.dto.orders.response.*;
 import com.team2.market.service.OrderService;

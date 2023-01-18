@@ -10,7 +10,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import org.springframework.web.bind.annotation.*;
 
-import com.team2.market.dto.DefaultResponseDto;
 import com.team2.market.dto.orders.response.*;
 import com.team2.market.dto.users.request.*;
 import com.team2.market.dto.users.response.*;

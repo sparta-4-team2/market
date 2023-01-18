@@ -17,9 +17,7 @@ import com.team2.market.entity.User;
 import com.team2.market.repository.OrderRepository;
 import com.team2.market.repository.PostRepository;
 import com.team2.market.repository.UserRepository;
-import com.team2.market.util.jwt.JwtUtil;
 
-import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 
 @Service

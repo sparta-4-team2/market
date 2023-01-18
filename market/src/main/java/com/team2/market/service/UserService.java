@@ -1,13 +1,9 @@
 package com.team2.market.service;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,11 +12,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.team2.market.dto.orders.response.UserOrderForm;
 import com.team2.market.dto.types.OrderResultType;
-import com.team2.market.dto.users.request.LoginRequestDto;
-import com.team2.market.dto.users.request.ProfileUpdateRequestDto;
-import com.team2.market.dto.users.request.SignupRequestDto;
-import com.team2.market.dto.users.response.LoginResponseDto;
-import com.team2.market.dto.users.response.ProfileGetResponseDto;
+import com.team2.market.dto.users.request.*;
+import com.team2.market.dto.users.response.*;
 import com.team2.market.entity.Order;
 import com.team2.market.entity.User;
 import com.team2.market.entity.types.UserRoleType;

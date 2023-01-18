@@ -1,7 +1,7 @@
 package com.team2.market.controller;
 
-import java.util.List;
 import java.util.Map;
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,10 +9,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import com.team2.market.dto.DefaultResponseDto;
-import com.team2.market.dto.auth.*;
 import com.team2.market.dto.auth.response.RequestAuthResponseDto;
-import com.team2.market.dto.auth.response.RequestGetResponseDto;
 import com.team2.market.service.AuthService;
 import com.team2.market.util.statics.DefaultResponseEntity;
 
@@ -38,12 +35,12 @@ public class AuthController {
     /** 운영자의 구매자 권한 요청 목록 확인
      * 
      */
-    // @GetMapping("/auth/seller") 
-    // public ResponseEntity<DefaultResponseDto<List<RequestGetResponseDto>>> getAllAuthRequest() {
-    //     List<RequestAuthResponseDto> data = authService.getAllRequset();
+    @GetMapping("/auth/request") 
+    public ResponseEntity<Map<String, Object>> getAllAuthRequest() {
+        List<RequestAuthResponseDto> data = authService.getAllRequset();
 
-    //     return responseEntity.setResponseEntity(data, ResponseMessage.GETREQUEST_OK, HttpStatus.OK);
-    // }
+        return responseEntity.setResponseEntity(data, ResponseMessage.GETREQUEST_OK, HttpStatus.OK);
+    }
 
 
     @GetMapping("/seller")

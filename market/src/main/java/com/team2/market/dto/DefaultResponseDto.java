@@ -1,7 +1,5 @@
 package com.team2.market.dto;
 
-import java.util.List;
-
 import org.springframework.http.HttpStatus;
 
 import lombok.AllArgsConstructor;
