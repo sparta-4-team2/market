@@ -21,14 +21,14 @@ import lombok.RequiredArgsConstructor;
 public class SellerController {
 	private final SellerService sellerService;
 
-	@GetMapping("/seller/profile")
+	@GetMapping("/sellers/profile")
 	public ResponseEntity<ProfileGetResponseDto<SellerPostForm>> getProfile(@AuthenticationPrincipal UserDetails userDetails) {
 		ProfileGetResponseDto<SellerPostForm> profileDto = sellerService.getProfile(
 			userDetails.getUsername());
 		return ResponseEntity.ok(profileDto);
 	}
 
-	@PostMapping("/seller/profile")
+	@PostMapping("/sellers/profile")
 	public ResponseEntity<?> updateProfile(ProfileUpdateRequestDto request, @AuthenticationPrincipal UserDetails userDetails) {
 		ProfileGetResponseDto<SellerPostForm> profileDto = sellerService.updateProfile(
 			request, userDetails.getUsername());

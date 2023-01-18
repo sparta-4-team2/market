@@ -45,7 +45,7 @@ public class SecurityConfiguration {
 			.authorizeHttpRequests(auth -> auth
 				.antMatchers("/api/signup,/api/login").permitAll()
 				.antMatchers("/api/users/profile").authenticated()
-				.antMatchers("/api/seller/profile").hasRole("SELLER")
+				.antMatchers("/api/sellers/profile").hasRole("SELLER")
 				.antMatchers("/api/auth").hasRole("ADMIN")
 			);
 
