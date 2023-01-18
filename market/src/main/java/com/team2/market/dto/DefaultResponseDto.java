@@ -1,5 +1,7 @@
 package com.team2.market.dto;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 
 import lombok.AllArgsConstructor;
@@ -21,7 +23,7 @@ public class DefaultResponseDto<T> {
     }
 
     public static<T> DefaultResponseDto<T> res(final HttpStatus statusCode, final String responseMessage){
-        return res(statusCode, null);
+        return res(statusCode, responseMessage);
     }
 
     public static<T> DefaultResponseDto<T> res(final HttpStatus statusCode, final String responseMessage, final T t){

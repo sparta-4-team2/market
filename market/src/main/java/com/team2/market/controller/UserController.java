@@ -1,5 +1,7 @@
 package com.team2.market.controller;
 
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -27,13 +29,13 @@ public class UserController {
     private final DefaultResponseEntity responseEntity;
 
     @PostMapping("/signup")
-    public ResponseEntity<DefaultResponseDto<Void>> signup (@RequestBody SignupRequestDto requestDto) {
+    public ResponseEntity<Map<String, Object>> signup (@RequestBody SignupRequestDto requestDto) {
         userService.createUser(requestDto);
         return responseEntity.setResponseEntity(null, ResponseMessage.SIGNUP_OK, HttpStatus.OK);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<DefaultResponseDto<Void>> login (@RequestBody LoginRequestDto requestDto)
+    public ResponseEntity<Map<String, Object>> login (@RequestBody LoginRequestDto requestDto)
     {
         // login 함수의 반환값 Token을 받아야 하고, 그 토큰을 ResponseEntity를 통해 헤더에 추가해주는 방향으로
         String token = userService.login(requestDto);
@@ -41,7 +43,7 @@ public class UserController {
     }
 
 	@PostMapping("/users/profile")
-	public ResponseEntity<DefaultResponseDto<ProfileGetResponseDto<UserOrderForm>>> updateProfile(
+	public ResponseEntity<Map<String, Object>> updateProfile(
 		@RequestBody ProfileUpdateRequestDto requestDto,
 		@AuthenticationPrincipal UserDetails userDetails) {
 		ProfileGetResponseDto<UserOrderForm> profileDto = userService.updateProfile(
@@ -51,7 +53,7 @@ public class UserController {
 	}
 
 	@GetMapping("/users/profile")
-	public ResponseEntity<DefaultResponseDto<ProfileGetResponseDto<UserOrderForm>>> getProfile(
+	public ResponseEntity<Map<String, Object>> getProfile(
 		@AuthenticationPrincipal UserDetails userDetails) {
 		ProfileGetResponseDto<UserOrderForm> profileDto = userService.getProfile(
 			userDetails.getUsername());

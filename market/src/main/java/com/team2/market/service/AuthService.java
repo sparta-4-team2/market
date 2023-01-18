@@ -1,9 +1,11 @@
 package com.team2.market.service;
 
+import java.util.List;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import com.team2.market.dto.auth.RequestAuthResponseDto;
+import com.team2.market.dto.auth.response.RequestAuthResponseDto;
 import com.team2.market.entity.AuthRequest;
 import com.team2.market.entity.User;
 import com.team2.market.entity.types.RequestType;
@@ -65,6 +67,10 @@ public class AuthService implements AuthServiceInterface {
 
     private User getUser(UserDetails userDetails) {
         return userRepository.findByUsername(userDetails.getUsername()).orElseThrow(() -> new IllegalArgumentException("cannot found user"));
+    }
+
+    public List<RequestAuthResponseDto> getAllRequset() {
+        return null;
     }
 
 }

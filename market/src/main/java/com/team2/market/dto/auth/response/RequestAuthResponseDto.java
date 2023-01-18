@@ -1,4 +1,4 @@
-package com.team2.market.dto.auth;
+package com.team2.market.dto.auth.response;
 
 import com.team2.market.entity.AuthRequest;
 import com.team2.market.entity.types.RequestType;

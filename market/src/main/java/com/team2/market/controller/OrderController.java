@@ -1,6 +1,7 @@
 package com.team2.market.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -49,7 +50,7 @@ public class OrderController {
     }
 
     @PostMapping("/posts/{postid}/request")
-    public ResponseEntity<DefaultResponseDto<OrderResponseDto>> orderPost(@RequestBody OrderRequestDto requestDto,
+    public ResponseEntity<Map<String, Object>> orderPost(@RequestBody OrderRequestDto requestDto,
                                       @PathVariable Long postid,
                                       @AuthenticationPrincipal UserDetails userDetails) {
         
