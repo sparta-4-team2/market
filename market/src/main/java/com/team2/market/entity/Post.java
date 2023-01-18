@@ -9,6 +9,7 @@ import javax.persistence.*;
 
 import com.team2.market.type.SaleResultType;
 
+import com.team2.market.dto.product.request.PostCreateRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,13 +21,16 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column
+    @Column(nullable = false)
+    private String title;
+
+    @Column (nullable = false) //컬럼 값이 null 반환 X
     private String productName;
 
-    @Column 
+    @Column (nullable = false)
     private int price;
 
-    @Column
+    @Column(nullable = false)
     private String contents;
 
     @OneToMany(mappedBy = "post")
@@ -46,6 +50,13 @@ public class Post {
         this.productName = productName;
         this.price = price;
         this.contents = contents;
+    }
+    public Post(PostCreateRequestDto requestDto, Long id) {
+        this.title = requestDto.getTitle();
+        this.productName = requestDto.getProductName();
+        this.price = requestDto.getPrice();
+        this.contents = requestDto.getContents();
+
     }
 
 }
