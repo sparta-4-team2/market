@@ -47,39 +47,27 @@ public class UserController {
     }
 
 	@PostMapping("/users/profile")
-	public ResponseEntity<ProfileGetResponseDto<UserOrderForm>> updateProfile(
+	public ResponseEntity<DefaultResponseDto<ProfileGetResponseDto<UserOrderForm>>> updateProfile(
 		@RequestBody ProfileUpdateRequestDto requestDto,
 		@AuthenticationPrincipal UserDetails userDetails) {
 		ProfileGetResponseDto<UserOrderForm> profileDto = userService.updateProfile(
 			requestDto,
 			userDetails.getUsername());
-		return ResponseEntity.ok(profileDto);
+		return responseEntity.setResponseEntity(profileDto, ResponseMessage.PROFILE_UPDATE_OK, HttpStatus.OK);
 	}
 
 	@GetMapping("/users/profile")
-	public ResponseEntity<ProfileGetResponseDto<UserOrderForm>> getProfile(
+	public ResponseEntity<DefaultResponseDto<ProfileGetResponseDto<UserOrderForm>>> getProfile(
 		@AuthenticationPrincipal UserDetails userDetails) {
 		ProfileGetResponseDto<UserOrderForm> profileDto = userService.getProfile(
 			userDetails.getUsername());
-		return ResponseEntity.ok(profileDto);
+		return responseEntity.setResponseEntity(profileDto, ResponseMessage.PROFILE_GET_OK, HttpStatus.OK);
 	}
-
-    // private <T> ResponseEntity<DefaultResponseDto<T>> setResponseEntity(T data, String msg, HttpStatus status) {
-    //     DefaultResponseDto<T> defaultResponse = new DefaultResponseDto<>(status.value(), msg, data);
-    //     ResponseEntity<DefaultResponseDto<T>> ret = new ResponseEntity<>(defaultResponse, status);
-    //     return ret;
-    // }
-    
-    // private <T> ResponseEntity<DefaultResponseDto<T>> setResponseEntity(T data, String msg, String token, HttpStatus status) {
-    //     DefaultResponseDto<T> defaultResponse = new DefaultResponseDto<>(status.value(), msg, data);
-    //     HttpHeaders headers = new HttpHeaders();
-    //     headers.add(HttpHeaders.AUTHORIZATION, token);
-    //     ResponseEntity<DefaultResponseDto<T>> ret = new ResponseEntity<>(defaultResponse, headers, status);
-    //     return ret;
-    // }
 
     class ResponseMessage {
         public static final String SIGNUP_OK = "회원가입 성공";
         public static final String LOGIN_OK = "로그인 성공";
+        public static final String PROFILE_UPDATE_OK = "프로필 등록 성공";
+        public static final String PROFILE_GET_OK = "프로필 등록 성공";
     }
 }
