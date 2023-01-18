@@ -21,7 +21,8 @@ public class DefaultResponseEntity {
      * @param status : HttpStatus의 Enum 타입을 변수로 사용합니다.
      * @exception 
      */
-    public <T> ResponseEntity<Map<String, Object>> setResponseEntity(T data, String msg, HttpStatus status) {
+    public <T> ResponseEntity<Map<String, Object>> setResponseEntity
+                                (T data, String msg, HttpStatus status) {
         Map<String, Object> result = new HashMap<>();
         result.put("statusCode", status);
         result.put("responseMessage", msg);
@@ -38,7 +39,8 @@ public class DefaultResponseEntity {
      * @param status : HttpStatus의 Enum 타입을 변수로 사용합니다.
      * @exception 
      */
-    public <T> ResponseEntity<Map<String, Object>> setResponseEntity(List<T> data, String msg, HttpStatus status) {
+    public <T> ResponseEntity<Map<String, Object>> setResponseEntity
+                                (List<T> data, String msg, HttpStatus status) {
         Map<String, Object> result = new HashMap<>();
         result.put("statusCode", status);
         result.put("responseMessage", msg);
@@ -56,7 +58,8 @@ public class DefaultResponseEntity {
      * @param status : HttpStatus의 Enum 타입을 변수로 사용합니다.
      * @exception 
      */
-    public <T> ResponseEntity<Map<String, Object>> setResponseEntity(List<T> data, String msg, String token, HttpStatus status) {
+    public <T> ResponseEntity<Map<String, Object>> setResponseEntity
+                                (T data, String msg, String token, HttpStatus status) {
         Map<String, Object> result = new HashMap<>();
         result.put("statusCode", status);
         result.put("responseMessage", msg);

@@ -9,6 +9,7 @@ import lombok.Data;
 @Data
 @Builder
 @AllArgsConstructor
+@Deprecated
 public class DefaultResponseDto<T> {
     private int statusCode;
     private String responseMessage;
@@ -20,11 +21,13 @@ public class DefaultResponseDto<T> {
         this.data = null;
     }
 
-    public static<T> DefaultResponseDto<T> res(final HttpStatus statusCode, final String responseMessage){
-        return res(statusCode, responseMessage);
+    public static<T> DefaultResponseDto<T> res(final HttpStatus statusCode,
+                                               final String responseMessage){
+        return res(statusCode, null);
     }
 
-    public static<T> DefaultResponseDto<T> res(final HttpStatus statusCode, final String responseMessage, final T t){
+    public static<T> DefaultResponseDto<T> res(final HttpStatus statusCode,
+                                               final String responseMessage, final T t){
         return DefaultResponseDto.<T>builder()
                 .data(t)
                 .statusCode(statusCode.value())
