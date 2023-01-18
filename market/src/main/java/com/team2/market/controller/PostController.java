@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.team2.market.entity.Post;
 import org.springframework.web.bind.annotation.*;
 
 import com.team2.market.dto.product.request.*;
@@ -41,8 +42,8 @@ public class PostController {
 
     
     @GetMapping("/posts")
-    public List<PostGetResponseDto> getAllPost(@RequestBody PostGetRequestDto requestDto,
-                                               HttpServletRequest request)
+    public List<Post> getAllPost(@RequestBody PostGetRequestDto requestDto,
+                                 HttpServletRequest request)
     {
         return productService.getAllPost(requestDto, request);
     }

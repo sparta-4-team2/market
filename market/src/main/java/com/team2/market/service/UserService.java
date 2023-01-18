@@ -1,9 +1,6 @@
 package com.team2.market.service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jetbrains.annotations.NotNull;
@@ -12,6 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -20,6 +18,7 @@ import com.team2.market.dto.orders.response.UserOrderForm;
 import com.team2.market.dto.users.request.LoginRequestDto;
 import com.team2.market.dto.users.request.ProfileUpdateRequestDto;
 import com.team2.market.dto.users.request.SignupRequestDto;
+import com.team2.market.dto.users.response.LoginResponseDto;
 import com.team2.market.dto.users.response.ProfileGetResponseDto;
 import com.team2.market.entity.Order;
 import com.team2.market.entity.User;
@@ -31,18 +30,22 @@ import com.team2.market.util.jwt.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserServiceInterface{
 
     private final UserRepository userRepository;
-    private final OrderRepository orderRepository;
     private final JwtUtil jwtService;
+    private final OrderRepository orderRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void createUser(SignupRequestDto requestDto) {
         String username = requestDto.getUsername();
-        String password = requestDto.getPassword();
+        String password = passwordEncoder.encode(requestDto.getPassword());
 
         Optional<User> found = userRepository.findByUsername(username);
         if (found.isPresent()) {
@@ -57,8 +60,8 @@ public class UserService implements UserServiceInterface{
     public String login(LoginRequestDto requestDto, HttpServletResponse response) {
         User user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(() -> new UsernameNotFoundException("등록된 사용자가 없습니다."));
 
-        if (!user.isValidPassword(requestDto.getPassword())) {
-            throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
+        if(!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
         return jwtService.createToken(user.getUsername(), user.getRole());
     }
@@ -70,7 +73,6 @@ public class UserService implements UserServiceInterface{
 
         return getUserOrderFormProfileGetResponseDto(user);
     }
-
     @Transactional
     @Override
     public ProfileGetResponseDto<UserOrderForm> updateProfile(ProfileUpdateRequestDto requestDto, String username) {

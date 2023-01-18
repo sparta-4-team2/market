@@ -48,6 +48,9 @@ public class SecurityConfiguration {
 				.antMatchers("/api/sellers/profile").hasRole("SELLER")
 				.antMatchers("/api/auth").hasRole("ADMIN")
 			);
+		http.logout()
+				.logoutUrl("/api/logout")
+				.logoutSuccessUrl("/api/login");
 
 		return http.build();
 	}
