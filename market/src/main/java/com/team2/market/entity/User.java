@@ -53,4 +53,8 @@ public class User {
     public boolean isValidPassword(String password) {
         return this.password.equals(password);
     }
+
+    public void updateRole(UserRoleType role) {
+        this.role = role;
+    }
 }

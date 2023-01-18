@@ -22,4 +22,8 @@ public class Seller {
 
     @OneToMany(mappedBy = "seller")
     private List<Post> posts = new ArrayList<>();
+
+    public Seller(User user) {
+        this.user = user;
+    }
 }

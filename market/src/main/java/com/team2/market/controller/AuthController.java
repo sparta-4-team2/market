@@ -9,6 +9,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import com.team2.market.dto.auth.response.AuthChangeResponseDto;
 import com.team2.market.dto.auth.response.RequestAuthResponseDto;
 import com.team2.market.service.AuthService;
 import com.team2.market.util.statics.DefaultResponseEntity;
@@ -42,6 +43,14 @@ public class AuthController {
         return responseEntity.setResponseEntity(data, ResponseMessage.GETREQUEST_OK, HttpStatus.OK);
     }
 
+    // Post나 Put 메소드 뭘 써야할지 잘몰라서 일시적으로 Post로 작성
+    // 운영자 권한 판단 넣어줄 것
+    @PostMapping("/auth/request/{requestId}")
+    public ResponseEntity<Map<String, Object>> changeAuth(@PathVariable Long requestId) {
+        AuthChangeResponseDto data = authService.changeAuthorization(requestId);
+        return responseEntity.setResponseEntity(data, ResponseMessage.AUTHCHANGE_OK, HttpStatus.OK);
+    }
+
 
     @GetMapping("/seller")
     public void getAllSellers() {
@@ -53,12 +62,6 @@ public class AuthController {
         authService.getCustomInfo();
     }
 
-    // Post나 Put 메소드 뭘 써야할지 잘몰라서 일시적으로 Post로 작성
-    @PostMapping("/auth/seller/{userid}")
-    public void changeAuth() {
-        authService.setAuthorization();
-    }
-
     @GetMapping("/auth/seller/{sellerid}")
     public void getMethodName() {
         authService.getSellerInfo();
@@ -67,5 +70,6 @@ public class AuthController {
     class ResponseMessage {
         public static final String AUTHREQUEST_OK = "판매자 권한 요청 성공";
         public static final String GETREQUEST_OK = "일반 고객의 권한 요청 목록 조회 성공";
+        public static final String AUTHCHANGE_OK = "권한 변경 성공";
     }
 }
