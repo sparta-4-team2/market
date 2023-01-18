@@ -95,9 +95,9 @@ public class PostService implements PostServiceInterface{
 
             if (userRoleEnum == UserRoleEnum.SELLER) {
                 // 사용자 권한이 BUYER가 아닐 경우(SELLER, ADMIN일 경우)
-                postList = postRepository.findAllById(user.getId());
+                postList = new ArrayList<>()/* postRepository.findAllById(user.getId()) */;
             } else if (userRoleEnum == UserRoleEnum.ADMIN) {
-                postList = postRepository.findAllById(user.getId());
+                postList = new ArrayList<>() /*  postRepository.findAllById(user.getId()) */;
             } else {
                 throw new IllegalArgumentException("권한이 없습니다.");
 

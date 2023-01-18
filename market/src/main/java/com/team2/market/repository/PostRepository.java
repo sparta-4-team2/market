@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface PostRepository extends JpaRepository<Post, Long>{
 	List<Post> findAllBySellerIdAndForSale(Long sellerId, SaleResultType type, Pageable pageable);
 
-	List<Post> findAllById(Long userId);
+	//List<Post> findAllById(Long userId);
 
-    Optional<Post> findAllById(Long id, Long userId);
+    //Optional<Post> findAllById(Long id, Long userId);
 }
