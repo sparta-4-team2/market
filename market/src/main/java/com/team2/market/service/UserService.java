@@ -54,13 +54,13 @@ public class UserService implements UserServiceInterface{
     }
 
     @Override
-    public void login(LoginRequestDto requestDto, HttpServletResponse response) {
+    public String login(LoginRequestDto requestDto, HttpServletResponse response) {
         User user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(() -> new UsernameNotFoundException("등록된 사용자가 없습니다."));
 
         if (!user.isValidPassword(requestDto.getPassword())) {
             throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
         }
-        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtService.createToken(user.getUsername(), user.getRole()));
+        return jwtService.createToken(user.getUsername(), user.getRole());
     }
 
     @Transactional(readOnly = true)
