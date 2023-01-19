@@ -60,7 +60,7 @@ public class PostService implements PostServiceInterface{
     }
 
     @Transactional(readOnly = true)//관심 상품 조회
-    public List<PostGetRequestDto> getPost(PostGetRequestDto requestDto, Long postid, HttpServletRequest request) {
+    public List<PostGetResponseDto> getPost(PostGetRequestDto requestDto, Long postid, HttpServletRequest request) {
         // Request에서 Token 가져오기
         String token = jwtUtil.resolveToken(request);
         Claims claims;
@@ -84,7 +84,7 @@ public class PostService implements PostServiceInterface{
             UserRoleEnum userRoleEnum = user.getRole();
             System.out.println("role = " + userRoleEnum);
 
-            List<PostGetRequestDto> list = new ArrayList<>();
+            List<PostGetResponseDto> list = new ArrayList<>();
             List<Post> postList;
 
             if (userRoleEnum == UserRoleEnum.SELLER) {
@@ -97,7 +97,7 @@ public class PostService implements PostServiceInterface{
 
             }
             for (Post post : postList) {
-                list.add(new PostGetRequestDto(post));
+                list.add(new PostGetResponseDto(post));
             }
 
             return list;
@@ -108,7 +108,7 @@ public class PostService implements PostServiceInterface{
     }
 
     @Override
-    public List<Post> getAllPost(PostGetRequestDto requestDto, HttpServletRequest request) {
+    public List<PostGetResponseDto> getAllPost(PostGetRequestDto requestDto, HttpServletRequest request) {
         // TODO Auto-generated method stub
         return null;
     }

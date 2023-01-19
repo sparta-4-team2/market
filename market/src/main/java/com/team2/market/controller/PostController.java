@@ -20,23 +20,23 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class PostController {
-    private final PostService productService;
+    private final PostService postService;
     private final OrderService orderService;
 
     @PostMapping("/posts")
     public PostCreateResponseDto createPost(@RequestBody PostCreateRequestDto requestDto,
                                                   HttpServletRequest request)
     {
-        return productService.createPost(requestDto, request);
+        return postService.createPost(requestDto, request);
     }
 
     
     @GetMapping("/posts/{postid}")
-    public List<PostGetRequestDto> getPost(@RequestBody PostGetRequestDto requestDto,
-                                           @PathVariable Long postid,
-                                           HttpServletRequest request)
+    public List<PostGetResponseDto> getPost(@RequestBody PostGetRequestDto requestDto,
+                                            @PathVariable Long postid,
+                                            HttpServletRequest request)
     {
-        return productService.getPost(requestDto, postid, request);
+        return postService.getPost(requestDto, postid, request);
     }
 
     
@@ -44,7 +44,7 @@ public class PostController {
     public List<PostGetResponseDto> getAllPost(@RequestBody PostGetRequestDto requestDto,
                                                HttpServletRequest request)
     {
-        return productService.getAllPost(requestDto, request);
+        return postService.getAllPost(requestDto, request);
     }
 
     
@@ -53,7 +53,7 @@ public class PostController {
                                             @PathVariable Long postid,
                                             HttpServletRequest request)
     {
-        return productService.updatePost(requestDto, postid, request);
+        return postService.updatePost(requestDto, postid, request);
     }
 
     
@@ -62,7 +62,7 @@ public class PostController {
                                             @PathVariable Long postid,
                                             HttpServletRequest request)
     {
-        return productService.deletePost(requestDto, postid, request);
+        return postService.deletePost(requestDto, postid, request);
     }
 
     

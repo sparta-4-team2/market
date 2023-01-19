@@ -9,7 +9,7 @@ import com.team2.market.dto.product.response.*;
 
 public interface PostServiceInterface {
     PostCreateResponseDto createPost(PostCreateRequestDto requestDto, HttpServletRequest request);
-    List<PostGetRequestDto> getPost(PostGetRequestDto requestDto, Long postid, HttpServletRequest request);
+    List<PostGetResponseDto> getPost(PostGetRequestDto requestDto, Long postid, HttpServletRequest request);
     List<PostGetResponseDto> getAllPost(PostGetRequestDto requestDto, HttpServletRequest request);
     PostUpdateResponseDto updatePost(PostUpdateRequestDto requestDto, Long postid, HttpServletRequest request);
     PostDeleteResponseDto deletePost(PostDeleteRequestDto requestDto, Long postid, HttpServletRequest request);
