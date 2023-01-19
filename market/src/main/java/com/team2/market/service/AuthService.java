@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.team2.market.dto.auth.response.AuthChangeResponseDto;
+import com.team2.market.dto.auth.response.AuthGetBuyerResponseDto;
+import com.team2.market.dto.auth.response.AuthGetSellerResponseDto;
 import com.team2.market.dto.auth.response.RequestAuthResponseDto;
 import com.team2.market.entity.AuthRequest;
 import com.team2.market.entity.Seller;
@@ -54,21 +56,21 @@ public class AuthService implements AuthServiceInterface {
     }
 
     @Override
-    public void getCustomInfo() {
+    public List<AuthGetBuyerResponseDto> getAllBuyers() {
         // TODO Auto-generated method stub
-        
+        return null;
     }
 
     @Override
-    public void getSellerInfo() {
+    public AuthGetSellerResponseDto getSellerInfo() {
         // TODO Auto-generated method stub
-        
+        return null;
     }
 
     @Override
-    public void getAllSellers() {
+    public List<AuthGetSellerResponseDto> getAllSellers() {
         // TODO Auto-generated method stub
-        
+        return null;
     }
 
 
