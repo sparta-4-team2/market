@@ -31,8 +31,8 @@ public class PostController {
     }
 
     
-    @GetMapping("/posts/{postid}")
-    public List<PostGetResponseDto> getPost(@RequestBody PostGetRequestDto requestDto,
+    @GetMapping("/posts/{postid}")//관심상품 조회 -> 게시물 하나씩 선택해서 볼 수 있다. ->굳이 리스트로 만들 필요 X.
+    public PostGetResponseDto getPost(@RequestBody PostGetRequestDto requestDto,
                                             @PathVariable Long postid,
                                             HttpServletRequest request)
     {
