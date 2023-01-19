@@ -33,6 +33,9 @@ public class Post {
     @Column(nullable = false)
     private String contents;
 
+    @Column (nullable = false)
+    private Long userId;
+
     @OneToMany(mappedBy = "post")
     private List<Order> orderlist = new ArrayList<>();
 
@@ -56,6 +59,17 @@ public class Post {
         this.productName = requestDto.getProductName();
         this.price = requestDto.getPrice();
         this.contents = requestDto.getContents();
+        this.price = requestDto.getPrice();;
+        this.contents = requestDto.getContents();;
+
+    }
+
+    public Post(PostGetRequestDto requestDto, Long userId) {
+        this.userId = getUserId();
+        this.title = requestDto.getTitle();
+        this.productName = requestDto.getProductName();
+        this.price = requestDto.getPrice();;
+        this.contents = requestDto.getContents();;
 
     }
 
