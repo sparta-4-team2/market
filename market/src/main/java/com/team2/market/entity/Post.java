@@ -7,6 +7,8 @@ import javax.persistence.*;
 
 import com.team2.market.dto.product.request.PostCreateRequestDto;
 import com.team2.market.dto.product.request.PostGetRequestDto;
+import com.team2.market.dto.product.request.PostUpdateRequestDto;
+import com.team2.market.dto.product.response.PostGetResponseDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -49,13 +51,21 @@ public class Post {
 
     }
 
-    public Post(PostGetRequestDto requestDto, Long userId) {
+    public Post(PostGetRequestDto requestDto, Long Id) {
         this.userId = getUserId();
         this.title = requestDto.getTitle();
         this.productName = requestDto.getProductName();
         this.price = requestDto.getPrice();;
         this.contents = requestDto.getContents();;
 
+    }
+
+    public Post(PostUpdateRequestDto requestDto, Long id) {
+        this.userId = getUserId();
+        this.title = requestDto.getTitle();
+        this.productName = requestDto.getProductName();
+        this.price = requestDto.getPrice();;
+        this.contents = requestDto.getContents();
     }
 
 }

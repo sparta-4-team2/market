@@ -161,10 +161,32 @@ public class PostService implements PostServiceInterface{
     }
 
 
-    @Override//수정하기
-    public PostUpdateResponseDto updatePost(PostUpdateRequestDto requestDto, Long postid, HttpServletRequest request) {
-        // TODO Auto-generated method stub
-        return null;
+
+    @Transactional  //게시글 수정
+    public PostUpdateResponseDto updatePost( PostUpdateRequestDto requestDto, Long postid,
+                                  HttpServletRequest request) {
+
+        String token = jwtUtil.resolveToken(request);
+        Claims claims;
+
+        if (token != null) {
+            if (jwtUtil.validateToken(token)) {
+                claims = jwtUtil.getUserInfoFromToken(token);
+            } else {
+                throw new IllegalArgumentException("Token Error");
+            }
+            // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회
+            User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
+                    () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
+            );
+
+            // 요청받은 DTO로 DB에 저장할 객체 만들기
+            Post post = postRepository.save(new Post(requestDto, user.getId()));
+
+            return new PostUpdateResponseDto(post);
+        } else {
+            return null;
+        }
     }
 
     @Override//삭제하기
