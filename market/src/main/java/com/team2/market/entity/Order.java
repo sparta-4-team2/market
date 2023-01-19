@@ -26,14 +26,19 @@ public class Order {
     private User user;
 
     @Enumerated(EnumType.STRING)
-    private final OrderResultType orderType = OrderResultType.IN_PROGRESS;
-
-    private final OffsetDateTime tradeStartTime = OffsetDateTime.now();
+    private OrderResultType orderType;
+    private OffsetDateTime tradeStartTime;
 
     private OffsetDateTime tradeEndTime = OffsetDateTime.of(1, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC);
 
     public Order(Post post, User user) {
         this.post = post;
         this.user = user;
+        this.tradeStartTime = OffsetDateTime.now();
+        this.orderType = OrderResultType.IN_PROGRESS;
     }
+
+	public void successOrder() {
+        this.orderType = OrderResultType.SUCCESS;
+	}
 }

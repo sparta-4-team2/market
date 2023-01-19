@@ -39,7 +39,7 @@ public class SellerService {
 		return getSellerPostFormProfileGetResponseDto(seller);
 	}
 
-	private Seller findByUsername(String username) {
+	public Seller findByUsername(String username) {
 		return sellerRepository.findByUserName(username)
 			.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정 필요"));
 	}
