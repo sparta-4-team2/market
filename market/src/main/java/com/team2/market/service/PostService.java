@@ -2,7 +2,6 @@ package com.team2.market.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -88,30 +87,20 @@ public class PostService implements PostServiceInterface{
             List<PostGetResponseDto> list = new ArrayList<>();
             List<Post> postList;
 
-            if (userRoleEnum == UserRoleType.SELLER) {
-                // 사용자 권한이 BUYER가 아닐 경우(SELLER, ADMIN일 경우)
-                postList = new ArrayList<>()/* postRepository.findAllById(user.getId()) */;
-            } else if (userRoleEnum == UserRoleType.ADMIN) {
-                postList = new ArrayList<>() /*  postRepository.findAllById(user.getId()) */;
             // 로그인한 user들만 사용할 수 있지만 방어적으로 다 구현하자...(BUYER, SELLER, ADMIN)
-            if (userRoleEnum == UserRoleEnum.BUYER) {
+            if (userRoleEnum == UserRoleType.BUYER) {
                 // 사용자 권한이 USER 인 경우.
                 postList = postRepository.findAllById(user.getId());
-            } else if (userRoleEnum == UserRoleEnum.SELLER) {
+            } else if (userRoleEnum == UserRoleType.SELLER) {
                 postList = postRepository.findAllById(user.getId());
-            } else if (userRoleEnum == UserRoleEnum.ADMIN) {
+            } else if (userRoleEnum == UserRoleType.ADMIN) {
                 postList = postRepository.findAllById(user.getId());
             } else {
                 throw new IllegalArgumentException("권한이 없습니다.");
 
             }
-            for (Post post : postList) {
-                list.add(new PostGetRequestDto(post));
-            }
 
-            Post post = postRepository.saveAndFlush(new Post(requestDto, user.getId()));
-            return new PostGetResponseDto(post);
-
+            return new PostGetResponseDto(new Post());
         } else {
             return null;
         }
@@ -153,9 +142,6 @@ public class PostService implements PostServiceInterface{
             } else {
                 throw new IllegalArgumentException("권한이 없습니다.");
 
-            }
-            for (Post post : postList) {
-                list.add(new PostGetRequestDto(post));
             }
 
             return postList;
