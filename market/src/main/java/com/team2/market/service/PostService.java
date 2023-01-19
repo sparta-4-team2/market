@@ -104,7 +104,7 @@ public class PostService implements PostServiceInterface{
             }
 */
 
-            Post post = postRepository.findAllById(u)
+            Post post = postRepository.saveAndFlush(new Post(requestDto, user.getId()));
             return new PostGetResponseDto(post);
 
         } else {
