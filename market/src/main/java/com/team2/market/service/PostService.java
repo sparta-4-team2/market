@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class PostService implements PostServiceInterface{
+public class PostService implements PostServiceInterface {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
@@ -180,9 +180,24 @@ public class PostService implements PostServiceInterface{
         }
     }
 
-    @Override//삭제하기
+    @Transactional //게시글 삭제
+    @Override
     public PostDeleteResponseDto deletePost(PostDeleteRequestDto requestDto, Long postid, HttpServletRequest request) {
-        // TODO Auto-generated method stub
+        String token = jwtUtil.resolveToken(request);
+        Claims claims;
+
+        if (token != null) {
+            if (jwtUtil.validateToken(token)) {
+                claims = jwtUtil.getUserInfoFromToken(token);
+            } else {
+                throw new IllegalArgumentException("Token Error");
+            }
+            // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회
+            User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
+                    () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
+            );
+            //조회한 게시글 삭제
+        }
         return null;
     }
 
