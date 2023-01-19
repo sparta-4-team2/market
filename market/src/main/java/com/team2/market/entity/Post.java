@@ -59,4 +59,7 @@ public class Post {
 
     }
 
+	public void addOrder(Order order) {
+        this.orderlist.add(order);
+	}
 }

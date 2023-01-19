@@ -1,5 +1,8 @@
 package com.team2.market.controller;
 
+import static com.team2.market.controller.UserController.ResponseMessage.*;
+
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -22,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/users")
 public class UserController {
     private final UserService userService;
 
@@ -40,7 +43,7 @@ public class UserController {
         return DefaultResponseEntity.setResponseEntity(null, ResponseMessage.LOGIN_OK, token, HttpStatus.OK);
     }
 
-	@PostMapping("/users/profile")
+	@PostMapping("/profile")
 	public ResponseEntity<Map<String, Object>> updateProfile(
 		@RequestBody ProfileUpdateRequestDto requestDto,
 		@AuthenticationPrincipal UserDetails userDetails) {
@@ -50,12 +53,29 @@ public class UserController {
 		return DefaultResponseEntity.setResponseEntity(profileDto, ResponseMessage.PROFILE_UPDATE_OK, HttpStatus.OK);
 	}
 
-	@GetMapping("/users/profile")
-	public ResponseEntity<Map<String, Object>> getProfile(
-		@AuthenticationPrincipal UserDetails userDetails) {
-		ProfileGetResponseDto<OrderResponseDto> profileDto = userService.getProfile(
-			userDetails.getUsername());
+	@GetMapping("/{userId}/profile")
+	public ResponseEntity<Map<String, Object>> getProfile(@PathVariable Long userId) {
+		ProfileGetResponseDto<OrderResponseDto> profileDto = userService.getProfile(userId);
 		return DefaultResponseEntity.setResponseEntity(profileDto, ResponseMessage.PROFILE_GET_OK, HttpStatus.OK);
+	}
+
+	@GetMapping("/orders") // 사용자가 자신의 주문내역 조회
+	public ResponseEntity<Map<String, Object>> getOrdersForCustomer(
+		@AuthenticationPrincipal UserDetails userDetails,
+		@RequestParam("p") int page) {
+		List<OrderResponseDto> orders = userService.getAllOrders(userDetails.getUsername(), page);
+
+		return DefaultResponseEntity.setResponseEntity(orders, ORDER_LIST_OK, HttpStatus.OK);
+	}
+
+	@PostMapping("/posts/{postId}/")
+	public ResponseEntity<Map<String, Object>> sendOrderToSeller(@PathVariable Long postId,
+		@AuthenticationPrincipal UserDetails userDetails) {
+
+		OrderResponseDto responseDto = userService.sendOrderToSeller(userDetails.getUsername(), postId);
+
+		return DefaultResponseEntity.setResponseEntity(
+			responseDto, ResponseMessage.ORDER_OK, HttpStatus.OK);
 	}
 
     class ResponseMessage {
@@ -63,5 +83,7 @@ public class UserController {
         public static final String LOGIN_OK = "로그인 성공";
         public static final String PROFILE_UPDATE_OK = "프로필 등록 성공";
         public static final String PROFILE_GET_OK = "프로필 등록 성공";
+		public static final String ORDER_LIST_OK = "주문 이력 조회 성공";
+		public static final String ORDER_OK = "주문 완료";
     }
 }

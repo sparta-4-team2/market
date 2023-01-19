@@ -17,7 +17,6 @@ import com.team2.market.entity.Post;
 import com.team2.market.entity.Seller;
 import com.team2.market.entity.User;
 import com.team2.market.repository.OrderRepository;
-import com.team2.market.repository.PostRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,38 +24,34 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 @Service
 public class OrderService implements OrderServiceInterface {
-
-    private final PostRepository postRepository;
-    private final UserService userService;
     private final OrderRepository orderRepository;
-    private final SellerService Sellerservice;
 
 
     @Override
     // Post Url에서 접근
     public OrderResponseDto orderPost(Long postId, String username) {
-
-        // 구매 유저 정보
-        User user = userService.findByUsername(username);
-        
-        // 구매하려는 상품 게시글 정보
-        Post post = null;
-            // postService.getPost(postId);
-        
-        // 방어코드. 실질적으로는 동작할일 없는 코드긴하지만, url 변조가 의심되는 상황에서는 해당 처리가 가능.
-        if(post == null) {
-            throw new IllegalArgumentException("해당되는 포스트가 존재하지 않습니다.");
-        }
-
-        Order order = new Order(post, user);
-        orderRepository.save(order);
-        
-        return new OrderResponseDto(order);
+        //
+        // // 구매 유저 정보
+        // User user = userService.findByUsername(username);
+        //
+        // // 구매하려는 상품 게시글 정보
+        // Post post = null;
+        //     // postService.getPost(postId);
+        //
+        // // 방어코드. 실질적으로는 동작할일 없는 코드긴하지만, url 변조가 의심되는 상황에서는 해당 처리가 가능.
+        // if(post == null) {
+        //     throw new IllegalArgumentException("해당되는 포스트가 존재하지 않습니다.");
+        // }
+        //
+        // Order order = new Order(post, user);
+        // orderRepository.save(order);
+        //
+        // return new OrderResponseDto(order);
+        return null;
     }
 
     @Override
-    public List<OrderResponseDto> getAllOrders(String username, int page) {
-        User user = userService.findByUsername(username);
+    public List<OrderResponseDto> getAllOrders(User user, int page) {
 
         PageRequest sortByTime = PageRequest.of(page, 5, Sort.by("tradeStartTime"));
         List<Order> orders = orderRepository.findAllByUserAndOrderType(user,
@@ -66,15 +61,16 @@ public class OrderService implements OrderServiceInterface {
     }
 
     public List<SellerPostForm> getAllOrders2(String username, int page) {
-        Seller seller = Sellerservice.findByUsername(username);
-
-        PageRequest sortByTime = PageRequest.of(page, 5,
-            Sort.by(Sort.Direction.DESC, "tradeStartTime"));
-
-        List<Post> posts = postRepository.findAllBySellerIdAndForSale(
-            seller.getId(), SaleResultType.F, sortByTime);
-
-        return SellerPostForm.from(posts);
+        // Seller seller = Sellerservice.findByUsername(username);
+        //
+        // PageRequest sortByTime = PageRequest.of(page, 5,
+        //     Sort.by(Sort.Direction.DESC, "tradeStartTime"));
+        //
+        // List<Post> posts = postRepository.findAllBySellerIdAndForSale(
+        //     seller.getId(), SaleResultType.F, sortByTime);
+        //
+        // return SellerPostForm.from(posts);
+        return null;
     }
 
     public void processOrderRequest(Long orderId, String username) {
@@ -103,4 +99,17 @@ public class OrderService implements OrderServiceInterface {
         return PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC,property));
     }
 
+    public List<OrderResponseDto> getAllOrdersForSeller(Seller seller, int page) {
+        PageRequest tradeStartTime = getPageRequest("tradeStartTime");
+        List<Order> orders = orderRepository.findAllBySellerAndSaleType(seller,
+            SaleResultType.F, tradeStartTime);
+        return OrderResponseDto.from(orders);
+    }
+
+    public OrderResponseDto sendOrderToSeller(User user, Post post) {
+        Order order = new Order(post, user);
+        post.addOrder(order);
+        user.addOrder(order);
+        return new OrderResponseDto(order);
+    }
 }

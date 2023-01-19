@@ -15,6 +15,7 @@ import com.team2.market.dto.users.request.LoginRequestDto;
 import com.team2.market.dto.users.request.ProfileUpdateRequestDto;
 import com.team2.market.dto.users.request.SignupRequestDto;
 import com.team2.market.dto.users.response.ProfileGetResponseDto;
+import com.team2.market.entity.Post;
 import com.team2.market.entity.User;
 import com.team2.market.entity.types.UserRoleType;
 import com.team2.market.repository.UserRepository;
@@ -30,6 +31,8 @@ public class UserService implements UserServiceInterface{
     private final JwtUtil jwtService;
     private final PasswordEncoder passwordEncoder;
     private final ProfileService profileService;
+    private final OrderService orderService;
+    private final PostService postService;
 
     @Override
     public void createUser(SignupRequestDto requestDto) {
@@ -57,8 +60,8 @@ public class UserService implements UserServiceInterface{
 
     @Transactional(readOnly = true)
     @Override
-    public ProfileGetResponseDto<OrderResponseDto> getProfile(String username) {
-        User user = findByUsername(username);
+    public ProfileGetResponseDto<OrderResponseDto> getProfile(Long userId) {
+        User user = findById(userId);
         return profileService.getUserOrderFormProfileGetResponseDto(user);
     }
     @Transactional
@@ -90,5 +93,17 @@ public class UserService implements UserServiceInterface{
      */
     public List<User> findAllByRole(UserRoleType role) {
         return userRepository.findAllByRole(role);
+    }
+
+    public List<OrderResponseDto> getAllOrders(String username, int page) {
+        User user = findByUsername(username);
+        return orderService.getAllOrders(user, page);
+    }
+
+    public OrderResponseDto sendOrderToSeller(String username, Long postId) {
+        User user = findByUsername(username);
+        Post post = null;
+        //postService.getPost(postId)
+        return orderService.sendOrderToSeller(user, post);
     }
 }

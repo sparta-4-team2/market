@@ -8,5 +8,5 @@ public interface UserServiceInterface {
     void createUser(SignupRequestDto requestDto);
     String login(LoginRequestDto requestDto);
     ProfileGetResponseDto<OrderResponseDto> updateProfile(ProfileUpdateRequestDto requestDto, String username);
-    ProfileGetResponseDto<OrderResponseDto> getProfile(String username);
+    ProfileGetResponseDto<OrderResponseDto> getProfile(Long userId);
 }

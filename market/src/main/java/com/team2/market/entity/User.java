@@ -57,4 +57,8 @@ public class User {
     public void updateRole(UserRoleType role) {
         this.role = role;
     }
+
+    public void addOrder(Order order) {
+        this.orderlist.add(order);
+    }
 }

@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.team2.market.dto.orders.response.OrderResponseDto;
 import com.team2.market.dto.post.response.SellerPostForm;
 import com.team2.market.dto.types.SaleResultType;
 import com.team2.market.dto.users.request.ProfileUpdateRequestDto;
@@ -25,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class SellerService {
 	private final PostRepository postRepository;
 	private final SellerRepository sellerRepository;
+	private final OrderService orderService;
 
 	public ProfileGetResponseDto<SellerPostForm> updateProfile(ProfileUpdateRequestDto request, String username) {
 		Seller seller = findByUsername(username);
@@ -68,5 +70,11 @@ public class SellerService {
 		List<Post> posts = postRepository.findAllBySellerIdAndForSale(
 			seller.getId(), type, page);
 		return SellerPostForm.from(posts);
+	}
+
+	public List<OrderResponseDto> getAllOrders(String username, int page) {
+		Seller seller = findByUsername(username);
+
+		return orderService.getAllOrdersForSeller(seller, page);
 	}
 }
