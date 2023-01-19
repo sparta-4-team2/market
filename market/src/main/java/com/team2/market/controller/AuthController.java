@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import com.team2.market.dto.auth.response.AuthChangeResponseDto;
+import com.team2.market.dto.auth.response.AuthGetBuyerResponseDto;
+import com.team2.market.dto.auth.response.AuthGetSellerResponseDto;
 import com.team2.market.dto.auth.response.RequestAuthResponseDto;
 import com.team2.market.service.AuthService;
 import com.team2.market.util.statics.DefaultResponseEntity;
@@ -22,7 +24,8 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
     private final AuthService authService;
     /** 구매자의 판매자 권한 요청
-     * 
+     *
+     * @param user
      */
     @PostMapping("/auth/request")
     public ResponseEntity<Map<String, Object>> requestAuth(@AuthenticationPrincipal UserDetails user) {
@@ -33,9 +36,11 @@ public class AuthController {
 
     /** 운영자의 구매자 권한 요청 목록 확인
      * 
+     * @param user
      */
+    // 운영자 권한 넣어줘야할 것
     @GetMapping("/auth/request") 
-    public ResponseEntity<Map<String, Object>> getAllAuthRequest() {
+    public ResponseEntity<Map<String, Object>> getAllAuthRequest(@AuthenticationPrincipal UserDetails user) {
         List<RequestAuthResponseDto> data = authService.getAllRequset();
 
         return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.GETREQUEST_OK, HttpStatus.OK);
@@ -43,31 +48,68 @@ public class AuthController {
 
     // Post나 Put 메소드 뭘 써야할지 잘몰라서 일시적으로 Post로 작성
     // 운영자 권한 판단 넣어줄 것
+    /**
+     * 
+     * @param requestId
+     * @return
+     */
     @PostMapping("/auth/request/{requestId}")
     public ResponseEntity<Map<String, Object>> changeAuth(@PathVariable Long requestId) {
         AuthChangeResponseDto data = authService.changeAuthorization(requestId);
         return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.AUTHCHANGE_OK, HttpStatus.OK);
     }
 
+    /**
+     * 
+     * @return
+     */
+    @GetMapping("/auth/seller")
+    public ResponseEntity<Map<String, Object>> getAllSellers() {
+        List<AuthGetSellerResponseDto> data = authService.getAllSellers();
 
-    @GetMapping("/seller")
-    public void getAllSellers() {
-        authService.getAllSellers();
+        return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.AUTHCHANGE_OK, HttpStatus.OK);
     }
 
-    @GetMapping("/user")
-    public void getAllUsers() {
-        authService.getCustomInfo();
+    /**
+     * 
+     * @return
+     */
+    @GetMapping("/auth/user")
+    public ResponseEntity<Map<String, Object>> getAllBuyers() {
+        List<AuthGetBuyerResponseDto> data = authService.getAllBuyers();
+
+        return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.GETALLBUYER_OK, HttpStatus.OK);
     }
 
-    @GetMapping("/auth/seller/{sellerid}")
-    public void getMethodName() {
-        authService.getSellerInfo();
+    /**
+     * 
+     * @param userId
+     * @return
+     */
+    @GetMapping("/auth/user/{userId}")
+    public ResponseEntity<Map<String, Object>> getBuyerInfo(@PathVariable Long userId) {
+        AuthGetBuyerResponseDto data = authService.getBuyerInfo(userId);
+
+        return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.GETBUYERINFO_OK, HttpStatus.OK);
+    }
+
+    /**
+     * 
+     * @param sellerId
+     * @return
+     */
+    @GetMapping("/auth/seller/{sellerId}")
+    public ResponseEntity<Map<String, Object>> getSellerInfo(@PathVariable Long sellerId) {
+        AuthGetSellerResponseDto data = authService.getSellerInfo(sellerId);
+
+        return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.AUTHCHANGE_OK, HttpStatus.OK);
     }
     
     class ResponseMessage {
         public static final String AUTHREQUEST_OK = "판매자 권한 요청 성공";
         public static final String GETREQUEST_OK = "일반 고객의 권한 요청 목록 조회 성공";
         public static final String AUTHCHANGE_OK = "권한 변경 성공";
+        public static final String GETALLBUYER_OK = "모든 유저 조회 성공";
+        public static final String GETBUYERINFO_OK = "유저 정보 조회 성공";
     }
 }

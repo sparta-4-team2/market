@@ -1,5 +1,6 @@
 package com.team2.market.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
@@ -72,5 +73,22 @@ public class UserService implements UserServiceInterface{
     public User findByUsername(String username) {
         return userRepository.findByUsername(username)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "세부사항 후에 추가"));
+    }
+
+    /** 유저를 userId를 통해 조회
+     * @param userId 사용자의 Id
+     * @return User의 정보
+     */
+    public User findById(Long userId) {
+        return userRepository.findById(userId).orElse(null);
+    }
+
+    /** 유저를 Type에 따라 전체 조회
+     *
+     * @param role UserRoleType을 통해 조회
+     * @return
+     */
+    public List<User> findAllByRole(UserRoleType role) {
+        return userRepository.findAllByRole(role);
     }
 }
