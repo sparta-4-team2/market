@@ -2,6 +2,7 @@ package com.team2.market.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -27,7 +28,6 @@ public class PostService implements PostServiceInterface{
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
-    private final OrderRepository orderRepository;
     private final JwtUtil jwtUtil;
 
     @Transactional//상품 게시글 등록
@@ -60,7 +60,7 @@ public class PostService implements PostServiceInterface{
     }
 
     @Transactional(readOnly = true)//관심 상품 조회
-    public List<PostGetResponseDto> getPost(PostGetRequestDto requestDto, Long postid, HttpServletRequest request) {
+    public PostGetResponseDto getPost(PostGetRequestDto requestDto, Long postid, HttpServletRequest request) {
         // Request에서 Token 가져오기
         String token = jwtUtil.resolveToken(request);
         Claims claims;
@@ -80,20 +80,73 @@ public class PostService implements PostServiceInterface{
                     () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
             );
 
-            // 사용자 권한 가져와서 ADMIN 이면 전체 조회, USER 면 본인이 추가한 부분 조회
+        // 사용자 권한 가져와서 ADMIN 이면 전체 조회, USER 면 본인이 추가한 부분 조회
             UserRoleEnum userRoleEnum = user.getRole();
             System.out.println("role = " + userRoleEnum);
 
             List<PostGetResponseDto> list = new ArrayList<>();
             List<Post> postList;
 
-            if (userRoleEnum == UserRoleEnum.SELLER) {
-                // 사용자 권한이 BUYER가 아닐 경우(SELLER, ADMIN일 경우)
+            // 로그인한 user들만 사용할 수 있지만 방어적으로 다 구현하자...(BUYER, SELLER, ADMIN)
+            if (userRoleEnum == UserRoleEnum.BUYER) {
+                // 사용자 권한이 USER 인 경우.
+                postList = postRepository.findAllById(user.getId());
+            } else if (userRoleEnum == UserRoleEnum.SELLER) {
                 postList = postRepository.findAllById(user.getId());
             } else if (userRoleEnum == UserRoleEnum.ADMIN) {
                 postList = postRepository.findAllById(user.getId());
             } else {
                 throw new IllegalArgumentException("권한이 없습니다.");
+            }
+/*
+            for (Post post : postList) {
+                list.add(new PostGetResponseDto(post));
+            }
+*/
+
+            Post post = postRepository.findAllById(u)
+            return new PostGetResponseDto(post);
+
+        } else {
+            return null;
+        }
+    }
+
+    @Transactional(readOnly = true)//전체 상품 조회
+    public List<PostGetResponseDto> getAllPost(PostGetRequestDto requestDto, HttpServletRequest request) {
+        // TODO Auto-generated method stub
+        // Request에서 Token 가져오기
+        String token = jwtUtil.resolveToken(request);
+        Claims claims;
+
+        // 토큰이 있는 경우에만 관심상품 조회 가능
+        if (token != null) {
+            // Token 검증
+            if (jwtUtil.validateToken(token)) {
+                // 토큰에서 사용자 정보 가져오기
+                claims = jwtUtil.getUserInfoFromToken(token);
+            } else {
+                throw new IllegalArgumentException("Token Error");
+            }
+
+            // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회
+            User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
+                    () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
+            );
+
+        // 사용자 권한 가져와서 ADMIN 이면 전체 조회, USER 면 본인이 추가한 부분 조회
+            UserRoleEnum userRoleEnum = user.getRole();
+            System.out.println("role = " + userRoleEnum);
+
+            List<PostGetResponseDto> list = new ArrayList<>();
+            List<Post> postList;
+
+            if (userRoleEnum != UserRoleEnum.BUYER) {
+                // 사용자 권한이 BUYER 가 아닐 경우 전체를 조회한다.
+                //BUYER : 아무 권한 없음. SELLER : 전체, 관심 조회 가능. ADMIN : 전체, 관심 조회 가능
+                throw new IllegalArgumentException("권한이 없습니다.");
+            } else {
+                postList = postRepository.findAllById(user.getId());
 
             }
             for (Post post : postList) {
@@ -107,19 +160,14 @@ public class PostService implements PostServiceInterface{
         }
     }
 
-    @Override
-    public List<PostGetResponseDto> getAllPost(PostGetRequestDto requestDto, HttpServletRequest request) {
-        // TODO Auto-generated method stub
-        return null;
-    }
 
-    @Override
+    @Override//수정하기
     public PostUpdateResponseDto updatePost(PostUpdateRequestDto requestDto, Long postid, HttpServletRequest request) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
+    @Override//삭제하기
     public PostDeleteResponseDto deletePost(PostDeleteRequestDto requestDto, Long postid, HttpServletRequest request) {
         // TODO Auto-generated method stub
         return null;
