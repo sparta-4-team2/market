@@ -59,23 +59,48 @@ public class AuthController {
         return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.AUTHCHANGE_OK, HttpStatus.OK);
     }
 
-    @GetMapping("/seller")
+    /**
+     * 
+     * @return
+     */
+    @GetMapping("/auth/seller")
     public ResponseEntity<Map<String, Object>> getAllSellers() {
         List<AuthGetSellerResponseDto> data = authService.getAllSellers();
 
         return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.AUTHCHANGE_OK, HttpStatus.OK);
     }
 
-    @GetMapping("/user")
-    public ResponseEntity<Map<String, Object>> getAllUsers() {
+    /**
+     * 
+     * @return
+     */
+    @GetMapping("/auth/user")
+    public ResponseEntity<Map<String, Object>> getAllBuyers() {
         List<AuthGetBuyerResponseDto> data = authService.getAllBuyers();
 
-        return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.AUTHCHANGE_OK, HttpStatus.OK);
+        return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.GETALLBUYER_OK, HttpStatus.OK);
     }
 
-    @GetMapping("/auth/seller/{sellerid}")
-    public ResponseEntity<Map<String, Object>> getSellerInfo() {
-        AuthGetSellerResponseDto data = authService.getSellerInfo();
+    /**
+     * 
+     * @param userId
+     * @return
+     */
+    @GetMapping("/auth/user/{userId}")
+    public ResponseEntity<Map<String, Object>> getBuyerInfo(@PathVariable Long userId) {
+        AuthGetBuyerResponseDto data = authService.getBuyerInfo(userId);
+
+        return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.GETBUYERINFO_OK, HttpStatus.OK);
+    }
+
+    /**
+     * 
+     * @param sellerId
+     * @return
+     */
+    @GetMapping("/auth/seller/{sellerId}")
+    public ResponseEntity<Map<String, Object>> getSellerInfo(@PathVariable Long sellerId) {
+        AuthGetSellerResponseDto data = authService.getSellerInfo(sellerId);
 
         return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.AUTHCHANGE_OK, HttpStatus.OK);
     }
@@ -84,5 +109,7 @@ public class AuthController {
         public static final String AUTHREQUEST_OK = "판매자 권한 요청 성공";
         public static final String GETREQUEST_OK = "일반 고객의 권한 요청 목록 조회 성공";
         public static final String AUTHCHANGE_OK = "권한 변경 성공";
+        public static final String GETALLBUYER_OK = "모든 유저 조회 성공";
+        public static final String GETBUYERINFO_OK = "유저 정보 조회 성공";
     }
 }

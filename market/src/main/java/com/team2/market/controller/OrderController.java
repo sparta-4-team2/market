@@ -46,12 +46,12 @@ public class OrderController {
         return "";
     }
 
-    @PostMapping("/posts/{postid}/request")
+    @PostMapping("/posts/{postId}/orders")
     public ResponseEntity<Map<String, Object>> orderPost(@RequestBody OrderRequestDto requestDto,
-                                      @PathVariable Long postid,
+                                      @PathVariable Long postId,
                                       @AuthenticationPrincipal UserDetails userDetails) {
         
-        OrderResponseDto responseDto = orderService.orderPost(requestDto, postid, userDetails);
+        OrderResponseDto responseDto = orderService.orderPost(requestDto, postId, userDetails);
         
         return DefaultResponseEntity.setResponseEntity(responseDto, ResponseMessage.ORDER_OK, HttpStatus.OK);
     }
