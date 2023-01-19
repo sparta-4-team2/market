@@ -18,14 +18,14 @@ import com.team2.market.entity.types.RequestType;
 import com.team2.market.entity.types.UserRoleType;
 import com.team2.market.repository.AuthRequestRepository;
 import com.team2.market.repository.SellerRepository;
-import com.team2.market.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService implements AuthServiceInterface {
-    private final UserRepository userRepository;
+
+    private final UserService userService;
     private final AuthRequestRepository authRequestRepository;
     private final SellerRepository sellerRepository;
 
@@ -51,12 +51,13 @@ public class AuthService implements AuthServiceInterface {
         return responseDto;
     }
 
+    // 유저 정보 프로필 참조 할듯?
     @Override
     @Transactional(readOnly = true)
     public AuthGetBuyerResponseDto getBuyerInfo(Long userId) {
-        User user = userRepository.findByIdAndRole(userId, UserRoleType.BUYER).orElse(null);
-        if (user == null)
-            throw new IllegalArgumentException("존재하지 않는 회원입니다.");
+        User user = userService.findById(userId);
+        if (user.getRole() != UserRoleType.BUYER)
+            throw new IllegalArgumentException("고객이 아닙니다.");
 
         return new AuthGetBuyerResponseDto(user);
     }
@@ -64,11 +65,11 @@ public class AuthService implements AuthServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public List<AuthGetBuyerResponseDto> getAllBuyers() {
-        List<User> userlist = userRepository.findAllByRole(UserRoleType.BUYER);
+        List<User> userlist = userService.findAllByRole(UserRoleType.BUYER);
         return userlist.stream().map(AuthGetBuyerResponseDto::new).collect(Collectors.toList());
     }
     
-
+    // 판매자 정보 프로필 참조 할듯?
     @Override
     @Transactional(readOnly = true)
     public AuthGetSellerResponseDto getSellerInfo(Long sellerId) {
@@ -91,9 +92,10 @@ public class AuthService implements AuthServiceInterface {
      * 판매자 등록 요청을 위한 service 메소드
      */
     @Override
+    @Transactional
     public RequestAuthResponseDto requestAuthorization(UserDetails userDetails) {
         // 유저의 존재 유무 확인
-        User user = userRepository.findByUsername(userDetails.getUsername()).orElse(null);
+        User user = userService.findByUsername(userDetails.getUsername());
 
         if(user == null)
             throw new IllegalArgumentException("존재하지 않는 회원입니다.");
@@ -110,6 +112,7 @@ public class AuthService implements AuthServiceInterface {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<RequestAuthResponseDto> getAllRequset() {
         List<AuthRequest> requests = authRequestRepository.findAll();
         return requests.stream().map(RequestAuthResponseDto::new).collect(Collectors.toList());

@@ -66,6 +66,7 @@ public class UserService implements UserServiceInterface{
 
         return getUserOrderFormProfileGetResponseDto(user);
     }
+
     @Transactional
     @Override
     public ProfileGetResponseDto<UserOrderForm> updateProfile(ProfileUpdateRequestDto requestDto, String username) {
@@ -73,11 +74,6 @@ public class UserService implements UserServiceInterface{
         user.updateProfile(requestDto);
 
         return getUserOrderFormProfileGetResponseDto(user);
-    }
-
-    private User findByUsername(String username) {
-        return userRepository.findByUsername(username)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "세부사항 후에 추가"));
     }
 
     @NotNull
@@ -104,4 +100,32 @@ public class UserService implements UserServiceInterface{
             pageSortByStartTime);
         return UserOrderForm.from(orders);
     }
+
+    //
+    // Repository 기능 책임 분리
+    //
+
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "세부사항 후에 추가"));
+    }
+
+    /** 유저를 userId를 통해 조회
+     * @param userId 사용자의 Id
+     * @return User의 정보
+     */
+    public User findById(Long userId) {
+        return userRepository.findById(userId).orElse(null);
+    }
+
+    /** 유저를 Type에 따라 전체 조회
+     * 
+     * @param role UserRoleType을 통해 조회
+     * @return
+     */
+    public List<User> findAllByRole(UserRoleType role) {
+        return userRepository.findAllByRole(role);
+    }
+
+
 }
