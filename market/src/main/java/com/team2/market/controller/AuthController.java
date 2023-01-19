@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import com.team2.market.dto.auth.response.AuthChangeResponseDto;
@@ -14,6 +13,8 @@ import com.team2.market.dto.auth.response.AuthGetBuyerResponseDto;
 import com.team2.market.dto.auth.response.AuthGetSellerResponseDto;
 import com.team2.market.dto.auth.response.RequestAuthResponseDto;
 import com.team2.market.service.AuthService;
+
+import com.team2.market.util.security.CustomUserDetails;
 import com.team2.market.util.statics.DefaultResponseEntity;
 
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ public class AuthController {
      * @param user
      */
     @PostMapping("/auth/request")
-    public ResponseEntity<Map<String, Object>> requestAuth(@AuthenticationPrincipal UserDetails user) {
+    public ResponseEntity<Map<String, Object>> requestAuth(@AuthenticationPrincipal CustomUserDetails user) {
         RequestAuthResponseDto data = authService.requestAuthorization(user);
 
         return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.AUTHREQUEST_OK, HttpStatus.OK);
@@ -40,7 +41,7 @@ public class AuthController {
      */
     // 운영자 권한 넣어줘야할 것
     @GetMapping("/auth/request") 
-    public ResponseEntity<Map<String, Object>> getAllAuthRequest(@AuthenticationPrincipal UserDetails user) {
+    public ResponseEntity<Map<String, Object>> getAllAuthRequest(@AuthenticationPrincipal CustomUserDetails user) {
         List<RequestAuthResponseDto> data = authService.getAllRequset();
 
         return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.GETREQUEST_OK, HttpStatus.OK);

@@ -18,6 +18,7 @@ import com.team2.market.entity.types.RequestType;
 import com.team2.market.entity.types.UserRoleType;
 import com.team2.market.repository.AuthRequestRepository;
 import com.team2.market.repository.SellerRepository;
+import com.team2.market.util.security.CustomUserDetails;
 
 import lombok.RequiredArgsConstructor;
 
@@ -91,24 +92,22 @@ public class AuthService implements AuthServiceInterface {
      */
     @Override
     @Transactional
-    public RequestAuthResponseDto requestAuthorization(UserDetails userDetails) {
+    public RequestAuthResponseDto requestAuthorization(CustomUserDetails userDetails) {
         // 유저의 존재 유무 확인
-        User user = userService.findByUsername(userDetails.getUsername());
-
-        if(user == null)
-            throw new IllegalArgumentException("존재하지 않는 회원입니다.");
+        User user = userDetails.getUser();
 
         // 예외 처리 해야함
         if(user.getRole() != UserRoleType.BUYER){
-            return null;
+            throw new IllegalArgumentException("이미 판매자거나 운영자인 회원입니다.");
         }
 
-        AuthRequest request = new AuthRequest(user, RequestType.SELLERAUTH);
+        AuthRequest request = new AuthRequest(user, RequestType.INPROGRESS);
         authRequestRepository.save(request);
 
         return new RequestAuthResponseDto(request);
     }
 
+    // 현재 요청 타입에 관한 내용에 따라 가져올 수 있게 해야함
     @Override
     @Transactional(readOnly = true)
     public List<RequestAuthResponseDto> getAllRequset() {
