@@ -56,7 +56,7 @@ public class UserController {
 	public String logout (@RequestBody LoginRequestDto requestDto,
 													  HttpServletResponse response)
 	{
-		Cookie idCookie = new Cookie(requestDto.getUsername(), null));
+		Cookie idCookie = new Cookie(requestDto.getUsername(), null);
 		idCookie.setMaxAge(0); //만료
 		response.addCookie(idCookie);
 
