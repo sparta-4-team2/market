@@ -44,7 +44,7 @@ public class UserController {
 	public ResponseEntity<Map<String, Object>> updateProfile(
 		@RequestBody ProfileUpdateRequestDto requestDto,
 		@AuthenticationPrincipal UserDetails userDetails) {
-		ProfileGetResponseDto<UserOrderForm> profileDto = userService.updateProfile(
+		ProfileGetResponseDto<OrderResponseDto> profileDto = userService.updateProfile(
 			requestDto,
 			userDetails.getUsername());
 		return DefaultResponseEntity.setResponseEntity(profileDto, ResponseMessage.PROFILE_UPDATE_OK, HttpStatus.OK);
@@ -53,7 +53,7 @@ public class UserController {
 	@GetMapping("/users/profile")
 	public ResponseEntity<Map<String, Object>> getProfile(
 		@AuthenticationPrincipal UserDetails userDetails) {
-		ProfileGetResponseDto<UserOrderForm> profileDto = userService.getProfile(
+		ProfileGetResponseDto<OrderResponseDto> profileDto = userService.getProfile(
 			userDetails.getUsername());
 		return DefaultResponseEntity.setResponseEntity(profileDto, ResponseMessage.PROFILE_GET_OK, HttpStatus.OK);
 	}
