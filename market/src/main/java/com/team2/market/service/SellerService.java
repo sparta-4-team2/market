@@ -1,6 +1,7 @@
 package com.team2.market.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.PageRequest;
@@ -14,6 +15,7 @@ import com.team2.market.dto.post.response.SellerPostForm;
 import com.team2.market.dto.types.SaleResultType;
 import com.team2.market.dto.users.request.ProfileUpdateRequestDto;
 import com.team2.market.dto.users.response.ProfileGetResponseDto;
+import com.team2.market.entity.AuthRequest;
 import com.team2.market.entity.Post;
 import com.team2.market.entity.Seller;
 import com.team2.market.repository.PostRepository;
@@ -76,5 +78,22 @@ public class SellerService {
 		Seller seller = findByUsername(username);
 
 		return orderService.getAllOrdersForSeller(seller, page);
+	}
+
+	/**
+	 *
+	 * @param seller
+	 * @return
+	 */
+	public Seller save(Seller seller) {
+		return sellerRepository.save(seller);
+	}
+
+	public Seller findById(Long sellerId) {
+		return sellerRepository.findById(sellerId).orElseThrow( () -> new IllegalArgumentException("존재하지 않는 판매자입니다."));
+	}
+
+	public List<Seller> findAll() {
+		return sellerRepository.findAll();
 	}
 }

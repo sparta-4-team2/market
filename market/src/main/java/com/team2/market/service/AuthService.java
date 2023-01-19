@@ -26,8 +26,9 @@ import lombok.RequiredArgsConstructor;
 public class AuthService implements AuthServiceInterface {
 
     private final UserService userService;
+    private final SellerService sellerService;
+
     private final AuthRequestRepository authRequestRepository;
-    private final SellerRepository sellerRepository;
 
     @Override
     @Transactional
@@ -42,11 +43,10 @@ public class AuthService implements AuthServiceInterface {
         user.updateRole(UserRoleType.SELLER);
 
         // Seller를 DB목록에 추가
-        Seller seller = new Seller(user);
-        sellerRepository.save(seller);
+        Seller seller = sellerService.save(new Seller(user));
         
         // 데이터 반환
-        AuthChangeResponseDto responseDto = new AuthChangeResponseDto(user);
+        AuthChangeResponseDto responseDto = new AuthChangeResponseDto(seller);
         
         return responseDto;
     }
@@ -73,9 +73,7 @@ public class AuthService implements AuthServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public AuthGetSellerResponseDto getSellerInfo(Long sellerId) {
-        Seller seller = sellerRepository.findById(sellerId).orElse(null);
-        if(seller == null)
-            throw new IllegalArgumentException("존재하지 않는 판매자입니다.");
+        Seller seller = sellerService.findById(sellerId);
 
         return new AuthGetSellerResponseDto(seller);
     }
@@ -83,7 +81,7 @@ public class AuthService implements AuthServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public List<AuthGetSellerResponseDto> getAllSellers() {
-        List<Seller> sellers = sellerRepository.findAll();
+        List<Seller> sellers = sellerService.findAll();
         return sellers.stream().map(AuthGetSellerResponseDto::new).collect(Collectors.toList());
     }
 

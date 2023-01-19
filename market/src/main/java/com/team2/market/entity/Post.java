@@ -7,7 +7,9 @@ import java.util.List;
 
 import javax.persistence.*;
 
-import com.team2.market.dto.post.request.PostCreateRequestDto;
+import com.team2.market.dto.post.response.*;
+import com.team2.market.dto.post.request.*;
+
 import com.team2.market.dto.types.SaleResultType;
 
 import lombok.Getter;
@@ -33,6 +35,9 @@ public class Post {
     @Column(nullable = false)
     private String contents;
 
+    @Column (nullable = false)
+    private Long userId;
+
     @OneToMany(mappedBy = "post")
     private List<Order> orderlist = new ArrayList<>();
 
@@ -56,7 +61,24 @@ public class Post {
         this.productName = requestDto.getProductName();
         this.price = requestDto.getPrice();
         this.contents = requestDto.getContents();
+        this.price = requestDto.getPrice();;
+        this.contents = requestDto.getContents();;
+    }
 
+    public Post(PostGetRequestDto requestDto, Long userId) {
+        this.userId = getUserId();
+        this.title = requestDto.getTitle();
+        this.productName = requestDto.getProductName();
+        this.price = requestDto.getPrice();;
+        this.contents = requestDto.getContents();;
+    }
+
+    public Post(PostUpdateRequestDto requestDto, Long id) {
+        this.userId = getUserId();
+        this.title = requestDto.getTitle();
+        this.productName = requestDto.getProductName();
+        this.price = requestDto.getPrice();;
+        this.contents = requestDto.getContents();
     }
 
 	public void addOrder(Order order) {

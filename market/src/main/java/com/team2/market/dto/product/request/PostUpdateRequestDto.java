@@ -1,10 +1,10 @@
-package com.team2.market.dto.post.request;
+package com.team2.market.dto.product.request;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
-@NoArgsConstructor
+@Setter
 public class PostUpdateRequestDto {
     private String title;
     private String contents;

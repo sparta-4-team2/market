@@ -60,7 +60,7 @@ public class PostService implements PostServiceInterface{
     }
 
     @Transactional(readOnly = true)//관심 상품 조회
-    public List<PostGetRequestDto> getPost(PostGetRequestDto requestDto, Long postid, HttpServletRequest request) {
+    public PostGetResponseDto getPost(PostGetRequestDto requestDto, Long postid, HttpServletRequest request) {
         // Request에서 Token 가져오기
         String token = jwtUtil.resolveToken(request);
         Claims claims;
@@ -84,24 +84,23 @@ public class PostService implements PostServiceInterface{
             UserRoleType userRoleEnum = user.getRole();
             System.out.println("role = " + userRoleEnum);
 
-            List<PostGetRequestDto> list = new ArrayList<>();
+            List<PostGetResponseDto> list = new ArrayList<>();
             List<Post> postList;
 
-            if (userRoleEnum == UserRoleType.SELLER) {
-                // 사용자 권한이 BUYER가 아닐 경우(SELLER, ADMIN일 경우)
-                postList = new ArrayList<>()/* postRepository.findAllById(user.getId()) */;
+            // 로그인한 user들만 사용할 수 있지만 방어적으로 다 구현하자...(BUYER, SELLER, ADMIN)
+            if (userRoleEnum == UserRoleType.BUYER) {
+                // 사용자 권한이 USER 인 경우.
+                postList = postRepository.findAllById(user.getId());
+            } else if (userRoleEnum == UserRoleType.SELLER) {
+                postList = postRepository.findAllById(user.getId());
             } else if (userRoleEnum == UserRoleType.ADMIN) {
-                postList = new ArrayList<>() /*  postRepository.findAllById(user.getId()) */;
+                postList = postRepository.findAllById(user.getId());
             } else {
                 throw new IllegalArgumentException("권한이 없습니다.");
 
             }
-            for (Post post : postList) {
-                list.add(new PostGetRequestDto(post));
-            }
 
-            return list;
-
+            return new PostGetResponseDto(new Post());
         } else {
             return null;
         }
@@ -144,9 +143,6 @@ public class PostService implements PostServiceInterface{
                 throw new IllegalArgumentException("권한이 없습니다.");
 
             }
-            for (Post post : postList) {
-                list.add(new PostGetRequestDto(post));
-            }
 
             return postList;
 
@@ -155,13 +151,36 @@ public class PostService implements PostServiceInterface{
         }
     }
 
-    @Override
-    public PostUpdateResponseDto updatePost(PostUpdateRequestDto requestDto, Long postid, HttpServletRequest request) {
-        // TODO Auto-generated method stub
-        return null;
+
+
+    @Transactional  //게시글 수정
+    public PostUpdateResponseDto updatePost( PostUpdateRequestDto requestDto, Long postid,
+                                  HttpServletRequest request) {
+
+        String token = jwtUtil.resolveToken(request);
+        Claims claims;
+
+        if (token != null) {
+            if (jwtUtil.validateToken(token)) {
+                claims = jwtUtil.getUserInfoFromToken(token);
+            } else {
+                throw new IllegalArgumentException("Token Error");
+            }
+            // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회
+            User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
+                    () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
+            );
+
+            // 요청받은 DTO로 DB에 저장할 객체 만들기
+            Post post = postRepository.save(new Post(requestDto, user.getId()));
+
+            return new PostUpdateResponseDto(post);
+        } else {
+            return null;
+        }
     }
 
-    @Override
+    @Override//삭제하기
     public PostDeleteResponseDto deletePost(PostDeleteRequestDto requestDto, Long postid, HttpServletRequest request) {
         // TODO Auto-generated method stub
         return null;
