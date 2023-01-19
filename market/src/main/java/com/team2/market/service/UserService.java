@@ -23,6 +23,8 @@ import com.team2.market.util.jwt.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
 
+import javax.servlet.http.HttpServletResponse;
+
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserServiceInterface{
@@ -49,7 +51,7 @@ public class UserService implements UserServiceInterface{
     }
 
     @Override
-    public String login(LoginRequestDto requestDto) {
+    public String login(LoginRequestDto requestDto, HttpServletResponse response) {
         User user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(() -> new UsernameNotFoundException("등록된 사용자가 없습니다."));
 
         if(!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
