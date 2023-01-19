@@ -13,7 +13,7 @@ public class PostGetRequestDto {
     private String productName;
     private int price;
     private String contents;
-    private String nickName;
+
 
 
 
