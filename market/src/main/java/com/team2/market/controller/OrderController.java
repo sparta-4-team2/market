@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequiredArgsConstructor
 public class OrderController {
     private final OrderService orderService;
-    private final DefaultResponseEntity responseEntity;
 
     @GetMapping("/orders")
     public void getOrdersForCustomer() {
@@ -54,7 +53,7 @@ public class OrderController {
         
         OrderResponseDto responseDto = orderService.orderPost(requestDto, postid, userDetails);
         
-        return responseEntity.setResponseEntity(responseDto, ResponseMessage.ORDER_OK, HttpStatus.OK);
+        return DefaultResponseEntity.setResponseEntity(responseDto, ResponseMessage.ORDER_OK, HttpStatus.OK);
     }
     
     class ResponseMessage {

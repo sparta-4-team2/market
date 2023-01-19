@@ -21,8 +21,6 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api")
 public class AuthController {
     private final AuthService authService;
-    private final DefaultResponseEntity responseEntity;
-
     /** 구매자의 판매자 권한 요청
      * 
      */
@@ -30,7 +28,7 @@ public class AuthController {
     public ResponseEntity<Map<String, Object>> requestAuth(@AuthenticationPrincipal UserDetails user) {
         RequestAuthResponseDto data = authService.requestAuthorization(user);
 
-        return responseEntity.setResponseEntity(data, ResponseMessage.AUTHREQUEST_OK, HttpStatus.OK);
+        return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.AUTHREQUEST_OK, HttpStatus.OK);
     }
 
     /** 운영자의 구매자 권한 요청 목록 확인
@@ -40,7 +38,7 @@ public class AuthController {
     public ResponseEntity<Map<String, Object>> getAllAuthRequest() {
         List<RequestAuthResponseDto> data = authService.getAllRequset();
 
-        return responseEntity.setResponseEntity(data, ResponseMessage.GETREQUEST_OK, HttpStatus.OK);
+        return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.GETREQUEST_OK, HttpStatus.OK);
     }
 
     // Post나 Put 메소드 뭘 써야할지 잘몰라서 일시적으로 Post로 작성
@@ -48,7 +46,7 @@ public class AuthController {
     @PostMapping("/auth/request/{requestId}")
     public ResponseEntity<Map<String, Object>> changeAuth(@PathVariable Long requestId) {
         AuthChangeResponseDto data = authService.changeAuthorization(requestId);
-        return responseEntity.setResponseEntity(data, ResponseMessage.AUTHCHANGE_OK, HttpStatus.OK);
+        return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.AUTHCHANGE_OK, HttpStatus.OK);
     }
 
 

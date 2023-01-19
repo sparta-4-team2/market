@@ -25,12 +25,11 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api")
 public class UserController {
     private final UserService userService;
-    private final DefaultResponseEntity responseEntity;
 
     @PostMapping("/signup")
     public ResponseEntity<Map<String, Object>> signup (@RequestBody SignupRequestDto requestDto) {
         userService.createUser(requestDto);
-        return responseEntity.setResponseEntity(null, ResponseMessage.SIGNUP_OK, HttpStatus.OK);
+        return DefaultResponseEntity.setResponseEntity(null, ResponseMessage.SIGNUP_OK, HttpStatus.OK);
     }
 
     @PostMapping("/login")
@@ -38,7 +37,7 @@ public class UserController {
     {
         // login 함수의 반환값 Token을 받아야 하고, 그 토큰을 ResponseEntity를 통해 헤더에 추가해주는 방향으로
         String token = userService.login(requestDto);
-        return responseEntity.setResponseEntity(null, ResponseMessage.LOGIN_OK, token, HttpStatus.OK);
+        return DefaultResponseEntity.setResponseEntity(null, ResponseMessage.LOGIN_OK, token, HttpStatus.OK);
     }
 
 	@PostMapping("/users/profile")
@@ -48,7 +47,7 @@ public class UserController {
 		ProfileGetResponseDto<UserOrderForm> profileDto = userService.updateProfile(
 			requestDto,
 			userDetails.getUsername());
-		return responseEntity.setResponseEntity(profileDto, ResponseMessage.PROFILE_UPDATE_OK, HttpStatus.OK);
+		return DefaultResponseEntity.setResponseEntity(profileDto, ResponseMessage.PROFILE_UPDATE_OK, HttpStatus.OK);
 	}
 
 	@GetMapping("/users/profile")
@@ -56,7 +55,7 @@ public class UserController {
 		@AuthenticationPrincipal UserDetails userDetails) {
 		ProfileGetResponseDto<UserOrderForm> profileDto = userService.getProfile(
 			userDetails.getUsername());
-		return responseEntity.setResponseEntity(profileDto, ResponseMessage.PROFILE_GET_OK, HttpStatus.OK);
+		return DefaultResponseEntity.setResponseEntity(profileDto, ResponseMessage.PROFILE_GET_OK, HttpStatus.OK);
 	}
 
     class ResponseMessage {
