@@ -3,6 +3,7 @@ package com.team2.market.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Id;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Service;
@@ -152,10 +153,9 @@ public class PostService implements PostServiceInterface {
     }
 
 
-
     @Transactional  //게시글 수정
-    public PostUpdateResponseDto updatePost( PostUpdateRequestDto requestDto, Long postid,
-                                  HttpServletRequest request) {
+    public PostUpdateResponseDto updatePost(PostUpdateRequestDto requestDto, Long id,
+                                            HttpServletRequest request) {
 
         String token = jwtUtil.resolveToken(request);
         Claims claims;
@@ -182,7 +182,7 @@ public class PostService implements PostServiceInterface {
 
     @Transactional //게시글 삭제
     @Override
-    public PostDeleteResponseDto deletePost(PostDeleteRequestDto requestDto, Long postid, HttpServletRequest request) {
+    public PostDeleteResponseDto deletePost(PostDeleteRequestDto requestDto, Long userid, HttpServletRequest request) {
         String token = jwtUtil.resolveToken(request);
         Claims claims;
 
@@ -197,6 +197,26 @@ public class PostService implements PostServiceInterface {
                     () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
             );
             //조회한 게시글 삭제
+           //SELLER, ADMIN 삭제 권한 있음. BUYER 권한 없음
+            UserRoleType userRoleEnum = user.getRole();
+            System.out.println("role = " + userRoleEnum);
+            // 사용자 권한이 BUYER가 아닐 경우(SELLER, ADMIN일 경우)
+
+            if (userRoleEnum == UserRoleType.SELLER) {
+                postRepository.deleteById(user.getId());
+
+            } else if (userRoleEnum == UserRoleType.ADMIN) {
+                postRepository.deleteById(user.getId());
+
+            } else {
+                throw new IllegalArgumentException("권한이 없습니다.");
+            }
+
+            Post post = postRepository.findById(userid).orElseThrow(
+                    () -> new IllegalArgumentException("해당 포스트가 존재하지 않습니다.")
+            );
+
+            return new PostDeleteResponseDto(post);
         }
         return null;
     }

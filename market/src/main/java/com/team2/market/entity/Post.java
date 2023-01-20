@@ -81,7 +81,11 @@ public class Post {
         this.contents = requestDto.getContents();
     }
 
-	public void addOrder(Order order) {
+    public void addOrder(Order order) {
         this.orderlist.add(order);
 	}
+
+    public Post(PostDeleteRequestDto requestDto, Long id) {
+        this.userId = getUserId();
+    }
 }
