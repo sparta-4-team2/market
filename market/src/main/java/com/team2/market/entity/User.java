@@ -61,4 +61,8 @@ public class User {
     public void addOrder(Order order) {
         this.orderlist.add(order);
     }
+
+    public boolean isAdmin() {
+        return this.role.equals(UserRoleType.ADMIN);
+    }
 }

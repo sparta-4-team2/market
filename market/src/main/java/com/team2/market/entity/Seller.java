@@ -30,4 +30,8 @@ public class Seller {
     public void addPost(Post post) {
         this.posts.add(post);
     }
+
+    public Long getUserId() {
+        return this.user.getId();
+    }
 }

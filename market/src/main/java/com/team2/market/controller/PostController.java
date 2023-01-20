@@ -36,19 +36,17 @@ public class PostController {
 
     
     @GetMapping("/posts/{postid}")//관심상품 조회 -> 게시물 하나씩 선택해서 볼 수 있다. ->굳이 리스트로 만들 필요 X.
-    public ResponseEntity<Map<String, Object>> getPost(@RequestBody PostGetRequestDto requestDto,
-                                                       @PathVariable Long postid,
+    public ResponseEntity<Map<String, Object>> getPost(@PathVariable Long postid,
                                                        @AuthenticationPrincipal CustomUserDetails userDetails) {
-        PostGetResponseDto data = postService.getPost(requestDto, postid, userDetails);
+        PostGetResponseDto data = postService.getPost(postid, userDetails);
         return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.POSTGET_OK, HttpStatus.OK);
     }
 
     
     @GetMapping("/posts")
-    public ResponseEntity<Map<String, Object>> getAllPost(@RequestBody PostGetRequestDto requestDto,
-                                                          @AuthenticationPrincipal CustomUserDetails userDetails)
+    public ResponseEntity<Map<String, Object>> getAllPost(@AuthenticationPrincipal CustomUserDetails userDetails)
     {
-        List<PostGetResponseDto> data = postService.getAllPost(requestDto, userDetails);
+        List<PostGetResponseDto> data = postService.getAllPost(userDetails);
         return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.POSTGETALL_OK, HttpStatus.OK);
     }
 
@@ -64,11 +62,10 @@ public class PostController {
 
     
     @DeleteMapping("/posts/{postid}")
-    public ResponseEntity<Map<String, Object>> deletePost(@RequestBody PostDeleteRequestDto requestDto,
-                                                          @PathVariable Long postid,
+    public ResponseEntity<Map<String, Object>> deletePost(@PathVariable Long postid,
                                                           @AuthenticationPrincipal CustomUserDetails userDetails)
     {
-        PostDeleteResponseDto data =  postService.deletePost(requestDto, postid, userDetails);
+        PostDeleteResponseDto data =  postService.deletePost(postid, userDetails);
         return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.POSTDELETE_OK, HttpStatus.OK);
     }
 

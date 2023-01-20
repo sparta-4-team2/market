@@ -11,6 +11,7 @@ import com.team2.market.dto.post.response.*;
 import com.team2.market.entity.Post;
 import com.team2.market.entity.Seller;
 import com.team2.market.entity.User;
+import com.team2.market.entity.types.UserRoleType;
 import com.team2.market.repository.PostRepository;
 import com.team2.market.util.security.CustomUserDetails;
 
@@ -37,7 +38,7 @@ public class PostService implements PostServiceInterface {
 
     @Transactional(readOnly = true)//관심 상품 조회
     @Override
-    public PostGetResponseDto getPost(PostGetRequestDto requestDto, Long postid, CustomUserDetails userDetails) {
+    public PostGetResponseDto getPost(Long postid, CustomUserDetails userDetails) {
         Post post = getPost(postid);
 
         return new PostGetResponseDto(post);
@@ -53,7 +54,7 @@ public class PostService implements PostServiceInterface {
     //전체 상품 조회
     @Transactional(readOnly = true)
     @Override
-    public List<PostGetResponseDto> getAllPost(PostGetRequestDto requestDto, CustomUserDetails userDetails) {
+    public List<PostGetResponseDto> getAllPost(CustomUserDetails userDetails) {
         List<Post> posts = getAllPost();
         return posts.stream().map(PostGetResponseDto::new).collect(Collectors.toList());
     }
@@ -67,17 +68,35 @@ public class PostService implements PostServiceInterface {
     @Override
     public PostUpdateResponseDto updatePost(PostUpdateRequestDto requestDto, Long postId,
                                             CustomUserDetails userDetails) {
+        User user = userDetails.getUser();
+        Post post = getPost(postId);
 
-            return null;
+        if(!isAuthority(user, post)) {
+                throw new IllegalArgumentException("글 수정 권한이 없습니다.");
+        }
+        
+        post.updatePost(requestDto);
+        
+        return new PostUpdateResponseDto(post);
     }
 
     @Transactional //게시글 삭제
     @Override
-    public PostDeleteResponseDto deletePost(PostDeleteRequestDto requestDto,
-                                            Long postid,
+    public PostDeleteResponseDto deletePost(Long postid,
                                             CustomUserDetails userDetails) {
+        User user = userDetails.getUser();
+        Post post = getPost(postid);
 
-        return null;
+        if(!isAuthority(user, post)) {
+             throw new IllegalArgumentException("글 삭제 권한이 없습니다.");
+        }
+
+        postRepository.delete(post);
+
+        return new PostDeleteResponseDto(post);
     }
 
+    private boolean isAuthority(User user, Post post) {
+        return user.isAdmin() || post.getSeller().getUserId().equals(user.getId());
+    }
 }

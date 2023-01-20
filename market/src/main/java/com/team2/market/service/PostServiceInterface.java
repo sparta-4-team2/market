@@ -8,8 +8,8 @@ import com.team2.market.util.security.CustomUserDetails;
 
 public interface PostServiceInterface {
     PostCreateResponseDto createPost(PostCreateRequestDto requestDto, CustomUserDetails userDetails);
-    PostGetResponseDto getPost(PostGetRequestDto requestDto, Long postid, CustomUserDetails userDetails);
-    List<PostGetResponseDto> getAllPost(PostGetRequestDto requestDto, CustomUserDetails userDetails);
+    PostGetResponseDto getPost(Long postid, CustomUserDetails userDetails);
+    List<PostGetResponseDto> getAllPost(CustomUserDetails userDetails);
     PostUpdateResponseDto updatePost(PostUpdateRequestDto requestDto, Long postid, CustomUserDetails userDetails);
-    PostDeleteResponseDto deletePost(PostDeleteRequestDto requestDto, Long postid, CustomUserDetails userDetails);
+    PostDeleteResponseDto deletePost(Long postid, CustomUserDetails userDetails);
 }
