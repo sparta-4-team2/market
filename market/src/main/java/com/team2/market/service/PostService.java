@@ -2,6 +2,7 @@ package com.team2.market.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.Id;
 import javax.servlet.http.HttpServletRequest;
@@ -81,34 +82,57 @@ public class PostService implements PostServiceInterface {
                     () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
             );
 
-            // 사용자 권한 가져와서 ADMIN 이면 전체 조회, USER 면 본인이 추가한 부분 조회
-            UserRoleType userRoleEnum = user.getRole();
-            System.out.println("role = " + userRoleEnum);
+            Post post = postRepository.findById(postid).orElse(null);
 
-            List<PostGetResponseDto> list = new ArrayList<>();
-            List<Post> postList;
-
-            // 로그인한 user들만 사용할 수 있지만 방어적으로 다 구현하자...(BUYER, SELLER, ADMIN)
-            if (userRoleEnum == UserRoleType.BUYER) {
-                // 사용자 권한이 USER 인 경우.
-                postList = postRepository.findAllById(user.getId());
-            } else if (userRoleEnum == UserRoleType.SELLER) {
-                postList = postRepository.findAllById(user.getId());
-            } else if (userRoleEnum == UserRoleType.ADMIN) {
-                postList = postRepository.findAllById(user.getId());
-            } else {
-                throw new IllegalArgumentException("권한이 없습니다.");
-
+            if(post == null) {
+                throw new IllegalArgumentException("게시글이 존재하지 않습니다.");
             }
+            
+            // // 사용자 권한 가져와서 ADMIN 이면 전체 조회, USER 면 본인이 추가한 부분 조회
+            // UserRoleType userRoleEnum = user.getRole();
+            // // System.out.println("role = " + userRoleEnum);
 
-            return new PostGetResponseDto(new Post());
+            // List<Post> postList = new ArrayList<>();
+
+            // // 로그인한 user들만 사용할 수 있지만 방어적으로 다 구현하자...(BUYER, SELLER, ADMIN)
+            // if (userRoleEnum == UserRoleType.BUYER) {
+            //     // 사용자 권한이 USER 인 경우.
+            //     postList = postRepository.findAllByUserId(user.getId());
+            // } else if (userRoleEnum == UserRoleType.SELLER) {
+            //     postList = postRepository.findAllById(user.getId());
+            // } else if (userRoleEnum == UserRoleType.ADMIN) {
+            //     postList = postRepository.findAllById(user.getId());
+            // } else {
+            //     throw new IllegalArgumentException("권한이 없습니다.");
+            // }
+
+            // switch (userRoleEnum) {
+            //     case BUYER:
+            //         postList = postRepository.findAllById(user.getId());
+            //         break;
+            //     case SELLER:
+            //         postList = postRepository.findAllById(user.getId());
+            //         break;
+
+            //     case ADMIN:
+            //         postList = postRepository.findAllById(user.getId());
+            //         break;
+
+            //     default:
+            //         throw new IllegalArgumentException("권한이 없습니다.");
+            // }
+            
+
+            return new PostGetResponseDto(post);
         } else {
             return null;
         }
     }
 
-    @Transactional//전체 상품 조회
-    public List<Post> getAllPost(PostGetRequestDto requestDto, HttpServletRequest request) {
+
+    //전체 상품 조회
+    @Transactional(readOnly = true)
+    public List<PostGetResponseDto> getAllPost(PostGetRequestDto requestDto, HttpServletRequest request) {
         // Request에서 Token 가져오기
         String token = jwtUtil.resolveToken(request);
         Claims claims;
@@ -128,24 +152,15 @@ public class PostService implements PostServiceInterface {
                     () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
             );
 
+            List<Post> posts = postRepository.findAll();
+            // List<PostGetResponseDto> responses = new ArrayList<>();
             // 사용자 권한 가져와서 ADMIN,SELLER 이면 전체 조회, BUYER 면 권한 없음
-            UserRoleType userRoleEnum = user.getRole();
-            System.out.println("role = " + userRoleEnum);
 
-            List<PostGetRequestDto> list = new ArrayList<>();
-            List<Post> postList;
+            // for(int i = 0; i<posts.size(); i++){
+            //     responses.add(new PostGetResponseDto(posts.get(i)));
+            // }
 
-            if (userRoleEnum == UserRoleType.SELLER) {
-                // 사용자 권한이 BUYER가 아닐 경우(SELLER, ADMIN일 경우)
-                postList = postRepository.findAll();
-            } else if (userRoleEnum == UserRoleType.ADMIN) {
-                postList = postRepository.findAll();
-            } else {
-                throw new IllegalArgumentException("권한이 없습니다.");
-
-            }
-
-            return postList;
+            return posts.stream().map(PostGetResponseDto::new).collect(Collectors.toList());
 
         } else {
             return null;
@@ -154,7 +169,7 @@ public class PostService implements PostServiceInterface {
 
 
     @Transactional  //게시글 수정
-    public PostUpdateResponseDto updatePost(PostUpdateRequestDto requestDto, Long id,
+    public PostUpdateResponseDto updatePost(PostUpdateRequestDto requestDto, Long postId,
                                             HttpServletRequest request) {
 
         String token = jwtUtil.resolveToken(request);
@@ -171,8 +186,17 @@ public class PostService implements PostServiceInterface {
                     () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
             );
 
+
             // 요청받은 DTO로 DB에 저장할 객체 만들기
-            Post post = postRepository.save(new Post(requestDto, user.getId()));
+            // Post post = postRepository.save(new Post(requestDto, user.getId()));
+
+            Post post = postRepository.findByIdAndUserId(postId, user.getId()).orElse(null);
+
+            if(post == null) {
+                throw new IllegalArgumentException("게시글이 존재하지 않습니다.");
+            }
+
+            post.updatePost(requestDto); // db의 update기능까지 해준다
 
             return new PostUpdateResponseDto(post);
         } else {
@@ -182,7 +206,7 @@ public class PostService implements PostServiceInterface {
 
     @Transactional //게시글 삭제
     @Override
-    public PostDeleteResponseDto deletePost(PostDeleteRequestDto requestDto, Long userid, HttpServletRequest request) {
+    public PostDeleteResponseDto deletePost(PostDeleteRequestDto requestDto, Long postid, HttpServletRequest request) {
         String token = jwtUtil.resolveToken(request);
         Claims claims;
 
@@ -196,25 +220,27 @@ public class PostService implements PostServiceInterface {
             User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
                     () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
             );
+
             //조회한 게시글 삭제
            //SELLER, ADMIN 삭제 권한 있음. BUYER 권한 없음
+
             UserRoleType userRoleEnum = user.getRole();
             System.out.println("role = " + userRoleEnum);
             // 사용자 권한이 BUYER가 아닐 경우(SELLER, ADMIN일 경우)
 
-            if (userRoleEnum == UserRoleType.SELLER) {
-                postRepository.deleteById(user.getId());
-
-            } else if (userRoleEnum == UserRoleType.ADMIN) {
-                postRepository.deleteById(user.getId());
-
-            } else {
-                throw new IllegalArgumentException("권한이 없습니다.");
+            // 삭제 권한 확인
+            if(userRoleEnum != UserRoleType.ADMIN) {
+                if(userRoleEnum != UserRoleType.SELLER) {
+                    throw new IllegalArgumentException("권한이 없습니다.");
+                }
             }
 
-            Post post = postRepository.findById(userid).orElseThrow(
-                    () -> new IllegalArgumentException("해당 포스트가 존재하지 않습니다.")
-            );
+            Post post = postRepository.findById(postid).orElse(null);
+            if(post == null) {
+                throw new IllegalArgumentException("게시글이 존재하지 않습니다.");
+            }
+
+            postRepository.deleteById(postid);
 
             return new PostDeleteResponseDto(post);
         }

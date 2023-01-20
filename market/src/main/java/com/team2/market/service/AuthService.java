@@ -17,7 +17,6 @@ import com.team2.market.entity.User;
 import com.team2.market.entity.types.RequestType;
 import com.team2.market.entity.types.UserRoleType;
 import com.team2.market.repository.AuthRequestRepository;
-import com.team2.market.repository.SellerRepository;
 import com.team2.market.util.security.CustomUserDetails;
 
 import lombok.RequiredArgsConstructor;

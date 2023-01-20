@@ -85,6 +85,13 @@ public class Post {
         this.orderlist.add(order);
 	}
 
+    public void updatePost(PostUpdateRequestDto requestDto) {
+        this.title = requestDto.getTitle();
+        this.productName = requestDto.getProductName();
+        this.price = requestDto.getPrice();
+        this.contents = requestDto.getContents();
+    }
+
     public Post(PostDeleteRequestDto requestDto, Long id) {
         this.userId = getUserId();
     }
