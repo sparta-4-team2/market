@@ -1,10 +1,8 @@
 package com.team2.market.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.persistence.Id;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Service;
@@ -19,6 +17,7 @@ import com.team2.market.repository.OrderRepository;
 import com.team2.market.repository.PostRepository;
 import com.team2.market.repository.UserRepository;
 import com.team2.market.util.jwt.JwtUtil;
+import com.team2.market.util.security.CustomUserDetails;
 
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
@@ -33,9 +32,9 @@ public class PostService implements PostServiceInterface {
     private final JwtUtil jwtUtil;
 
     @Transactional//상품 게시글 등록
-    public PostCreateResponseDto createPost(PostCreateRequestDto requestDto, HttpServletRequest request) {
+    public PostCreateResponseDto createPost(PostCreateRequestDto requestDto, CustomUserDetails userdetails) {
         // Request에서 Token 가져오기
-        String token = jwtUtil.resolveToken(request);
+        String token = "aa"; //jwtUtil.resolveToken(request);
         Claims claims;
 
         // 토큰이 있는 경우에만 관심상품 추가 가능

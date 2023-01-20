@@ -1,16 +1,20 @@
 package com.team2.market.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.team2.market.entity.Post;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import com.team2.market.dto.post.request.*;
 import com.team2.market.dto.post.response.*;
-import com.team2.market.service.OrderService;
 import com.team2.market.service.PostService;
+import com.team2.market.util.security.CustomUserDetails;
+import com.team2.market.util.statics.DefaultResponseEntity;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,49 +26,57 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
-    private final OrderService orderService;
 
     @PostMapping("/posts")
-    public PostCreateResponseDto createPost(@RequestBody PostCreateRequestDto requestDto,
-                                                  HttpServletRequest request)
-    {
-        return postService.createPost(requestDto, request);
+    public ResponseEntity<Map<String, Object>> createPost(@RequestBody PostCreateRequestDto requestDto,
+                                                          @AuthenticationPrincipal CustomUserDetails userDetails) {
+        PostCreateResponseDto data =  postService.createPost(requestDto, userDetails);
+        return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.POSTCREATE_OK, HttpStatus.OK);
     }
 
     
     @GetMapping("/posts/{postid}")//관심상품 조회 -> 게시물 하나씩 선택해서 볼 수 있다. ->굳이 리스트로 만들 필요 X.
-    public PostGetResponseDto getPost(@RequestBody PostGetRequestDto requestDto,
-                                            @PathVariable Long postid,
-                                            HttpServletRequest request)
-    {
-        return postService.getPost(requestDto, postid, request);
+    public ResponseEntity<Map<String, Object>> getPost(@RequestBody PostGetRequestDto requestDto,
+                                                       @PathVariable Long postid,
+                                                       @AuthenticationPrincipal CustomUserDetails userDetails) {
+        PostGetResponseDto data = postService.getPost(requestDto, postid, userDetails);
+        return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.POSTGET_OK, HttpStatus.OK);
     }
 
     
     @GetMapping("/posts")
-    public List<Post> getAllPost(@RequestBody PostGetRequestDto requestDto,
-                                 HttpServletRequest request)
+    public ResponseEntity<Map<String, Object>> getAllPost(@RequestBody PostGetRequestDto requestDto,
+                                                          @AuthenticationPrincipal CustomUserDetails userDetails)
     {
-        return postService.getAllPost(requestDto, request);
+        List<PostGetResponseDto> data = postService.getAllPost(requestDto, userDetails);
+        return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.POSTGETALL_OK, HttpStatus.OK);
     }
 
     
     @PutMapping("/posts/{postid}")
-    public PostUpdateResponseDto updatePost(@RequestBody PostUpdateRequestDto requestDto,
-                                            @PathVariable Long postid,
-                                            HttpServletRequest request)
+    public ResponseEntity<Map<String, Object>> updatePost(@RequestBody PostUpdateRequestDto requestDto,
+                                                          @PathVariable Long postid,
+                                                          @AuthenticationPrincipal CustomUserDetails userDetails)
     {
-        return postService.updatePost(requestDto, postid, request);
+        PostUpdateResponseDto data = postService.updatePost(requestDto, postid, userDetails);
+        return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.POSTUPDATE_OK, HttpStatus.OK);
     }
 
     
     @DeleteMapping("/posts/{postid}")
-    public PostDeleteResponseDto deletePost(@RequestBody PostDeleteRequestDto requestDto,
-                                            @PathVariable Long postid,
-                                            HttpServletRequest request)
+    public ResponseEntity<Map<String, Object>> deletePost(@RequestBody PostDeleteRequestDto requestDto,
+                                                          @PathVariable Long postid,
+                                                          @AuthenticationPrincipal CustomUserDetails userDetails)
     {
-        return postService.deletePost(requestDto, postid, request);
+        PostDeleteResponseDto data =  postService.deletePost(requestDto, postid, userDetails);
+        return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.POSTDELETE_OK, HttpStatus.OK);
     }
 
-    
+    class ResponseMessage {
+        private static final String POSTCREATE_OK = "게시글 생성 성공";
+        private static final String POSTGET_OK = "게시글 정보 조회 성공";
+        private static final String POSTGETALL_OK = "게시글 목록 조회 성공";
+        private static final String POSTUPDATE_OK = "게시글 수정 성공";
+        private static final String POSTDELETE_OK = "게시글 삭제 성공";
+    }
 }
