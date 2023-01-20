@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PostDeleteResponseDto {
     private Long id;
+    
     public PostDeleteResponseDto(Post post) {
         this.id = getId();
     }

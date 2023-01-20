@@ -26,4 +26,8 @@ public class Seller {
     public Seller(User user) {
         this.user = user;
     }
+
+    public void addPost(Post post) {
+        this.posts.add(post);
+    }
 }

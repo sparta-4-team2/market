@@ -2,6 +2,7 @@ package com.team2.market.controller;
 
 import static com.team2.market.controller.UserController.ResponseMessage.*;
 
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 
@@ -44,10 +45,10 @@ public class UserController {
     {
         // login 함수의 반환값 Token을 받아야 하고, 그 토큰을 ResponseEntity를 통해 헤더에 추가해주는 방향으로
         String token = userService.login(requestDto, response);
-
-		Cookie idCookie = new Cookie(requestDto.getUsername(), String.valueOf(requestDto.getUsername()));
-		idCookie.setMaxAge(30 * 60 * 1000); //30분 유효
-		response.addCookie(idCookie);
+		
+		// final Cookie idCookie = new Cookie("Authorization", token);
+		// idCookie.setMaxAge(30 * 60 * 1000); //30분 유효
+		// response.addCookie(idCookie);
 
         return DefaultResponseEntity.setResponseEntity(null, ResponseMessage.LOGIN_OK, token, HttpStatus.OK);
     }
@@ -56,9 +57,9 @@ public class UserController {
 	public String logout (@RequestBody LoginRequestDto requestDto,
 													  HttpServletResponse response)
 	{
-		Cookie idCookie = new Cookie(requestDto.getUsername(), null);
-		idCookie.setMaxAge(0); //만료
-		response.addCookie(idCookie);
+		// Cookie idCookie = new Cookie(requestDto.getUsername(), null);
+		// idCookie.setMaxAge(0); //만료
+		// response.addCookie(idCookie);
 
 		return "로그아웃 성공";
 	}

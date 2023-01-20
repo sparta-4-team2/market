@@ -13,10 +13,13 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Optional;
 
 
 @Slf4j
@@ -26,7 +29,7 @@ public class JwtUtil {
 
     public static final String AUTHORIZATION_HEADER = "Authorization"; // Header에 들어가는 key 값
     public static final String AUTHORIZATION_KEY = "auth"; // 사용자 권한의 key 값
-    private static final String BEARER_PREFIX = "Bearer "; // Token 앞에 붙는 식별자
+    private static final String BEARER_PREFIX = "Bearer"; // Token 앞에 붙는 식별자
     private static final long TOKEN_TIME = 60 * 60 * 1000L; // Token 만료 시간
 
 
@@ -56,9 +59,10 @@ public class JwtUtil {
 
     // Header에서 토큰 가져오기
     public String resolveToken(HttpServletRequest request) { // HttpServletRequest객체의 Header 안에 토큰이 들어있음
+
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER); // AUTHORIZATION_HEADER를 파라미터로 Header에 있는 Token 값을 가져온다
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
-            return bearerToken.substring(7);
+            return bearerToken.substring(6);
         }
         return null;
     }

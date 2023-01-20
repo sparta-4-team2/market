@@ -35,9 +35,6 @@ public class Post {
     @Column(nullable = false)
     private String contents;
 
-    @Column (nullable = false)
-    private Long userId;
-
     @OneToMany(mappedBy = "post")
     private List<Order> orderlist = new ArrayList<>();
 
@@ -51,34 +48,14 @@ public class Post {
 
     private OffsetDateTime tradeEndTime = OffsetDateTime.of(1, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC);
 
-    public Post(String productName, int price, String contents) {
-        this.productName = productName;
-        this.price = price;
-        this.contents = contents;
-    }
-    public Post(PostCreateRequestDto requestDto, Long id) {
+    public Post(PostCreateRequestDto requestDto, Seller seller) {
         this.title = requestDto.getTitle();
         this.productName = requestDto.getProductName();
         this.price = requestDto.getPrice();
         this.contents = requestDto.getContents();
-        this.price = requestDto.getPrice();;
-        this.contents = requestDto.getContents();;
-    }
-
-    public Post(PostGetRequestDto requestDto, Long userId) {
-        this.userId = getUserId();
-        this.title = requestDto.getTitle();
-        this.productName = requestDto.getProductName();
-        this.price = requestDto.getPrice();;
-        this.contents = requestDto.getContents();;
-    }
-
-    public Post(PostUpdateRequestDto requestDto, Long id) {
-        this.userId = getUserId();
-        this.title = requestDto.getTitle();
-        this.productName = requestDto.getProductName();
-        this.price = requestDto.getPrice();;
-        this.contents = requestDto.getContents();
+        
+        this.seller = seller;
+        this.forSale = SaleResultType.S;
     }
 
     public void addOrder(Order order) {
@@ -90,9 +67,7 @@ public class Post {
         this.productName = requestDto.getProductName();
         this.price = requestDto.getPrice();
         this.contents = requestDto.getContents();
+
     }
 
-    public Post(PostDeleteRequestDto requestDto, Long id) {
-        this.userId = getUserId();
-    }
 }
