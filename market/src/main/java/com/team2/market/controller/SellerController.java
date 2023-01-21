@@ -20,6 +20,7 @@ import com.team2.market.dto.orders.response.OrderResponseDto;
 import com.team2.market.dto.post.response.SellerPostForm;
 import com.team2.market.dto.users.request.ProfileUpdateRequestDto;
 import com.team2.market.dto.users.response.ProfileGetResponseDto;
+import com.team2.market.service.OrderService;
 import com.team2.market.service.SellerService;
 import com.team2.market.util.statics.DefaultResponseEntity;
 
@@ -30,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 public class SellerController {
 	private final SellerService sellerService;
+	private final OrderService orderService;
 
 	@GetMapping("/profile")
 	public ResponseEntity<ProfileGetResponseDto<SellerPostForm>> getProfile(@AuthenticationPrincipal UserDetails userDetails) {
@@ -54,13 +56,13 @@ public class SellerController {
 		return DefaultResponseEntity.setResponseEntity(posts, POST_LIST_OK, HttpStatus.OK);
 	}
 
-	// @PostMapping("/orders/{orderId}")
-	// public String /*주문요청처리*/postMethodName(@PathVariable Long orderId,
-	// 	@AuthenticationPrincipal UserDetails userDetails) {
-	// 	sellerService.processOrderRequest(orderId, userDetails.getUsername());
-	//
-	// 	return "";
-	// }
+	@PostMapping("/orders/{orderId}")
+	public String processOrderRequest(@PathVariable Long orderId,
+		@AuthenticationPrincipal UserDetails userDetails) {
+		orderService.processOrderRequest(orderId, userDetails.getUsername());
+
+		return "";
+	}
 
 	class ResponseMessage {
 		public static final String POST_LIST_OK = "거래 신청 이력 조회 성공";
