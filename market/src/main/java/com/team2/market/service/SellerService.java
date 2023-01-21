@@ -11,11 +11,12 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.team2.market.dto.orders.response.OrderResponseDto;
 import com.team2.market.dto.post.response.SellerPostForm;
-import com.team2.market.dto.types.SaleResultType;
+import com.team2.market.dto.types.SaleStatus;
 import com.team2.market.dto.users.request.ProfileUpdateRequestDto;
 import com.team2.market.dto.users.response.ProfileGetResponseDto;
 import com.team2.market.entity.Post;
 import com.team2.market.entity.Seller;
+import com.team2.market.entity.User;
 import com.team2.market.repository.PostRepository;
 import com.team2.market.repository.SellerRepository;
 
@@ -28,23 +29,19 @@ public class SellerService {
 	private final SellerRepository sellerRepository;
 	private final OrderService orderService;
 
-	public ProfileGetResponseDto<SellerPostForm> updateProfile(ProfileUpdateRequestDto request, String username) {
-		Seller seller = findByUsername(username);
+	public ProfileGetResponseDto<SellerPostForm> updateProfile(ProfileUpdateRequestDto request, User user) {
+		Seller seller = findByUsername(user.getUsername());
 		seller.getUser().updateProfile(request);
 
 		return getSellerPostFormProfileGetResponseDto(seller);
 	}
 
-	public ProfileGetResponseDto<SellerPostForm> getProfile(String username) {
-		Seller seller = findByUsername(username);
+	public ProfileGetResponseDto<SellerPostForm> getProfile(User user) {
+		Seller seller = findByUsername(user.getUsername());
 
 		return getSellerPostFormProfileGetResponseDto(seller);
 	}
 
-	public Seller findByUsername(String username) {
-		return sellerRepository.findByUserName(username)
-			.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정 필요"));
-	}
 
 	@NotNull
 	private static PageRequest getPageRequest(String tradeStartTime) {
@@ -56,24 +53,23 @@ public class SellerService {
 		Seller seller) {
 		PageRequest page = getPageRequest("tradeStartTime");
 		List<SellerPostForm> progress = getSellerPostForms(
-			seller, SaleResultType.F, page);
+			seller, SaleStatus.FINISH, page);
 
 		PageRequest page2 = getPageRequest("tradeEndTime");
 		List<SellerPostForm> success = getSellerPostForms(
-			seller, SaleResultType.S, page2);
+			seller, SaleStatus.STILL, page2);
 		return new ProfileGetResponseDto<>(seller.getUser(), progress, success);
 	}
 
 	@NotNull
-	private List<SellerPostForm> getSellerPostForms(Seller seller, SaleResultType type,
+	private List<SellerPostForm> getSellerPostForms(Seller seller, SaleStatus type,
 		PageRequest page) {
-		List<Post> posts = postRepository.findAllBySellerIdAndForSale(
-			seller.getId(), type, page);
-		return SellerPostForm.from(posts);
+		//List<Post> posts = postRepository.findAllBySellerIdAndStatus(seller.getId(), type, page);
+		return SellerPostForm.from(null);
 	}
 
-	public List<OrderResponseDto> getAllOrders(String username, int page) {
-		Seller seller = findByUsername(username);
+	public List<OrderResponseDto> getAllOrders(User user, int page) {
+		Seller seller = findByUsername(user.getUsername());
 
 		return orderService.getAllOrdersForSeller(seller, page);
 	}
@@ -93,5 +89,10 @@ public class SellerService {
 
 	public List<Seller> findAll() {
 		return sellerRepository.findAll();
+	}
+	
+	public Seller findByUsername(String username) {
+		return sellerRepository.findByUserName(username)
+			.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정 필요"));
 	}
 }

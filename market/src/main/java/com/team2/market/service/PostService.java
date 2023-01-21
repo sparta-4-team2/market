@@ -24,9 +24,8 @@ public class PostService implements PostServiceInterface {
     private final SellerService sellerService;
 
     @Transactional//상품 게시글 등록
-    public PostCreateResponseDto createPost(PostCreateRequestDto requestDto, CustomUserDetails userdetails) {
+    public PostCreateResponseDto createPost(PostCreateRequestDto requestDto, User user) {
 
-        User user = userdetails.getUser();
         Seller seller = sellerService.findByUsername(user.getUsername());
 
         Post post = postRepository.save(new Post(requestDto, seller));
@@ -65,8 +64,7 @@ public class PostService implements PostServiceInterface {
     @Transactional  //게시글 수정
     @Override
     public PostUpdateResponseDto updatePost(PostUpdateRequestDto requestDto, Long postId,
-                                            CustomUserDetails userDetails) {
-        User user = userDetails.getUser();
+                                            User user) {
         Post post = getPost(postId);
 
         if(!isAuthority(user, post)) {

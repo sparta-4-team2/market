@@ -29,11 +29,11 @@ public class AuthController {
 
     /** 구매자의 판매자 권한 요청
      *  user의 현재 권한이 Buyer일경우만 가능하게 할것 
-     * @param user
+     * @param userDetails
      */
     @PostMapping("/request")
-    public ResponseEntity<Map<String, Object>> requestAuth(@AuthenticationPrincipal CustomUserDetails user) {
-        RequestAuthResponseDto data = authService.requestAuthorization(user);
+    public ResponseEntity<Map<String, Object>> requestAuth(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        RequestAuthResponseDto data = authService.requestAuthorization(userDetails.getUser());
 
         return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.AUTHREQUEST_OK, HttpStatus.OK);
     }

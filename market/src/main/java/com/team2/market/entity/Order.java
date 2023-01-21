@@ -5,7 +5,7 @@ import java.time.ZoneOffset;
 
 import javax.persistence.*;
 
-import com.team2.market.dto.types.OrderResultType;
+import com.team2.market.dto.types.OrderStatus;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,8 +25,10 @@ public class Order {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column
     @Enumerated(EnumType.STRING)
-    private OrderResultType orderType;
+    private OrderStatus status;
+
     private OffsetDateTime tradeStartTime;
 
     private OffsetDateTime tradeEndTime = OffsetDateTime.of(1, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC);
@@ -35,10 +37,10 @@ public class Order {
         this.post = post;
         this.user = user;
         this.tradeStartTime = OffsetDateTime.now();
-        this.orderType = OrderResultType.IN_PROGRESS;
+        this.status = OrderStatus.IN_PROGRESS;
     }
 
 	public void successOrder() {
-        this.orderType = OrderResultType.SUCCESS;
+        this.status = OrderStatus.SUCCESS;
 	}
 }

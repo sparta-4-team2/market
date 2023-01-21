@@ -11,8 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.team2.market.dto.orders.response.OrderResponseDto;
-import com.team2.market.dto.types.OrderResultType;
-import com.team2.market.dto.types.SaleResultType;
+import com.team2.market.dto.types.OrderStatus;
+import com.team2.market.dto.types.SaleStatus;
 import com.team2.market.entity.Order;
 import com.team2.market.entity.Post;
 import com.team2.market.entity.Seller;
@@ -31,17 +31,16 @@ public class OrderService implements OrderServiceInterface {
     public List<OrderResponseDto> getAllOrders(User user, int page) {
 
         PageRequest sortByTime = PageRequest.of(page, 5, Sort.by("tradeStartTime"));
-        List<Order> orders = orderRepository.findAllByUserAndOrderType(user,
-            OrderResultType.IN_PROGRESS, sortByTime);
+        // List<Order> orders = orderRepository.findAllByUserAndStatus(user,OrderStatus.IN_PROGRESS, sortByTime);
 
-        return OrderResponseDto.from(orders);
+        return OrderResponseDto.from(null);
     }
 
-    public void processOrderRequest(Long orderId, String username) {
+    public void processOrderRequest(Long orderId, User user) {
         Order order = orderRepository.findById(orderId)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "error"));
 
-        if (!order.getPost().getSeller().getUser().getUsername().equals(username)) { // method 화
+        if (!order.getPost().getSeller().getUser().getUsername().equals(user.getUsername())) { // method 화
             System.out.println("Authorization Error");
             return;
         }
@@ -50,10 +49,10 @@ public class OrderService implements OrderServiceInterface {
         order.successOrder();
     }
 
-    public List<OrderResponseDto> getOrderResponseDtoList(String tradeEndTime, User user, OrderResultType orderResultType) {
+    public List<OrderResponseDto> getOrderResponseDtoList(String tradeEndTime, User user, OrderStatus orderResultType) {
         PageRequest pageable = getPageRequest(tradeEndTime);
-        List<Order> orders = orderRepository.findAllByUserAndOrderType(user, orderResultType, pageable);
-        return OrderResponseDto.from(orders);
+        // List<Order> orders = orderRepository.findAllByUserAndStatus(user, orderResultType, pageable);
+        return OrderResponseDto.from(null);
     }
 
     @NotNull
@@ -63,13 +62,14 @@ public class OrderService implements OrderServiceInterface {
 
     public List<OrderResponseDto> getAllOrdersForSeller(Seller seller, int page) {
         PageRequest tradeStartTime = getPageRequest("tradeStartTime");
-        List<Order> orders = orderRepository.findAllBySellerAndSaleType(seller,
-            SaleResultType.F, tradeStartTime);
-        return OrderResponseDto.from(orders);
+        //List<Order> orders = orderRepository.findAllBySellerAndStatus(seller,SaleStatus.FINISH, tradeStartTime);
+        return OrderResponseDto.from(null);
     }
 
+    @Transactional
     public OrderResponseDto sendOrderToSeller(User user, Post post) {
         Order order = new Order(post, user);
+        orderRepository.save(order);
         post.addOrder(order);
         user.addOrder(order);
         return new OrderResponseDto(order);

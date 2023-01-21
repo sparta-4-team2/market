@@ -16,7 +16,7 @@ public class Seller {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @JoinColumn
+    @JoinColumn(name="user_id")
     @OneToOne
     private User user;
 

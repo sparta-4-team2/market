@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +18,7 @@ import com.team2.market.dto.users.request.ProfileUpdateRequestDto;
 import com.team2.market.dto.users.response.ProfileGetResponseDto;
 import com.team2.market.service.OrderService;
 import com.team2.market.service.SellerService;
+import com.team2.market.util.security.CustomUserDetails;
 import com.team2.market.util.statics.DefaultResponseEntity;
 
 import lombok.RequiredArgsConstructor;
@@ -31,31 +31,31 @@ public class SellerController {
 	private final OrderService orderService;
 
 	@GetMapping("/profile")
-	public ResponseEntity<ProfileGetResponseDto<SellerPostForm>> getProfile(@AuthenticationPrincipal UserDetails userDetails) {
+	public ResponseEntity<ProfileGetResponseDto<SellerPostForm>> getProfile(@AuthenticationPrincipal CustomUserDetails userDetails) {
 		ProfileGetResponseDto<SellerPostForm> profileDto = sellerService.getProfile(
-			userDetails.getUsername());
+			userDetails.getUser());
 		return ResponseEntity.ok(profileDto);
 	}
 
 	@PostMapping("/profile")
-	public ResponseEntity<?> updateProfile(ProfileUpdateRequestDto request, @AuthenticationPrincipal UserDetails userDetails) {
+	public ResponseEntity<?> updateProfile(ProfileUpdateRequestDto request, @AuthenticationPrincipal CustomUserDetails userDetails) {
 		ProfileGetResponseDto<SellerPostForm> profileDto = sellerService.updateProfile(
-			request, userDetails.getUsername());
+			request, userDetails.getUser());
 		return ResponseEntity.ok(profileDto);
 	}
 
 	@GetMapping("/orders") // 판매자가 자신에게 온 거래신청 목록 조회
 	public ResponseEntity<Map<String, Object>> getOrdersForSeller(
-		@AuthenticationPrincipal UserDetails userDetails,
+		@AuthenticationPrincipal CustomUserDetails userDetails,
 		@RequestParam("p") int page) {
-		List<OrderResponseDto> posts = sellerService.getAllOrders(userDetails.getUsername(), page);
+		List<OrderResponseDto> posts = sellerService.getAllOrders(userDetails.getUser(), page);
 		return DefaultResponseEntity.setResponseEntity(posts, POST_LIST_OK, HttpStatus.OK);
 	}
 
-	@PostMapping("/orders/{orderId}")
+	@PostMapping("/orders/{orderId}") // 판매자 요청 수락 및 처리
 	public String processOrderRequest(@PathVariable Long orderId,
-		@AuthenticationPrincipal UserDetails userDetails) {
-		orderService.processOrderRequest(orderId, userDetails.getUsername());
+		@AuthenticationPrincipal CustomUserDetails userDetails) {
+		orderService.processOrderRequest(orderId, userDetails.getUser());
 
 		return "";
 	}

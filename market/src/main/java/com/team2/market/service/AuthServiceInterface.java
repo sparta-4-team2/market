@@ -4,10 +4,10 @@ import java.util.List;
 
 
 import com.team2.market.dto.auth.response.*;
-import com.team2.market.util.security.CustomUserDetails;
+import com.team2.market.entity.User;
 
 public interface AuthServiceInterface {
-    RequestAuthResponseDto requestAuthorization(CustomUserDetails userDetails);
+    RequestAuthResponseDto requestAuthorization(User user);
     List<RequestAuthResponseDto> getAllRequset();
     AuthChangeResponseDto changeAuthorization(Long requestId);
     

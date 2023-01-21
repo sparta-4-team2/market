@@ -1,6 +1,6 @@
 package com.team2.market.dto.types;
 
-public enum OrderResultType {
+public enum OrderStatus {
 	FAIL,
 	IN_PROGRESS,
 	SUCCESS

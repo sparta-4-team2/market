@@ -9,7 +9,7 @@ import javax.persistence.*;
 
 import com.team2.market.dto.post.request.*;
 
-import com.team2.market.dto.types.SaleResultType;
+import com.team2.market.dto.types.SaleStatus;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,7 +41,9 @@ public class Post {
     @JoinColumn(name = "seller_id")
     private Seller seller;
 
-    private SaleResultType forSale; // 판매 진행 or 완료 여부
+    @Column
+    @Enumerated(value = EnumType.STRING)
+    private SaleStatus status; // 판매 진행 or 완료 여부
 
     private final OffsetDateTime tradeStartTime = OffsetDateTime.now();
 
@@ -54,7 +56,7 @@ public class Post {
         this.contents = requestDto.getContents();
         
         this.seller = seller;
-        this.forSale = SaleResultType.S;
+        this.status = SaleStatus.STILL;
     }
 
     public void addOrder(Order order) {

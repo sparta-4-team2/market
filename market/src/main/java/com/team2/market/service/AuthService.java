@@ -13,10 +13,9 @@ import com.team2.market.dto.auth.response.RequestAuthResponseDto;
 import com.team2.market.entity.AuthRequest;
 import com.team2.market.entity.Seller;
 import com.team2.market.entity.User;
-import com.team2.market.entity.types.RequestType;
+import com.team2.market.entity.types.RequestStatus;
 import com.team2.market.entity.types.UserRoleType;
 import com.team2.market.repository.AuthRequestRepository;
-import com.team2.market.util.security.CustomUserDetails;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,6 +28,24 @@ public class AuthService implements AuthServiceInterface {
 
     private final AuthRequestRepository authRequestRepository;
 
+
+    /*
+     * 판매자 등록 요청을 위한 service 메소드
+     */
+    @Override
+    @Transactional
+    public RequestAuthResponseDto requestAuthorization(User user) {
+        // 예외 처리 해야함
+        if(user.getRole() != UserRoleType.ROLE_BUYER){
+            throw new IllegalArgumentException("이미 판매자거나 운영자인 회원입니다.");
+        }
+
+        AuthRequest request = new AuthRequest(user, RequestStatus.INPROGRESS);
+        authRequestRepository.save(request);
+
+        return new RequestAuthResponseDto(request);
+    }
+
     @Override
     @Transactional
     public AuthChangeResponseDto changeAuthorization(Long requestId) {
@@ -36,6 +53,9 @@ public class AuthService implements AuthServiceInterface {
         AuthRequest request = getRequest(requestId);
         if(request == null)
             throw new IllegalArgumentException("해당 요청이 존재하지 않습니다.");
+
+        if(request.getStatus().equals(RequestStatus.END))
+            throw new IllegalArgumentException("해당 요청은 종료되었습니다.");
         
         // 요청을 통해 유저의 권한 변경
         User user = request.getUser();
@@ -43,7 +63,7 @@ public class AuthService implements AuthServiceInterface {
 
         // Seller를 DB목록에 추가
         Seller seller = sellerService.save(new Seller(user));
-        
+        request.setState(RequestStatus.END);
         // 데이터 반환
         AuthChangeResponseDto responseDto = new AuthChangeResponseDto(seller);
         
@@ -82,27 +102,6 @@ public class AuthService implements AuthServiceInterface {
     public List<AuthGetSellerResponseDto> getAllSellers() {
         List<Seller> sellers = sellerService.findAll();
         return sellers.stream().map(AuthGetSellerResponseDto::new).collect(Collectors.toList());
-    }
-
-
-    /*
-     * 판매자 등록 요청을 위한 service 메소드
-     */
-    @Override
-    @Transactional
-    public RequestAuthResponseDto requestAuthorization(CustomUserDetails userDetails) {
-        // 유저의 존재 유무 확인
-        User user = userDetails.getUser();
-
-        // 예외 처리 해야함
-        if(user.getRole() != UserRoleType.ROLE_BUYER){
-            throw new IllegalArgumentException("이미 판매자거나 운영자인 회원입니다.");
-        }
-
-        AuthRequest request = new AuthRequest(user, RequestType.INPROGRESS);
-        authRequestRepository.save(request);
-
-        return new RequestAuthResponseDto(request);
     }
 
     // 현재 요청 타입에 관한 내용에 따라 가져올 수 있게 해야함

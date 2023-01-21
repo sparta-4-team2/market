@@ -4,7 +4,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.team2.market.dto.types.OrderResultType;
+import com.team2.market.dto.types.OrderStatus;
 import com.team2.market.entity.Order;
 
 import lombok.Getter;
@@ -16,16 +16,16 @@ public class OrderResponseDto {
 	private final String productName;
 	private final int price;
 	private final OffsetDateTime tradeTime;
-	private final OrderResultType orderResultType;
+	private final OrderStatus orderResultType;
 
 	public OrderResponseDto(Order order) {
 		this.orderId = order.getId();
 		this.postId = order.getPost().getId();
 		this.productName = order.getPost().getProductName();
 		this.price = order.getPost().getPrice();
-		this.orderResultType = order.getOrderType();
+		this.orderResultType = order.getStatus();
 		this.tradeTime =
-			orderResultType.equals(OrderResultType.IN_PROGRESS) ? order.getTradeStartTime() :
+			orderResultType.equals(OrderStatus.IN_PROGRESS) ? order.getTradeStartTime() :
 				order.getTradeEndTime();
 	}
 

@@ -26,7 +26,7 @@ public class PostController {
     public ResponseEntity<Map<String, Object>> createPost(@RequestBody PostCreateRequestDto requestDto,
                                                           @AuthenticationPrincipal CustomUserDetails userDetails) {
         // 분기 나눠서 처리
-        PostCreateResponseDto data =  postService.createPost(requestDto, userDetails);
+        PostCreateResponseDto data =  postService.createPost(requestDto, userDetails.getUser());
         return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.POSTCREATE_OK, HttpStatus.OK);
     }
     
@@ -47,7 +47,7 @@ public class PostController {
     public ResponseEntity<Map<String, Object>> updatePost(@RequestBody PostUpdateRequestDto requestDto,
                                                           @PathVariable Long postid,
                                                           @AuthenticationPrincipal CustomUserDetails userDetails) {
-        PostUpdateResponseDto data = postService.updatePost(requestDto, postid, userDetails);
+        PostUpdateResponseDto data = postService.updatePost(requestDto, postid, userDetails.getUser());
         return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.POSTUPDATE_OK, HttpStatus.OK);
     }
     

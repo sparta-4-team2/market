@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import com.team2.market.dto.orders.response.*;
 import com.team2.market.dto.users.request.*;
 import com.team2.market.dto.users.response.*;
-
+import com.team2.market.service.BuyerService;
 import com.team2.market.service.UserService;
 
 import com.team2.market.util.statics.DefaultResponseEntity;
@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/api/users")
 public class UserController {
     private final UserService userService;
+	private final BuyerService buyerService;
 
     @PostMapping("/signup")
     public ResponseEntity<Map<String, Object>> signup (@RequestBody SignupRequestDto requestDto) {
@@ -85,7 +86,7 @@ public class UserController {
 	public ResponseEntity<Map<String, Object>> sendOrderToSeller(@PathVariable Long postId,
 		@AuthenticationPrincipal UserDetails userDetails) {
 
-		OrderResponseDto responseDto = userService.sendOrderToSeller(userDetails.getUsername(), postId);
+		OrderResponseDto responseDto = buyerService.sendOrderToSeller(userDetails.getUsername(), postId);
 
 		return DefaultResponseEntity.setResponseEntity(
 			responseDto, ResponseMessage.ORDER_OK, HttpStatus.OK);
