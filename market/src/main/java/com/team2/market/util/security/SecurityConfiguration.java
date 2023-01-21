@@ -1,6 +1,7 @@
 package com.team2.market.util.security;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -53,8 +54,13 @@ public class SecurityConfiguration {
 				.antMatchers("/api/signup,/api/login").permitAll()
 				.antMatchers("/api/users/profile").authenticated()
 				.antMatchers("/api/sellers/profile").hasRole("SELLER")
-				// .antMatchers("/api/auth/admim/**").hasAnyRole("ADMIN")
+				// 판매글 관리 권한
+				.antMatchers(HttpMethod.POST, "/api/posts").access("hasRole('SELLER')")
+				.antMatchers(HttpMethod.PUT, "/api/posts/**").access("hasRole('SELLER') or hasRole('ADMIN')")
+				.antMatchers(HttpMethod.DELETE, "/api/posts/**").access("hasRole('SELLER') or hasRole('ADMIN')")
+				// 관리자 권한
 				.antMatchers("/api/auth/admin/**").access("hasRole('ADMIN')")
+				
 			);
 		
 		http.logout()

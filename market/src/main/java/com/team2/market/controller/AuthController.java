@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/auth")
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class AuthController {
     private final AuthService authService;
@@ -31,7 +31,7 @@ public class AuthController {
      *  user의 현재 권한이 Buyer일경우만 가능하게 할것 
      * @param user
      */
-    @PostMapping("/auth/request")
+    @PostMapping("/request")
     public ResponseEntity<Map<String, Object>> requestAuth(@AuthenticationPrincipal CustomUserDetails user) {
         RequestAuthResponseDto data = authService.requestAuthorization(user);
 
@@ -43,7 +43,7 @@ public class AuthController {
      *  forbidden 처리? vs 컨트롤러 내부동작으로 처리?
      * @param user
      */
-    @GetMapping("/auth/admin/request") 
+    @GetMapping("/admin/request") 
     public ResponseEntity<Map<String, Object>> getAllAuthRequest(@AuthenticationPrincipal CustomUserDetails user) {
         List<RequestAuthResponseDto> data = authService.getAllRequset();
 
@@ -57,7 +57,7 @@ public class AuthController {
      * @param requestId
      * @return
      */
-    @PostMapping("/auth/admin/request/{requestId}")
+    @PostMapping("/admin/request/{requestId}")
     public ResponseEntity<Map<String, Object>> changeAuth(@PathVariable Long requestId) {
         AuthChangeResponseDto data = authService.changeAuthorization(requestId);
         return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.AUTHCHANGE_OK, HttpStatus.OK);
@@ -67,7 +67,7 @@ public class AuthController {
      * 
      * @return
      */
-    @GetMapping("/auth/seller")
+    @GetMapping("/admin/seller")
     public ResponseEntity<Map<String, Object>> getAllSellers() {
         List<AuthGetSellerResponseDto> data = authService.getAllSellers();
 
@@ -78,7 +78,7 @@ public class AuthController {
      * 
      * @return
      */
-    @GetMapping("/auth/user")
+    @GetMapping("/admin/user")
     public ResponseEntity<Map<String, Object>> getAllBuyers() {
         List<AuthGetBuyerResponseDto> data = authService.getAllBuyers();
 
@@ -90,7 +90,7 @@ public class AuthController {
      * @param userId
      * @return
      */
-    @GetMapping("/auth/user/{userId}")
+    @GetMapping("/admin/user/{userId}")
     public ResponseEntity<Map<String, Object>> getBuyerInfo(@PathVariable Long userId) {
         AuthGetBuyerResponseDto data = authService.getBuyerInfo(userId);
 
@@ -102,7 +102,7 @@ public class AuthController {
      * @param sellerId
      * @return
      */
-    @GetMapping("/auth/seller/{sellerId}")
+    @GetMapping("/admin/seller/{sellerId}")
     public ResponseEntity<Map<String, Object>> getSellerInfo(@PathVariable Long sellerId) {
         AuthGetSellerResponseDto data = authService.getSellerInfo(sellerId);
 

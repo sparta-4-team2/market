@@ -48,9 +48,8 @@ public class UserController {
         return DefaultResponseEntity.setResponseEntity(null, ResponseMessage.LOGIN_OK, token, HttpStatus.OK);
     }
 
-	@PostMapping("/logout")
-	public ResponseEntity<Map<String, Object>> logout (@RequestBody LoginRequestDto requestDto,
-													  HttpServletResponse response)
+	@GetMapping("/logout")
+	public ResponseEntity<Map<String, Object>> logout (@AuthenticationPrincipal UserDetails userDetails)
 	{
 		// response token 내용 삭제
 		String token = "LOGGED OUT";
