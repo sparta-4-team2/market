@@ -2,7 +2,6 @@ package com.team2.market.controller;
 
 import static com.team2.market.controller.UserController.ResponseMessage.*;
 
-import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +23,6 @@ import com.team2.market.util.statics.DefaultResponseEntity;
 
 import lombok.RequiredArgsConstructor;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
@@ -47,22 +45,16 @@ public class UserController {
         // login 함수의 반환값 Token을 받아야 하고, 그 토큰을 ResponseEntity를 통해 헤더에 추가해주는 방향으로
         String token = userService.login(requestDto, response);
 		
-		// final Cookie idCookie = new Cookie("Authorization", token);
-		// idCookie.setMaxAge(30 * 60 * 1000); //30분 유효
-		// response.addCookie(idCookie);
-
         return DefaultResponseEntity.setResponseEntity(null, ResponseMessage.LOGIN_OK, token, HttpStatus.OK);
     }
 
 	@PostMapping("/logout")
-	public String logout (@RequestBody LoginRequestDto requestDto,
+	public ResponseEntity<Map<String, Object>> logout (@RequestBody LoginRequestDto requestDto,
 													  HttpServletResponse response)
 	{
-		// Cookie idCookie = new Cookie(requestDto.getUsername(), null);
-		// idCookie.setMaxAge(0); //만료
-		// response.addCookie(idCookie);
-
-		return "로그아웃 성공";
+		// response token 내용 삭제
+		String token = "LOGGED OUT";
+		return DefaultResponseEntity.setResponseEntity(null, ResponseMessage.LOGOUT_OK, token, HttpStatus.OK);
 	}
 
 	@PostMapping("/profile")
@@ -101,8 +93,9 @@ public class UserController {
 	}
 
     class ResponseMessage {
-        public static final String SIGNUP_OK = "회원가입 성공";
+		public static final String SIGNUP_OK = "회원가입 성공";
         public static final String LOGIN_OK = "로그인 성공";
+		public static final String LOGOUT_OK = "로그아웃 성공";
         public static final String PROFILE_UPDATE_OK = "프로필 등록 성공";
         public static final String PROFILE_GET_OK = "프로필 등록 성공";
 		public static final String ORDER_LIST_OK = "주문 이력 조회 성공";
