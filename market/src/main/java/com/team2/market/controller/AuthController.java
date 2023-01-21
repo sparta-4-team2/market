@@ -5,8 +5,6 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +13,6 @@ import com.team2.market.dto.auth.response.AuthChangeResponseDto;
 import com.team2.market.dto.auth.response.AuthGetBuyerResponseDto;
 import com.team2.market.dto.auth.response.AuthGetSellerResponseDto;
 import com.team2.market.dto.auth.response.RequestAuthResponseDto;
-import com.team2.market.entity.types.UserRoleType;
 import com.team2.market.service.AuthService;
 
 import com.team2.market.util.security.CustomUserDetails;

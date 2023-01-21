@@ -13,13 +13,10 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
-import java.util.Optional;
 
 
 @Slf4j

@@ -7,7 +7,6 @@ import java.util.List;
 
 import javax.persistence.*;
 
-import com.team2.market.dto.post.response.*;
 import com.team2.market.dto.post.request.*;
 
 import com.team2.market.dto.types.SaleResultType;

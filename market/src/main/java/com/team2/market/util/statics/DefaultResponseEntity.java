@@ -4,11 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.Cookie;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
@@ -68,18 +65,6 @@ public class DefaultResponseEntity {
         result.put("responseMessage", msg);
         result.put("data", data);
         
-		// Cookie idCookie = new Cookie(requestDto.getUsername(), String.valueOf(token));
-		// idCookie.setMaxAge(30 * 60 * 1000); //30분 유효
-		// response.addCookie(idCookie);
-
-        // ResponseCookie responseCookie = ResponseCookie.from("Authorization", token)
-        //                                               .httpOnly(true)
-        //                                               .secure(true)
-        //                                               .path("/")
-        //                                               .maxAge(30*60*1000)
-        //                                               .domain("localhost:8080/")
-        //                                               .build();
-
         return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, token).body(result);
     }
 }

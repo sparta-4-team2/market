@@ -35,7 +35,6 @@ public class UserService implements UserServiceInterface{
     private final PasswordEncoder passwordEncoder;
     private final ProfileService profileService;
     private final OrderService orderService;
-    private final PostService postService;
 
     private static final String ADMIN_TOKEN = "ADMINTOKEN";
 

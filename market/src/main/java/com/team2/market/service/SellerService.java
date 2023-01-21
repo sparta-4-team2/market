@@ -1,7 +1,6 @@
 package com.team2.market.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.PageRequest;
@@ -15,7 +14,6 @@ import com.team2.market.dto.post.response.SellerPostForm;
 import com.team2.market.dto.types.SaleResultType;
 import com.team2.market.dto.users.request.ProfileUpdateRequestDto;
 import com.team2.market.dto.users.response.ProfileGetResponseDto;
-import com.team2.market.entity.AuthRequest;
 import com.team2.market.entity.Post;
 import com.team2.market.entity.Seller;
 import com.team2.market.repository.PostRepository;

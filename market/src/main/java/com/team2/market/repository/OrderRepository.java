@@ -10,7 +10,6 @@ import org.springframework.data.repository.query.Param;
 import com.team2.market.dto.types.OrderResultType;
 import com.team2.market.dto.types.SaleResultType;
 import com.team2.market.entity.Order;
-import com.team2.market.entity.Post;
 import com.team2.market.entity.Seller;
 import com.team2.market.entity.User;
 

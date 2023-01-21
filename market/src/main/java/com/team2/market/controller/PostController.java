@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +23,7 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/posts")
-    public ResponseEntity<?> createPost(@RequestBody PostCreateRequestDto requestDto,
+    public ResponseEntity<Map<String, Object>> createPost(@RequestBody PostCreateRequestDto requestDto,
                                                           @AuthenticationPrincipal CustomUserDetails userDetails) {
         // 분기 나눠서 처리
         PostCreateResponseDto data =  postService.createPost(requestDto, userDetails);

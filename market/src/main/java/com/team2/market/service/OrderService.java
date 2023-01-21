@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.team2.market.dto.orders.response.OrderResponseDto;
-import com.team2.market.dto.post.response.SellerPostForm;
 import com.team2.market.dto.types.OrderResultType;
 import com.team2.market.dto.types.SaleResultType;
 import com.team2.market.entity.Order;
