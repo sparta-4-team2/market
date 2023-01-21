@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.team2.market.dto.types.OrderStatus;
-import com.team2.market.dto.types.SaleStatus;
+import com.team2.market.dto.types.PostStatus;
 import com.team2.market.entity.Order;
 import com.team2.market.entity.Seller;
 import com.team2.market.entity.User;
@@ -16,7 +16,7 @@ import com.team2.market.entity.User;
 public interface OrderRepository extends JpaRepository<Order, Long> {
 	List<Order> findAllByUserAndStatus(User user, OrderStatus status, Pageable pageable);
 
-	@Query("select o from orders o where o.post.seller=:seller and o.post.status=:status")
+	@Query("select o from orders o where o.post.seller=:seller and o.status=:status")
 	List<Order> findAllBySellerAndStatus(@Param("seller") Seller seller,
-		@Param("status") SaleStatus status, Pageable pageable);
+		@Param("status") OrderStatus status, Pageable pageable);
 }

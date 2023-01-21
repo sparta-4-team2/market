@@ -12,7 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.team2.market.dto.orders.response.OrderResponseDto;
 import com.team2.market.dto.types.OrderStatus;
-import com.team2.market.dto.types.SaleStatus;
+import com.team2.market.dto.types.PostStatus;
 import com.team2.market.entity.Order;
 import com.team2.market.entity.Post;
 import com.team2.market.entity.Seller;
@@ -62,13 +62,20 @@ public class OrderService implements OrderServiceInterface {
 
     public List<OrderResponseDto> getAllOrdersForSeller(Seller seller, int page) {
         PageRequest tradeStartTime = getPageRequest("tradeStartTime");
-        List<Order> orders = orderRepository.findAllBySellerAndStatus(seller,SaleStatus.FINISH, tradeStartTime);
+        List<Order> orders = orderRepository.findAllBySellerAndStatus(seller, OrderStatus.IN_PROGRESS, tradeStartTime);
         
         return OrderResponseDto.from(orders);
     }
 
+    /** 구매자의 판매글에 해당 상품 구매 요청
+     * @param user 구매를 원하는 유저
+     * @param post 구매를 원하는 품목
+     * @return 구매를 성공했을 경우, 주문 요청 정보를 반환해준다.
+     * @exception FinishedPostException 해당 주문 요청이, 판매 종료된 글에 보내졌을경우 판매 종료를 알리는 예외처리
+     */
     @Transactional
     public OrderResponseDto sendOrderToSeller(User user, Post post) {
+        
         Order order = new Order(post, user);
         orderRepository.save(order);
         post.addOrder(order);

@@ -1,6 +1,6 @@
 package com.team2.market.dto.post.response;
 
-import com.team2.market.dto.types.SaleStatus;
+import com.team2.market.dto.types.PostStatus;
 import com.team2.market.entity.Post;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +18,7 @@ public class PostCreateResponseDto {
     private String productName;
     // 상품 가격
     private int price;
-    private SaleStatus type;
+    private PostStatus type;
     // 판매자
     private Long sellerId;
     private String sellerName;

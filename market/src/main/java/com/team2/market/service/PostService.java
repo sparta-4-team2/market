@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.team2.market.dto.post.request.*;
 import com.team2.market.dto.post.response.*;
+import com.team2.market.dto.types.PostStatus;
 import com.team2.market.entity.Post;
 import com.team2.market.entity.Seller;
 import com.team2.market.entity.User;
@@ -94,5 +95,9 @@ public class PostService implements PostServiceInterface {
 
     private boolean isAuthority(User user, Post post) {
         return user.isAdmin() || post.getSeller().getUserId().equals(user.getId());
+    }
+
+    public void updatePostStatus(Post post, PostStatus status) {
+        post.updateStatus(status);
     }
 }

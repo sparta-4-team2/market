@@ -11,7 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.team2.market.dto.orders.response.OrderResponseDto;
 import com.team2.market.dto.post.response.SellerPostForm;
-import com.team2.market.dto.types.SaleStatus;
+import com.team2.market.dto.types.PostStatus;
 import com.team2.market.dto.users.request.ProfileUpdateRequestDto;
 import com.team2.market.dto.users.response.ProfileGetResponseDto;
 import com.team2.market.entity.Post;
@@ -53,16 +53,16 @@ public class SellerService {
 		Seller seller) {
 		PageRequest page = getPageRequest("tradeStartTime");
 		List<SellerPostForm> progress = getSellerPostForms(
-			seller, SaleStatus.FINISH, page);
+			seller, PostStatus.FINISH, page);
 
 		PageRequest page2 = getPageRequest("tradeEndTime");
 		List<SellerPostForm> success = getSellerPostForms(
-			seller, SaleStatus.STILL, page2);
+			seller, PostStatus.STILL, page2);
 		return new ProfileGetResponseDto<>(seller.getUser(), progress, success);
 	}
 
 	@NotNull
-	private List<SellerPostForm> getSellerPostForms(Seller seller, SaleStatus type,
+	private List<SellerPostForm> getSellerPostForms(Seller seller, PostStatus type,
 		PageRequest page) {
 		List<Post> posts = postRepository.findAllBySellerIdAndStatus(seller.getId(), type, page);
 		return SellerPostForm.from(posts);

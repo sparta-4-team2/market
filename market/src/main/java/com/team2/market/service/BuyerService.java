@@ -22,6 +22,9 @@ public class BuyerService {
         User user = userService.findByUsername(username);
         Post post = postService.getPost(postId);
         
+        if(post.isFinish()) throw new IllegalArgumentException("판매가 종료된 게시물입니다.");
+
         return orderService.sendOrderToSeller(user, post);
     }
 }
+ 

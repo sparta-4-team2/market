@@ -9,7 +9,7 @@ import javax.persistence.*;
 
 import com.team2.market.dto.post.request.*;
 
-import com.team2.market.dto.types.SaleStatus;
+import com.team2.market.dto.types.PostStatus;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -43,7 +43,7 @@ public class Post {
 
     @Column
     @Enumerated(value = EnumType.STRING)
-    private SaleStatus status; // 판매 진행 or 완료 여부
+    private PostStatus status; // 판매 진행 or 완료 여부
 
     private final OffsetDateTime tradeStartTime = OffsetDateTime.now();
 
@@ -56,7 +56,7 @@ public class Post {
         this.contents = requestDto.getContents();
         
         this.seller = seller;
-        this.status = SaleStatus.STILL;
+        this.status = PostStatus.STILL;
     }
 
     public void addOrder(Order order) {
@@ -69,6 +69,14 @@ public class Post {
         this.price = requestDto.getPrice();
         this.contents = requestDto.getContents();
 
+    }
+
+    public boolean isFinish() {
+        return this.status.equals(PostStatus.FINISH);
+    }
+
+    public void updateStatus(PostStatus status) {
+        this.status = status;
     }
 
 }
