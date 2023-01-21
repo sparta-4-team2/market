@@ -94,8 +94,7 @@ public class OrderService implements OrderServiceInterface {
     @Transactional
     public OrderResponseDto sendOrderToSeller(User user, Post post) {
         
-        Order order = new Order(post, user);
-        orderRepository.save(order);
+        Order order = orderRepository.save(new Order(post, user));
         post.addOrder(order);
         user.addOrder(order);
         return new OrderResponseDto(order);

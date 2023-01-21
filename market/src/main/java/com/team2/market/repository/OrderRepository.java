@@ -22,5 +22,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
 	List<Order> findAllByUser(User user, Pageable pageable);
 
-	List<Order> findAllBySeller(Seller seller, PageRequest tradeStartTime);
+	@Query("select o from orders o where o.post.seller=:seller")
+	List<Order> findAllBySeller(@Param("seller")Seller seller, PageRequest tradeStartTime);
 }

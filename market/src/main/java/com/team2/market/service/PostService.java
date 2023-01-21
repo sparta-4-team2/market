@@ -43,6 +43,7 @@ public class PostService implements PostServiceInterface {
         return new PostGetResponseDto(post);
     }
 
+    @Transactional
     public Post getPost(Long postid) {
         return postRepository.findById(postid).orElseThrow( 
             () -> new IllegalArgumentException("조회할 수 있는 게시글이 없습니다.")

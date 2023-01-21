@@ -1,5 +1,7 @@
 package com.team2.market.util.test;
 
+import javax.transaction.Transactional;
+
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,6 +34,7 @@ public class TestDataRunner implements ApplicationRunner {
     
     
     @Override
+    @Transactional 
     public void run(ApplicationArguments args) throws Exception {
         
         // 일반 유저 생성

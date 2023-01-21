@@ -34,7 +34,7 @@ public class Post {
     @Column(nullable = false)
     private String contents;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
     private List<Order> orderlist = new ArrayList<>();
 
     @ManyToOne
@@ -59,6 +59,7 @@ public class Post {
         this.status = PostStatus.STILL;
     }
 
+    // 영속성 컨텍스트에서 문제가 있는듯?
     public void addOrder(Order order) {
         this.orderlist.add(order);
 	}
