@@ -18,7 +18,7 @@ public class ProfileService {
 
 	public ProfileGetResponseDto<OrderResponseDto> getUserOrderFormProfileGetResponseDto(User user) {
 		List<OrderResponseDto> progress = orderService.getOrderResponseDtoList("tradeStartTime", user,
-			OrderStatus.FAIL);
+			OrderStatus.ALL);
 
 		List<OrderResponseDto> success = orderService.getOrderResponseDtoList("tradeEndTime", user,
 			OrderStatus.SUCCESS);

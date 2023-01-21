@@ -111,8 +111,8 @@ public class UserService implements UserServiceInterface{
         return userRepository.findAllByRole(role);
     }
 
-    public List<OrderResponseDto> getAllOrders(String username, int page) {
+    public List<OrderResponseDto> getAllOrders(String username, int page, int type) {
         User user = findByUsername(username);
-        return orderService.getAllOrders(user, page);
+        return orderService.getAllOrders(user, page, type);
     }
 }

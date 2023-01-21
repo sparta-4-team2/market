@@ -76,13 +76,14 @@ public class UserController {
 	@GetMapping("/orders") // 사용자가 자신의 주문내역 조회
 	public ResponseEntity<Map<String, Object>> getOrdersForCustomer(
 		@AuthenticationPrincipal UserDetails userDetails,
-		@RequestParam("p") int page) {
-		List<OrderResponseDto> orders = userService.getAllOrders(userDetails.getUsername(), page);
+		@RequestParam("page") int page,
+		@RequestParam("type") int type) {
+		List<OrderResponseDto> orders = userService.getAllOrders(userDetails.getUsername(), page, type);
 
 		return DefaultResponseEntity.setResponseEntity(orders, ORDER_LIST_OK, HttpStatus.OK);
 	}
 
-	@PostMapping("/posts/{postId}/")
+	@PostMapping("/posts/{postId}")
 	public ResponseEntity<Map<String, Object>> sendOrderToSeller(@PathVariable Long postId,
 		@AuthenticationPrincipal UserDetails userDetails) {
 

@@ -68,10 +68,10 @@ public class SellerService {
 		return SellerPostForm.from(posts);
 	}
 
-	public List<OrderResponseDto> getAllOrders(User user, int page) {
+	public List<OrderResponseDto> getAllOrders(User user, int page, int type) {
 		Seller seller = findByUsername(user.getUsername());
 
-		return orderService.getAllOrdersForSeller(seller, page);
+		return orderService.getAllOrdersForSeller(seller, page, type);
 	}
 
 	/**

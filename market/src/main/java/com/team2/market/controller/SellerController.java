@@ -47,20 +47,22 @@ public class SellerController {
 	@GetMapping("/orders") // 판매자가 자신에게 온 거래신청 목록 조회
 	public ResponseEntity<Map<String, Object>> getOrdersForSeller(
 		@AuthenticationPrincipal CustomUserDetails userDetails,
-		@RequestParam("p") int page) {
-		List<OrderResponseDto> posts = sellerService.getAllOrders(userDetails.getUser(), page);
-		return DefaultResponseEntity.setResponseEntity(posts, POST_LIST_OK, HttpStatus.OK);
+		@RequestParam("page") int page,
+		@RequestParam("type") int type) {
+		List<OrderResponseDto> posts = sellerService.getAllOrders(userDetails.getUser(), page, type);
+		return DefaultResponseEntity.setResponseEntity(posts, ORDER_LIST_OK, HttpStatus.OK);
 	}
 
 	@PostMapping("/orders/{orderId}") // 판매자 요청 수락 및 처리
-	public String processOrderRequest(@PathVariable Long orderId,
+	public ResponseEntity<Map<String, Object>> processOrderRequest(@PathVariable Long orderId,
 		@AuthenticationPrincipal CustomUserDetails userDetails) {
-		orderService.processOrderRequest(orderId, userDetails.getUser());
+		var data = orderService.processOrderRequest(orderId, userDetails.getUser());
 
-		return "";
+		return DefaultResponseEntity.setResponseEntity(data, ORDER_PROCESS_OK, HttpStatus.OK);
 	}
 
 	class ResponseMessage {
-		public static final String POST_LIST_OK = "거래 신청 이력 조회 성공";
+		public static final String ORDER_LIST_OK = "거래 신청 이력 조회 성공";
+		public static final String ORDER_PROCESS_OK = "거래 종료";
 	}
 }

@@ -9,5 +9,5 @@ import com.team2.market.entity.User;
 public interface OrderServiceInterface {
     OrderResponseDto sendOrderToSeller(User user, Post post);
 
-    List<OrderResponseDto> getAllOrders(User user, int page);
+    List<OrderResponseDto> getAllOrders(User user, int page, int type);
 }

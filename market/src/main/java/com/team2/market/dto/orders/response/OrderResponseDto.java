@@ -17,6 +17,7 @@ public class OrderResponseDto {
 	private final int price;
 	private final OffsetDateTime tradeTime;
 	private final OrderStatus orderResultType;
+	private final OrderStatus status;
 
 	public OrderResponseDto(Order order) {
 		this.orderId = order.getId();
@@ -27,6 +28,7 @@ public class OrderResponseDto {
 		this.tradeTime =
 			orderResultType.equals(OrderStatus.IN_PROGRESS) ? order.getTradeStartTime() :
 				order.getTradeEndTime();
+		this.status = order.getStatus();
 	}
 
 	public static List<OrderResponseDto> from(List<Order> orders) {

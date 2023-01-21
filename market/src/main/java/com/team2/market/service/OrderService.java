@@ -28,25 +28,36 @@ public class OrderService implements OrderServiceInterface {
     private final OrderRepository orderRepository;
 
     @Override
-    public List<OrderResponseDto> getAllOrders(User user, int page) {
+    public List<OrderResponseDto> getAllOrders(User user, int page, int type) {
+        OrderStatus status = OrderStatus.typeToOrderStatus(type);
 
         PageRequest sortByTime = PageRequest.of(page, 5, Sort.by("tradeStartTime"));
-        List<Order> orders = orderRepository.findAllByUserAndStatus(user,OrderStatus.IN_PROGRESS, sortByTime);
+        List<Order> orders;
+        if(status.equals(OrderStatus.ALL)) {
+            orders = orderRepository.findAllByUser(user, sortByTime);
+        }
+        else {
+            orders = orderRepository.findAllByUserAndStatus(user, status, sortByTime);
+        }
 
         return OrderResponseDto.from(orders);
     }
 
-    public void processOrderRequest(Long orderId, User user) {
+    @Transactional
+    public OrderRequestFinishResponseDto processOrderRequest(Long orderId, User user) {
         Order order = orderRepository.findById(orderId)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "error"));
 
         if (!order.getPost().getSeller().getUser().getUsername().equals(user.getUsername())) { // method 화
-            System.out.println("Authorization Error");
-            return;
+            throw new IllegalArgumentException("Authorization Error");
         }
 
         // order 주문상태 변경 -> 주문성공
         order.successOrder();
+        // post 판매 종료 처리
+        order.getPost().finishSale();
+
+        return new OrderRequestFinishResponseDto(order);
     }
 
     public List<OrderResponseDto> getOrderResponseDtoList(String tradeEndTime, User user, OrderStatus orderResultType) {
@@ -60,9 +71,16 @@ public class OrderService implements OrderServiceInterface {
         return PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC,property));
     }
 
-    public List<OrderResponseDto> getAllOrdersForSeller(Seller seller, int page) {
+    public List<OrderResponseDto> getAllOrdersForSeller(Seller seller, int page, int type) {
+        OrderStatus status = OrderStatus.typeToOrderStatus(type);
         PageRequest tradeStartTime = getPageRequest("tradeStartTime");
-        List<Order> orders = orderRepository.findAllBySellerAndStatus(seller, OrderStatus.IN_PROGRESS, tradeStartTime);
+        List<Order> orders;
+
+        if(status.equals(OrderStatus.ALL)) {
+            orders = orderRepository.findAllBySeller(seller, tradeStartTime);
+        } else {
+            orders = orderRepository.findAllBySellerAndStatus(seller, status, tradeStartTime);
+        }
         
         return OrderResponseDto.from(orders);
     }

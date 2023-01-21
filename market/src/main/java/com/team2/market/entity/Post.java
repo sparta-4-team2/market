@@ -79,4 +79,8 @@ public class Post {
         this.status = status;
     }
 
+    public void finishSale() {
+        this.status = PostStatus.FINISH;
+    }
+
 }
