@@ -1,4 +1,4 @@
-package com.team2.market.service;
+package com.team2.market.dto.orders.response;
 
 import com.team2.market.dto.types.OrderStatus;
 import com.team2.market.entity.Order;

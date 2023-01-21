@@ -6,10 +6,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.team2.market.dto.post.request.PostCreateRequestDto;
+import com.team2.market.dto.post.response.PostCreateResponseDto;
+import com.team2.market.entity.Post;
 import com.team2.market.entity.Seller;
 import com.team2.market.entity.User;
 import com.team2.market.entity.types.UserRoleType;
 import com.team2.market.service.AuthService;
+import com.team2.market.service.OrderService;
 import com.team2.market.service.PostService;
 import com.team2.market.service.SellerService;
 import com.team2.market.service.UserService;
@@ -24,6 +27,7 @@ public class TestDataRunner implements ApplicationRunner {
     private final UserService userService;
     private final AuthService authService;
     private final PostService postService;
+    private final OrderService orderService;
     private final SellerService sellerService;
     
     
@@ -49,22 +53,27 @@ public class TestDataRunner implements ApplicationRunner {
         authService.changeAuthorization(requestId2);
 
         // 각각 유저들의 판매글 작성
-        PostCreateRequestDto post1 = new PostCreateRequestDto("제목1", "판매물1", 10000, "내용1");
-        PostCreateRequestDto post2 = new PostCreateRequestDto("제목2", "판매물2", 10000, "내용2");
-        PostCreateRequestDto post3 = new PostCreateRequestDto("제목3", "판매물3", 10000, "내용3");
-        PostCreateRequestDto post4 = new PostCreateRequestDto("제목4", "판매물4", 10000, "내용4");
-        PostCreateRequestDto post5 = new PostCreateRequestDto("제목5", "판매물5", 10000, "내용5");
-        PostCreateRequestDto post6 = new PostCreateRequestDto("제목6", "판매물6", 10000, "내용6");
+        Post post1 = createPost(new PostCreateRequestDto("제목1", "판매물1", 10000, "내용1"), testUser1);
+        Post post2 = createPost(new PostCreateRequestDto("제목2", "판매물2", 10000, "내용2"), testUser1);
+        Post post3 = createPost(new PostCreateRequestDto("제목3", "판매물3", 10000, "내용3"), testUser1);
+        Post post4 = createPost(new PostCreateRequestDto("제목4", "판매물4", 10000, "내용4"), testUser2);
+        Post post5 = createPost(new PostCreateRequestDto("제목5", "판매물5", 10000, "내용5"), testUser2);
+        Post post6 = createPost(new PostCreateRequestDto("제목6", "판매물6", 10000, "내용6"), testUser2);
 
-        postService.createPost(post1, testUser1);
-        postService.createPost(post2, testUser1);
-        postService.createPost(post3, testUser1);
-        postService.createPost(post4, testUser2);
-        postService.createPost(post5, testUser2);
-        postService.createPost(post6, testUser2);
+        orderService.sendOrderToSeller(testUser3, post1);   
+        orderService.sendOrderToSeller(testUser4, post2);   
+        orderService.sendOrderToSeller(testUser5, post3);   
+        orderService.sendOrderToSeller(testUser3, post4);   
+        orderService.sendOrderToSeller(testUser4, post5);   
+        orderService.sendOrderToSeller(testUser5, post6);   
     }
 
     private User createUser(String username, String password, UserRoleType role) {
         return new User(username, passwordEncoder.encode(password), role);
+    }
+
+    private Post createPost(PostCreateRequestDto requestDto, User user) {
+        PostCreateResponseDto response = postService.createPost(requestDto, user);
+        return postService.getPost(response.getId());
     }
 }

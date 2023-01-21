@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.team2.market.dto.orders.response.OrderRequestFinishResponseDto;
 import com.team2.market.dto.orders.response.OrderResponseDto;
 import com.team2.market.dto.types.OrderStatus;
-import com.team2.market.dto.types.PostStatus;
 import com.team2.market.entity.Order;
 import com.team2.market.entity.Post;
 import com.team2.market.entity.Seller;
