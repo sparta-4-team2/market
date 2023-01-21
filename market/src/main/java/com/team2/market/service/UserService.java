@@ -30,11 +30,14 @@ import javax.servlet.http.HttpServletResponse;
 public class UserService implements UserServiceInterface{
 
     private final UserRepository userRepository;
+    
     private final JwtUtil jwtService;
     private final PasswordEncoder passwordEncoder;
     private final ProfileService profileService;
     private final OrderService orderService;
     private final PostService postService;
+
+    private static final String ADMIN_TOKEN = "ADMINTOKEN";
 
     @Override
     public void createUser(SignupRequestDto requestDto) {
@@ -45,7 +48,14 @@ public class UserService implements UserServiceInterface{
         if (found.isPresent()) {
             throw new IllegalArgumentException("중복된 사용자가 존재합니다.");
         }
-        UserRoleType role = UserRoleType.BUYER;
+        
+        UserRoleType role = UserRoleType.ROLE_BUYER;
+
+        if(requestDto.isAdmin()) {
+            if(requestDto.getAdminToken().matches(ADMIN_TOKEN))
+                role = UserRoleType.ROLE_ADMIN;
+        }
+
         User user = new User(username, password, role);
         userRepository.save(user);
     }
@@ -79,6 +89,8 @@ public class UserService implements UserServiceInterface{
         return userRepository.findByUsername(username)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "세부사항 후에 추가"));
     }
+    
+    /// UserRepository 지원함수
 
     /** 유저를 userId를 통해 조회
      * @param userId 사용자의 Id

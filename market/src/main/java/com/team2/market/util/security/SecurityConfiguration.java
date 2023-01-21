@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.team2.market.entity.types.UserRoleType;
 import com.team2.market.util.jwt.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfiguration {
 	private final JwtUtil jwtUtil;
 	private final UserDetailsService userDetailsService;
+	private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -49,13 +51,14 @@ public class SecurityConfiguration {
 			.addFilterBefore(jwtVerificationFilter(), UsernamePasswordAuthenticationFilter.class)
 			.exceptionHandling().authenticationEntryPoint(jwtEntryPoint());
 
-		http // 추가 적인 api 및 권한 설정 필요
-			.authorizeHttpRequests(auth -> auth
+		http.authorizeRequests(auth -> auth
 				.antMatchers("/api/signup,/api/login").permitAll()
 				.antMatchers("/api/users/profile").authenticated()
 				.antMatchers("/api/sellers/profile").hasRole("SELLER")
-				.antMatchers("/api/auth").hasRole("ADMIN")
+				// .antMatchers("/api/auth/admim/**").hasAnyRole("ADMIN")
+				.antMatchers("/api/auth/admin/**").access("hasRole('ADMIN')")
 			);
+
 		http.logout()
 				.logoutUrl("/api/logout")
 				.logoutSuccessUrl("/api/login");

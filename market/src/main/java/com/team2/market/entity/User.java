@@ -63,6 +63,6 @@ public class User {
     }
 
     public boolean isAdmin() {
-        return this.role.equals(UserRoleType.ADMIN);
+        return this.role.equals(UserRoleType.ROLE_ADMIN);
     }
 }

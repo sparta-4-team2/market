@@ -51,8 +51,7 @@ public class SellerController {
 	public ResponseEntity<Map<String, Object>> getOrdersForSeller(
 		@AuthenticationPrincipal UserDetails userDetails,
 		@RequestParam("p") int page) {
-		List<OrderResponseDto> posts = sellerService.getAllOrders(userDetails.getUsername(),
-			page);
+		List<OrderResponseDto> posts = sellerService.getAllOrders(userDetails.getUsername(), page);
 		return DefaultResponseEntity.setResponseEntity(posts, POST_LIST_OK, HttpStatus.OK);
 	}
 

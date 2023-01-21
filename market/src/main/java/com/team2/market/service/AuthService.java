@@ -40,7 +40,7 @@ public class AuthService implements AuthServiceInterface {
         
         // 요청을 통해 유저의 권한 변경
         User user = request.getUser();
-        user.updateRole(UserRoleType.SELLER);
+        user.updateRole(UserRoleType.ROLE_SELLER);
 
         // Seller를 DB목록에 추가
         Seller seller = sellerService.save(new Seller(user));
@@ -56,7 +56,7 @@ public class AuthService implements AuthServiceInterface {
     @Transactional(readOnly = true)
     public AuthGetBuyerResponseDto getBuyerInfo(Long userId) {
         User user = userService.findById(userId);
-        if (user.getRole() != UserRoleType.BUYER)
+        if (user.getRole() != UserRoleType.ROLE_BUYER)
             throw new IllegalArgumentException("고객이 아닙니다.");
 
         return new AuthGetBuyerResponseDto(user);
@@ -65,7 +65,7 @@ public class AuthService implements AuthServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public List<AuthGetBuyerResponseDto> getAllBuyers() {
-        List<User> userlist = userService.findAllByRole(UserRoleType.BUYER);
+        List<User> userlist = userService.findAllByRole(UserRoleType.ROLE_BUYER);
         return userlist.stream().map(AuthGetBuyerResponseDto::new).collect(Collectors.toList());
     }
     
@@ -96,7 +96,7 @@ public class AuthService implements AuthServiceInterface {
         User user = userDetails.getUser();
 
         // 예외 처리 해야함
-        if(user.getRole() != UserRoleType.BUYER){
+        if(user.getRole() != UserRoleType.ROLE_BUYER){
             throw new IllegalArgumentException("이미 판매자거나 운영자인 회원입니다.");
         }
 

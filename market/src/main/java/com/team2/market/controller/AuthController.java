@@ -5,6 +5,9 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +15,7 @@ import com.team2.market.dto.auth.response.AuthChangeResponseDto;
 import com.team2.market.dto.auth.response.AuthGetBuyerResponseDto;
 import com.team2.market.dto.auth.response.AuthGetSellerResponseDto;
 import com.team2.market.dto.auth.response.RequestAuthResponseDto;
+import com.team2.market.entity.types.UserRoleType;
 import com.team2.market.service.AuthService;
 
 import com.team2.market.util.security.CustomUserDetails;
@@ -22,10 +26,12 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
+@EnableGlobalMethodSecurity(securedEnabled = true)
 public class AuthController {
     private final AuthService authService;
+
     /** 구매자의 판매자 권한 요청
-     *
+     *  user의 현재 권한이 Buyer일경우만 가능하게 할것 
      * @param user
      */
     @PostMapping("/auth/request")
@@ -36,11 +42,11 @@ public class AuthController {
     }
 
     /** 운영자의 구매자 권한 요청 목록 확인
-     * 
+     *  운영자 권한 넣어줘야할 것
+     *  forbidden 처리? vs 컨트롤러 내부동작으로 처리?
      * @param user
      */
-    // 운영자 권한 넣어줘야할 것
-    @GetMapping("/auth/request") 
+    @GetMapping("/auth/admin/request") 
     public ResponseEntity<Map<String, Object>> getAllAuthRequest(@AuthenticationPrincipal CustomUserDetails user) {
         List<RequestAuthResponseDto> data = authService.getAllRequset();
 
@@ -54,7 +60,7 @@ public class AuthController {
      * @param requestId
      * @return
      */
-    @PostMapping("/auth/request/{requestId}")
+    @PostMapping("/auth/admin/request/{requestId}")
     public ResponseEntity<Map<String, Object>> changeAuth(@PathVariable Long requestId) {
         AuthChangeResponseDto data = authService.changeAuthorization(requestId);
         return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.AUTHCHANGE_OK, HttpStatus.OK);

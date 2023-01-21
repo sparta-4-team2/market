@@ -3,10 +3,9 @@ package com.team2.market.controller;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,10 +15,7 @@ import com.team2.market.service.PostService;
 import com.team2.market.util.security.CustomUserDetails;
 import com.team2.market.util.statics.DefaultResponseEntity;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
+import lombok.RequiredArgsConstructor; 
 
 @RestController
 @RequestMapping("/api")
@@ -28,12 +24,12 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/posts")
-    public ResponseEntity<Map<String, Object>> createPost(@RequestBody PostCreateRequestDto requestDto,
+    public ResponseEntity<?> createPost(@RequestBody PostCreateRequestDto requestDto,
                                                           @AuthenticationPrincipal CustomUserDetails userDetails) {
+        // 분기 나눠서 처리
         PostCreateResponseDto data =  postService.createPost(requestDto, userDetails);
         return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.POSTCREATE_OK, HttpStatus.OK);
     }
-
     
     @GetMapping("/posts/{postid}")//관심상품 조회 -> 게시물 하나씩 선택해서 볼 수 있다. ->굳이 리스트로 만들 필요 X.
     public ResponseEntity<Map<String, Object>> getPost(@PathVariable Long postid,
@@ -41,30 +37,24 @@ public class PostController {
         PostGetResponseDto data = postService.getPost(postid, userDetails);
         return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.POSTGET_OK, HttpStatus.OK);
     }
-
     
     @GetMapping("/posts")
-    public ResponseEntity<Map<String, Object>> getAllPost(@AuthenticationPrincipal CustomUserDetails userDetails)
-    {
+    public ResponseEntity<Map<String, Object>> getAllPost(@AuthenticationPrincipal CustomUserDetails userDetails) {
         List<PostGetResponseDto> data = postService.getAllPost(userDetails);
         return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.POSTGETALL_OK, HttpStatus.OK);
     }
-
     
     @PutMapping("/posts/{postid}")
     public ResponseEntity<Map<String, Object>> updatePost(@RequestBody PostUpdateRequestDto requestDto,
                                                           @PathVariable Long postid,
-                                                          @AuthenticationPrincipal CustomUserDetails userDetails)
-    {
+                                                          @AuthenticationPrincipal CustomUserDetails userDetails) {
         PostUpdateResponseDto data = postService.updatePost(requestDto, postid, userDetails);
         return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.POSTUPDATE_OK, HttpStatus.OK);
     }
-
     
     @DeleteMapping("/posts/{postid}")
     public ResponseEntity<Map<String, Object>> deletePost(@PathVariable Long postid,
-                                                          @AuthenticationPrincipal CustomUserDetails userDetails)
-    {
+                                                          @AuthenticationPrincipal CustomUserDetails userDetails) {
         PostDeleteResponseDto data =  postService.deletePost(postid, userDetails);
         return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.POSTDELETE_OK, HttpStatus.OK);
     }

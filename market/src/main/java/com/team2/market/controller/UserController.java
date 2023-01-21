@@ -35,6 +35,7 @@ public class UserController {
 
     @PostMapping("/signup")
     public ResponseEntity<Map<String, Object>> signup (@RequestBody SignupRequestDto requestDto) {
+		System.out.println(requestDto);
         userService.createUser(requestDto);
         return DefaultResponseEntity.setResponseEntity(null, ResponseMessage.SIGNUP_OK, HttpStatus.OK);
     }

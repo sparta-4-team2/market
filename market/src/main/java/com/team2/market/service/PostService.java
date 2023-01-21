@@ -11,7 +11,6 @@ import com.team2.market.dto.post.response.*;
 import com.team2.market.entity.Post;
 import com.team2.market.entity.Seller;
 import com.team2.market.entity.User;
-import com.team2.market.entity.types.UserRoleType;
 import com.team2.market.repository.PostRepository;
 import com.team2.market.util.security.CustomUserDetails;
 
@@ -43,7 +42,6 @@ public class PostService implements PostServiceInterface {
 
         return new PostGetResponseDto(post);
     }
-
 
     public Post getPost(Long postid) {
         return postRepository.findById(postid).orElseThrow( 
