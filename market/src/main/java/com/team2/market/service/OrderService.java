@@ -31,9 +31,9 @@ public class OrderService implements OrderServiceInterface {
     public List<OrderResponseDto> getAllOrders(User user, int page) {
 
         PageRequest sortByTime = PageRequest.of(page, 5, Sort.by("tradeStartTime"));
-        // List<Order> orders = orderRepository.findAllByUserAndStatus(user,OrderStatus.IN_PROGRESS, sortByTime);
+        List<Order> orders = orderRepository.findAllByUserAndStatus(user,OrderStatus.IN_PROGRESS, sortByTime);
 
-        return OrderResponseDto.from(null);
+        return OrderResponseDto.from(orders);
     }
 
     public void processOrderRequest(Long orderId, User user) {
@@ -51,8 +51,8 @@ public class OrderService implements OrderServiceInterface {
 
     public List<OrderResponseDto> getOrderResponseDtoList(String tradeEndTime, User user, OrderStatus orderResultType) {
         PageRequest pageable = getPageRequest(tradeEndTime);
-        // List<Order> orders = orderRepository.findAllByUserAndStatus(user, orderResultType, pageable);
-        return OrderResponseDto.from(null);
+        List<Order> orders = orderRepository.findAllByUserAndStatus(user, orderResultType, pageable);
+        return OrderResponseDto.from(orders);
     }
 
     @NotNull
@@ -62,8 +62,9 @@ public class OrderService implements OrderServiceInterface {
 
     public List<OrderResponseDto> getAllOrdersForSeller(Seller seller, int page) {
         PageRequest tradeStartTime = getPageRequest("tradeStartTime");
-        //List<Order> orders = orderRepository.findAllBySellerAndStatus(seller,SaleStatus.FINISH, tradeStartTime);
-        return OrderResponseDto.from(null);
+        List<Order> orders = orderRepository.findAllBySellerAndStatus(seller,SaleStatus.FINISH, tradeStartTime);
+        
+        return OrderResponseDto.from(orders);
     }
 
     @Transactional

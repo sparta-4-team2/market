@@ -64,8 +64,8 @@ public class SellerService {
 	@NotNull
 	private List<SellerPostForm> getSellerPostForms(Seller seller, SaleStatus type,
 		PageRequest page) {
-		//List<Post> posts = postRepository.findAllBySellerIdAndStatus(seller.getId(), type, page);
-		return SellerPostForm.from(null);
+		List<Post> posts = postRepository.findAllBySellerIdAndStatus(seller.getId(), type, page);
+		return SellerPostForm.from(posts);
 	}
 
 	public List<OrderResponseDto> getAllOrders(User user, int page) {

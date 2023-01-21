@@ -14,9 +14,9 @@ import com.team2.market.entity.Seller;
 import com.team2.market.entity.User;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
-	// List<Order> findAllByUserAndStatus(User user, OrderStatus status, Pageable pageable);
+	List<Order> findAllByUserAndStatus(User user, OrderStatus status, Pageable pageable);
 
-	// @Query("select o from orders o where o.post.seller=:seller and o.post.Status=:type")
-	// List<Order> findAllBySellerAndStatus(@Param("seller") Seller seller,
-	// 	@Param("type") SaleStatus type, Pageable pageable);
+	@Query("select o from orders o where o.post.seller=:seller and o.post.status=:status")
+	List<Order> findAllBySellerAndStatus(@Param("seller") Seller seller,
+		@Param("status") SaleStatus status, Pageable pageable);
 }

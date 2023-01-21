@@ -10,7 +10,7 @@ import com.team2.market.entity.Post;
 
 
 public interface PostRepository extends JpaRepository<Post, Long>{
-	// List<Post> findAllBySellerIdAndStatus(Long sellerId, SaleStatus status, Pageable pageable);
+	List<Post> findAllBySellerIdAndStatus(Long sellerId, SaleStatus status, Pageable pageable);
 
 
 }
