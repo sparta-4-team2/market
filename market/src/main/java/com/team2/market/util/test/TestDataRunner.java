@@ -7,6 +7,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import com.team2.market.dto.orders.response.OrderResponseDto;
 import com.team2.market.dto.post.request.PostCreateRequestDto;
 import com.team2.market.dto.post.response.PostCreateResponseDto;
 import com.team2.market.entity.Post;
@@ -63,12 +64,16 @@ public class TestDataRunner implements ApplicationRunner {
         Post post5 = createPost(new PostCreateRequestDto("제목5", "판매물5", 10000, "내용5"), testUser2);
         Post post6 = createPost(new PostCreateRequestDto("제목6", "판매물6", 10000, "내용6"), testUser2);
 
-        orderService.sendOrderToSeller(testUser3, post1);   
-        orderService.sendOrderToSeller(testUser4, post2);   
-        orderService.sendOrderToSeller(testUser5, post3);   
-        orderService.sendOrderToSeller(testUser3, post4);   
-        orderService.sendOrderToSeller(testUser4, post5);   
-        orderService.sendOrderToSeller(testUser5, post6);   
+        OrderResponseDto order1 = orderService.sendOrderToSeller(testUser3, post1);   
+        OrderResponseDto order2 = orderService.sendOrderToSeller(testUser4, post2);   
+        OrderResponseDto order3 = orderService.sendOrderToSeller(testUser5, post3);   
+        OrderResponseDto order4 = orderService.sendOrderToSeller(testUser3, post4);   
+        OrderResponseDto order5 = orderService.sendOrderToSeller(testUser4, post5);   
+        OrderResponseDto order6 = orderService.sendOrderToSeller(testUser5, post6);   
+
+        orderService.processOrderRequest(order1.getOrderId(), testUser1);
+        orderService.processOrderRequest(order4.getOrderId(), testUser2);
+        
     }
 
     private User createUser(String username, String password, UserRoleType role) {
