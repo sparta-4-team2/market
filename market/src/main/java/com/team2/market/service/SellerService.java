@@ -1,9 +1,12 @@
 package com.team2.market.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.jetbrains.annotations.NotNull;
+
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -87,8 +90,8 @@ public class SellerService {
 		return sellerRepository.findById(sellerId).orElseThrow( () -> new IllegalArgumentException("존재하지 않는 판매자입니다."));
 	}
 
-	public List<Seller> findAll() {
-		return sellerRepository.findAll();
+	public List<Seller> findAll(Pageable pageable) {
+		return sellerRepository.findAll(pageable).stream().collect(Collectors.toList());
 	}
 	
 	public Seller findByUsername(String username) {

@@ -15,5 +15,5 @@ public interface AuthServiceInterface {
     List<AuthGetBuyerResponseDto> getAllBuyers();
     
     AuthGetSellerResponseDto getSellerInfo(Long sellerId);
-    List<AuthGetSellerResponseDto> getAllSellers();
+    List<AuthGetSellerResponseDto> getAllSellers(int page);
 }

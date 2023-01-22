@@ -3,6 +3,8 @@ package com.team2.market.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -99,9 +101,14 @@ public class AuthService implements AuthServiceInterface {
 
     @Override
     @Transactional(readOnly = true)
-    public List<AuthGetSellerResponseDto> getAllSellers() {
-        List<Seller> sellers = sellerService.findAll();
+    public List<AuthGetSellerResponseDto> getAllSellers(int page) {
+        PageRequest sortById = getPageRequest(page, "id");
+        List<Seller> sellers = sellerService.findAll(sortById);
         return sellers.stream().map(AuthGetSellerResponseDto::new).collect(Collectors.toList());
+    }
+
+    private PageRequest getPageRequest(int page, String property) {
+        return PageRequest.of(page, 5, Sort.by(Sort.Direction.DESC, property));
     }
 
     // 현재 요청 타입에 관한 내용에 따라 가져올 수 있게 해야함

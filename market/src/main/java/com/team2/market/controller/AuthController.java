@@ -67,9 +67,25 @@ public class AuthController {
      * 
      * @return
      */
-    @GetMapping("/admin/seller")
-    public ResponseEntity<Map<String, Object>> getAllSellers() {
-        List<AuthGetSellerResponseDto> data = authService.getAllSellers();
+    @GetMapping("/seller")
+    public ResponseEntity<Map<String, Object>> getAllSellers
+        (@RequestParam("page") int page) 
+    {
+        List<AuthGetSellerResponseDto> data = authService.getAllSellers(page);
+
+        return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.AUTHCHANGE_OK, HttpStatus.OK);
+    }
+
+    /**
+     * 
+     * @param sellerId
+     * @return
+     */
+    @GetMapping("/seller/{sellerId}")
+    public ResponseEntity<Map<String, Object>> getSellerInfo
+        (@PathVariable Long sellerId) 
+        {
+        AuthGetSellerResponseDto data = authService.getSellerInfo(sellerId);
 
         return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.AUTHCHANGE_OK, HttpStatus.OK);
     }
@@ -78,7 +94,7 @@ public class AuthController {
      * 
      * @return
      */
-    @GetMapping("/admin/user")
+    @GetMapping("/user")
     public ResponseEntity<Map<String, Object>> getAllBuyers() {
         List<AuthGetBuyerResponseDto> data = authService.getAllBuyers();
 
@@ -90,24 +106,13 @@ public class AuthController {
      * @param userId
      * @return
      */
-    @GetMapping("/admin/user/{userId}")
+    @GetMapping("/user/{userId}")
     public ResponseEntity<Map<String, Object>> getBuyerInfo(@PathVariable Long userId) {
         AuthGetBuyerResponseDto data = authService.getBuyerInfo(userId);
 
         return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.GETBUYERINFO_OK, HttpStatus.OK);
     }
 
-    /**
-     * 
-     * @param sellerId
-     * @return
-     */
-    @GetMapping("/admin/seller/{sellerId}")
-    public ResponseEntity<Map<String, Object>> getSellerInfo(@PathVariable Long sellerId) {
-        AuthGetSellerResponseDto data = authService.getSellerInfo(sellerId);
-
-        return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.AUTHCHANGE_OK, HttpStatus.OK);
-    }
     
     class ResponseMessage {
         public static final String AUTHREQUEST_OK = "판매자 권한 요청 성공";
