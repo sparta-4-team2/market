@@ -3,6 +3,8 @@ package com.team2.market.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -107,11 +109,11 @@ public class UserService implements UserServiceInterface{
      * @param role UserRoleType을 통해 조회
      * @return
      */
-    public List<User> findAllByRole(UserRoleType role) {
-        return userRepository.findAllByRole(role);
+    public Page<User> findAllByRole(UserRoleType role, Pageable pageable) {
+        return userRepository.findAllByRole(role, pageable);
     }
 
-    public List<OrderResponseDto> getAllOrders(String username, int page, int type) {
+    public Page<OrderResponseDto> getAllOrders(String username, int page, int type) {
         User user = findByUsername(username);
         return orderService.getAllOrders(user, page, type);
     }

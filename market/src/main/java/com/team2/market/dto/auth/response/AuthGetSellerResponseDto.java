@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.team2.market.dto.post.response.PostGetResponseDto;
-import com.team2.market.entity.Post;
 import com.team2.market.entity.Seller;
 
 import lombok.Getter;

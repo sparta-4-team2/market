@@ -3,6 +3,7 @@ package com.team2.market.controller;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -40,7 +41,7 @@ public class PostController {
     public ResponseEntity<Map<String, Object>> getAllPost
         (@AuthenticationPrincipal CustomUserDetails userDetails,
          @RequestParam("page") int page) {
-        List<PostGetResponseDto> data = postService.getAllPost(userDetails.getUser(), page);
+        Page<PostGetResponseDto> data = postService.getAllPost(userDetails.getUser(), page);
         return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.POSTGETALL_OK, HttpStatus.OK);
     }
     

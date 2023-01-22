@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.jetbrains.annotations.NotNull;
-
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -71,7 +71,7 @@ public class SellerService {
 		return SellerPostForm.from(posts);
 	}
 
-	public List<OrderResponseDto> getAllOrders(User user, int page, int type) {
+	public Page<OrderResponseDto> getAllOrders(User user, int page, int type) {
 		Seller seller = findByUsername(user.getUsername());
 
 		return orderService.getAllOrdersForSeller(seller, page, type);
@@ -90,8 +90,8 @@ public class SellerService {
 		return sellerRepository.findById(sellerId).orElseThrow( () -> new IllegalArgumentException("존재하지 않는 판매자입니다."));
 	}
 
-	public List<Seller> findAll(Pageable pageable) {
-		return sellerRepository.findAll(pageable).stream().collect(Collectors.toList());
+	public Page<Seller> findAll(Pageable pageable) {
+		return sellerRepository.findAll(pageable);
 	}
 	
 	public Seller findByUsername(String username) {

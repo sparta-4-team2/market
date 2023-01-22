@@ -3,6 +3,7 @@ package com.team2.market.controller;
 import java.util.Map;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -44,8 +45,11 @@ public class AuthController {
      * @param user
      */
     @GetMapping("/admin/request") 
-    public ResponseEntity<Map<String, Object>> getAllAuthRequest(@AuthenticationPrincipal CustomUserDetails user) {
-        List<RequestAuthResponseDto> data = authService.getAllRequset();
+    public ResponseEntity<Map<String, Object>> getAllAuthRequest
+        (@AuthenticationPrincipal CustomUserDetails userDetails,
+         @RequestParam("page") int page) 
+    {
+        Page<RequestAuthResponseDto> data = authService.getAllRequset(page);
 
         return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.GETREQUEST_OK, HttpStatus.OK);
     }
@@ -71,7 +75,7 @@ public class AuthController {
     public ResponseEntity<Map<String, Object>> getAllSellers
         (@RequestParam("page") int page) 
     {
-        List<AuthGetSellerResponseDto> data = authService.getAllSellers(page);
+        Page<AuthGetSellerResponseDto> data = authService.getAllSellers(page);
 
         return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.AUTHCHANGE_OK, HttpStatus.OK);
     }
@@ -95,8 +99,10 @@ public class AuthController {
      * @return
      */
     @GetMapping("/user")
-    public ResponseEntity<Map<String, Object>> getAllBuyers() {
-        List<AuthGetBuyerResponseDto> data = authService.getAllBuyers();
+    public ResponseEntity<Map<String, Object>> getAllBuyers
+        (@RequestParam("page") int page)
+    {
+        Page<AuthGetBuyerResponseDto> data = authService.getAllBuyers(page);
 
         return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.GETALLBUYER_OK, HttpStatus.OK);
     }

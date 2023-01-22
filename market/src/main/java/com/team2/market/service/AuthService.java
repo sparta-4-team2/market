@@ -3,7 +3,9 @@ package com.team2.market.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -85,9 +87,11 @@ public class AuthService implements AuthServiceInterface {
 
     @Override
     @Transactional(readOnly = true)
-    public List<AuthGetBuyerResponseDto> getAllBuyers() {
-        List<User> userlist = userService.findAllByRole(UserRoleType.ROLE_BUYER);
-        return userlist.stream().map(AuthGetBuyerResponseDto::new).collect(Collectors.toList());
+    public Page<AuthGetBuyerResponseDto> getAllBuyers(int page) {
+        PageRequest pageable = PageRequest.of(page,5,Sort.by(Sort.Direction.DESC, "id"));
+        
+        Page<User> userlist = userService.findAllByRole(UserRoleType.ROLE_BUYER, pageable);
+        return userlist.map(AuthGetBuyerResponseDto::new);
     }
     
     // 판매자 정보 프로필 참조 할듯?
@@ -101,10 +105,10 @@ public class AuthService implements AuthServiceInterface {
 
     @Override
     @Transactional(readOnly = true)
-    public List<AuthGetSellerResponseDto> getAllSellers(int page) {
+    public Page<AuthGetSellerResponseDto> getAllSellers(int page) {
         PageRequest sortById = getPageRequest(page, "id");
-        List<Seller> sellers = sellerService.findAll(sortById);
-        return sellers.stream().map(AuthGetSellerResponseDto::new).collect(Collectors.toList());
+        Page<Seller> sellers = sellerService.findAll(sortById);
+        return sellers.map(AuthGetSellerResponseDto::new);
     }
 
     private PageRequest getPageRequest(int page, String property) {
@@ -114,13 +118,18 @@ public class AuthService implements AuthServiceInterface {
     // 현재 요청 타입에 관한 내용에 따라 가져올 수 있게 해야함
     @Override
     @Transactional(readOnly = true)
-    public List<RequestAuthResponseDto> getAllRequset() {
-        List<AuthRequest> requests = authRequestRepository.findAll();
-        return requests.stream().map(RequestAuthResponseDto::new).collect(Collectors.toList());
+    public Page<RequestAuthResponseDto> getAllRequset(int page) {
+        PageRequest pageable = PageRequest.of(page,5,Sort.by(Sort.Direction.DESC, "id"));
+        Page<AuthRequest> requests = getAllRequests(pageable);
+        return requests.map(RequestAuthResponseDto::new);
     }
 
     private AuthRequest getRequest(Long requestId) {
         return authRequestRepository.findById(requestId).orElse(null);
+    }
+
+    private Page<AuthRequest> getAllRequests(Pageable pageable) {
+        return authRequestRepository.findAll(pageable);
     }
 
 }

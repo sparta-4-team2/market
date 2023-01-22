@@ -5,6 +5,7 @@ import static com.team2.market.controller.SellerController.ResponseMessage.*;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -49,7 +50,7 @@ public class SellerController {
 		@AuthenticationPrincipal CustomUserDetails userDetails,
 		@RequestParam("page") int page,
 		@RequestParam("type") int type) {
-		List<OrderResponseDto> posts = sellerService.getAllOrders(userDetails.getUser(), page, type);
+		Page<OrderResponseDto> posts = sellerService.getAllOrders(userDetails.getUser(), page, type);
 		return DefaultResponseEntity.setResponseEntity(posts, ORDER_LIST_OK, HttpStatus.OK);
 	}
 

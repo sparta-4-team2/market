@@ -5,6 +5,7 @@ import static com.team2.market.controller.UserController.ResponseMessage.*;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -78,7 +79,7 @@ public class UserController {
 		@AuthenticationPrincipal UserDetails userDetails,
 		@RequestParam("page") int page,
 		@RequestParam("type") int type) {
-		List<OrderResponseDto> orders = userService.getAllOrders(userDetails.getUsername(), page, type);
+		Page<OrderResponseDto> orders = userService.getAllOrders(userDetails.getUsername(), page, type);
 
 		return DefaultResponseEntity.setResponseEntity(orders, ORDER_LIST_OK, HttpStatus.OK);
 	}

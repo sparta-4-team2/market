@@ -3,6 +3,7 @@ package com.team2.market.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -56,10 +57,10 @@ public class PostService implements PostServiceInterface {
     //전체 상품 조회
     @Transactional(readOnly = true)
     @Override
-    public List<PostGetResponseDto> getAllPost(User user, int page) {
+    public Page<PostGetResponseDto> getAllPost(User user, int page) {
         PageRequest sortById = getPageRequest(page, "id");
-        List<Post> posts = getAllPostOrderById(sortById);
-        return posts.stream().map(PostGetResponseDto::new).collect(Collectors.toList());
+        Page<Post> posts = getAllPostOrderById(sortById);
+        return posts.map(PostGetResponseDto::new);
     }
 
 
@@ -67,8 +68,8 @@ public class PostService implements PostServiceInterface {
         return PageRequest.of(page, 5, Sort.by(Sort.Direction.ASC, property));
     }
 
-    private List<Post> getAllPostOrderById(Pageable pageable) {
-        return postRepository.findAll(pageable).stream().collect(Collectors.toList());
+    private Page<Post> getAllPostOrderById(Pageable pageable) {
+        return postRepository.findAll(pageable);
     }
 
     @Transactional  //게시글 수정

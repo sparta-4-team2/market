@@ -38,14 +38,14 @@ public class TestDataRunner implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         
         // 일반 유저 생성
-        User testUser1 = userService.save(createUser("User1", "1q2w3e4r!", UserRoleType.ROLE_BUYER));
-        User testUser2 = userService.save(createUser("User2", "1q2w3e4r!", UserRoleType.ROLE_BUYER));
-        User testUser3 = userService.save(createUser("User3", "1q2w3e4r!", UserRoleType.ROLE_BUYER));
-        User testUser4 = userService.save(createUser("User4", "1q2w3e4r!", UserRoleType.ROLE_BUYER));
-        User testUser5 = userService.save(createUser("User5", "1q2w3e4r!", UserRoleType.ROLE_BUYER));
+        User testUser1 = createUser("User1", "1q2w3e4r!", UserRoleType.ROLE_BUYER);
+        User testUser2 = createUser("User2", "1q2w3e4r!", UserRoleType.ROLE_BUYER);
+        User testUser3 = createUser("User3", "1q2w3e4r!", UserRoleType.ROLE_BUYER);
+        User testUser4 = createUser("User4", "1q2w3e4r!", UserRoleType.ROLE_BUYER);
+        User testUser5 = createUser("User5", "1q2w3e4r!", UserRoleType.ROLE_BUYER);
 
         // 관리자 유저 생성
-        User adminUser1 = userService.save(createUser("Admin1", "1q2w3e4r!", UserRoleType.ROLE_BUYER));
+        User adminUser1 = userService.save(createUser("Admin1", "1q2w3e4r!", UserRoleType.ROLE_ADMIN));
 
         //testUser1, testUser2의 권한 변경 요청
         Long requestId1 = authService.requestAuthorization(testUser1).getRequestId();
@@ -76,7 +76,7 @@ public class TestDataRunner implements ApplicationRunner {
     }
 
     private User createUser(String username, String password, UserRoleType role) {
-        return new User(username, passwordEncoder.encode(password), role);
+        return userService.save(new User(username, passwordEncoder.encode(password), role));
     }
 
     private Post createPost(PostCreateRequestDto requestDto, User user) {

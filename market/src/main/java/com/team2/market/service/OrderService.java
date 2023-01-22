@@ -1,8 +1,10 @@
 package com.team2.market.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.jetbrains.annotations.NotNull;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -28,11 +30,11 @@ public class OrderService implements OrderServiceInterface {
     private final OrderRepository orderRepository;
 
     @Override
-    public List<OrderResponseDto> getAllOrders(User user, int page, int type) {
+    public Page<OrderResponseDto> getAllOrders(User user, int page, int type) {
         OrderStatus status = OrderStatus.typeToOrderStatus(type);
 
         PageRequest sortByTime = PageRequest.of(page, 5, Sort.by("tradeStartTime"));
-        List<Order> orders;
+        Page<Order> orders;
         if(status.equals(OrderStatus.ALL)) {
             orders = orderRepository.findAllByUser(user, sortByTime);
         }
@@ -40,7 +42,7 @@ public class OrderService implements OrderServiceInterface {
             orders = orderRepository.findAllByUserAndStatus(user, status, sortByTime);
         }
 
-        return OrderResponseDto.from(orders);
+        return orders.map(OrderResponseDto::new);
     }
 
     @Transactional
@@ -62,7 +64,7 @@ public class OrderService implements OrderServiceInterface {
 
     public List<OrderResponseDto> getOrderResponseDtoList(String tradeEndTime, User user, OrderStatus orderResultType) {
         PageRequest pageable = getPageRequest(tradeEndTime);
-        List<Order> orders = orderRepository.findAllByUserAndStatus(user, orderResultType, pageable);
+        List<Order> orders = orderRepository.findAllByUserAndStatus(user, orderResultType, pageable).stream().collect(Collectors.toList());
         return OrderResponseDto.from(orders);
     }
 
@@ -71,10 +73,10 @@ public class OrderService implements OrderServiceInterface {
         return PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC,property));
     }
 
-    public List<OrderResponseDto> getAllOrdersForSeller(Seller seller, int page, int type) {
+    public Page<OrderResponseDto> getAllOrdersForSeller(Seller seller, int page, int type) {
         OrderStatus status = OrderStatus.typeToOrderStatus(type);
         PageRequest tradeStartTime = getPageRequest("tradeStartTime");
-        List<Order> orders;
+        Page<Order> orders;
 
         if(status.equals(OrderStatus.ALL)) {
             orders = orderRepository.findAllBySeller(seller, tradeStartTime);
@@ -82,7 +84,7 @@ public class OrderService implements OrderServiceInterface {
             orders = orderRepository.findAllBySellerAndStatus(seller, status, tradeStartTime);
         }
         
-        return OrderResponseDto.from(orders);
+        return orders.map(OrderResponseDto::new);
     }
 
     /** 구매자의 판매글에 해당 상품 구매 요청
