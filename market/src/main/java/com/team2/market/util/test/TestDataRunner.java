@@ -33,7 +33,6 @@ public class TestDataRunner implements ApplicationRunner {
     private final OrderService orderService;
     private final SellerService sellerService;
     
-    
     @Override
     @Transactional 
     public void run(ApplicationArguments args) throws Exception {

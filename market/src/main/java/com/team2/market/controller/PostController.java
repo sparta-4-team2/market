@@ -25,7 +25,6 @@ public class PostController {
     @PostMapping("/posts")
     public ResponseEntity<Map<String, Object>> createPost(@RequestBody PostCreateRequestDto requestDto,
                                                           @AuthenticationPrincipal CustomUserDetails userDetails) {
-        // 분기 나눠서 처리
         PostCreateResponseDto data =  postService.createPost(requestDto, userDetails.getUser());
         return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.POSTCREATE_OK, HttpStatus.OK);
     }
@@ -38,8 +37,10 @@ public class PostController {
     }
     
     @GetMapping("/posts")
-    public ResponseEntity<Map<String, Object>> getAllPost(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        List<PostGetResponseDto> data = postService.getAllPost(userDetails);
+    public ResponseEntity<Map<String, Object>> getAllPost
+        (@AuthenticationPrincipal CustomUserDetails userDetails,
+         @RequestParam("page") int page) {
+        List<PostGetResponseDto> data = postService.getAllPost(userDetails.getUser(), page);
         return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.POSTGETALL_OK, HttpStatus.OK);
     }
     

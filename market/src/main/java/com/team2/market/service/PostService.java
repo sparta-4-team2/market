@@ -1,8 +1,12 @@
 package com.team2.market.service;
 
 import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,14 +57,19 @@ public class PostService implements PostServiceInterface {
     //전체 상품 조회
     @Transactional(readOnly = true)
     @Override
-    public List<PostGetResponseDto> getAllPost(CustomUserDetails userDetails) {
-        List<Post> posts = getAllPost();
+    public List<PostGetResponseDto> getAllPost(User user, int page) {
+        PageRequest sortById = getPageRequest(page, "id");
+        List<Post> posts = getAllPostOrderById(sortById);
         return posts.stream().map(PostGetResponseDto::new).collect(Collectors.toList());
     }
 
 
-    private List<Post> getAllPost() {
-        return postRepository.findAll();
+    private PageRequest getPageRequest( int page, String property){
+        return PageRequest.of(page, 5, Sort.by(Sort.Direction.ASC, property));
+    }
+
+    private List<Post> getAllPostOrderById(Pageable pageable) {
+        return postRepository.findAll(pageable).stream().collect(Collectors.toList());
     }
 
     @Transactional  //게시글 수정
