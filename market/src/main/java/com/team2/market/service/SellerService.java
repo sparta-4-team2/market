@@ -1,7 +1,6 @@
 package com.team2.market.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;

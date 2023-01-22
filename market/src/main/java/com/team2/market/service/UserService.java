@@ -1,6 +1,5 @@
 package com.team2.market.service;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;

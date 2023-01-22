@@ -2,7 +2,6 @@ package com.team2.market.controller;
 
 import static com.team2.market.controller.UserController.ResponseMessage.*;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;

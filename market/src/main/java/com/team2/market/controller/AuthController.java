@@ -1,7 +1,6 @@
 package com.team2.market.controller;
 
 import java.util.Map;
-import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
