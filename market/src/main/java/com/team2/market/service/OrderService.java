@@ -101,4 +101,8 @@ public class OrderService implements OrderServiceInterface {
     public List<Order> findAll() {
         return orderRepository.findAll();
     }
+
+    public void delete(Order order) {
+        orderRepository.delete(order);
+    }
 }

@@ -34,13 +34,14 @@ public class Post {
     @Column(nullable = false)
     private String contents;
 
-    @ElementCollection
-    @CollectionTable(
-        name = "ordertopost",
-        joinColumns = @JoinColumn(name = "post_id")
-    )
-    @MapKeyColumn(name ="user_id")
-    @Column
+    // @ElementCollection
+    // @CollectionTable(
+    //     name = "ordertopost",
+    //     joinColumns = @JoinColumn(name = "post_id")
+    // )
+    // @MapKeyColumn(name ="user_id")
+    // @Column
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private Map<Long, Order> orderToPost = new HashMap<>();
 
     @ManyToOne

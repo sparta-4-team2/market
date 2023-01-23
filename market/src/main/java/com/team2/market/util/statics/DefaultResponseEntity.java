@@ -1,7 +1,6 @@
 package com.team2.market.util.statics;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpHeaders;

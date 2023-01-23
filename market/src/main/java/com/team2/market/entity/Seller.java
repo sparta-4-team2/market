@@ -20,12 +20,13 @@ public class Seller {
     @OneToOne
     private User user;
 
-    @ElementCollection
-    @CollectionTable(
-        name = "posttoseller",
-        joinColumns = @JoinColumn(name = "seller_id")
-    )
-    @MapKeyColumn(name ="post_id")
+    // @ElementCollection
+    // @CollectionTable(
+    //     name = "posttoseller",
+    //     joinColumns = @JoinColumn(name = "seller_id")
+    // )
+    // @MapKeyColumn(name ="post_id")
+    @OneToMany(mappedBy = "seller", cascade = CascadeType.REFRESH, orphanRemoval = true)
     private Map<Long, Post> postToSeller = new HashMap<>();
 
     public Seller(User user) {
