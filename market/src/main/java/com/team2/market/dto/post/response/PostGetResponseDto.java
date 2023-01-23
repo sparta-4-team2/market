@@ -1,5 +1,9 @@
 package com.team2.market.dto.post.response;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import com.team2.market.dto.orders.response.OrderGetResponseDto;
 import com.team2.market.dto.types.PostStatus;
 import com.team2.market.entity.Post;
 
@@ -24,6 +28,8 @@ public class PostGetResponseDto {
     private Long sellerId;
     private String sellerName;
 
+    private List<OrderGetResponseDto> orderlist;
+
     public PostGetResponseDto(Post post) {
         // 게시글
         this.id = post.getId();
@@ -38,5 +44,10 @@ public class PostGetResponseDto {
         // 판매자
         this.sellerId = post.getSeller().getId();
         this.sellerName = post.getSeller().getUser().getUsername();
+
+        this.orderlist = post.getOrderToPost().values()
+                                .stream()
+                                .map(OrderGetResponseDto::new)
+                                .collect(Collectors.toList());
     }
 }

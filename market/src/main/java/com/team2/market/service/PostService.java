@@ -1,5 +1,7 @@
 package com.team2.market.service;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -106,5 +108,9 @@ public class PostService implements PostServiceInterface {
 
     public void updatePostStatus(Post post, PostStatus status) {
         post.updateStatus(status);
+    }
+
+    public List<Post> findAll() {
+        return postRepository.findAll();
     }
 }

@@ -32,6 +32,10 @@ public class SecurityConfiguration {
 		return new JwtVerificationFilter(jwtUtil, userDetailsService);
 	}
 
+	@Bean CustomAccessDeniedHandler accessDeniedHandler() {
+		return new CustomAccessDeniedHandler();
+	}
+
 	@Bean
 	public JwtEntryPoint jwtEntryPoint() {
 		return new JwtEntryPoint();
@@ -48,7 +52,8 @@ public class SecurityConfiguration {
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and()
 			.addFilterBefore(jwtVerificationFilter(), UsernamePasswordAuthenticationFilter.class)
-			.exceptionHandling().authenticationEntryPoint(jwtEntryPoint());
+			.exceptionHandling().authenticationEntryPoint(jwtEntryPoint())
+								.accessDeniedHandler(accessDeniedHandler());
 
 		http.authorizeRequests(auth -> auth
 			.antMatchers("/api/signup,/api/login").permitAll()

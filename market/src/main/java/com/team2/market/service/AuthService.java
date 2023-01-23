@@ -38,7 +38,8 @@ public class AuthService implements AuthServiceInterface {
     public RequestAuthResponseDto requestAuthorization(User user) {
         // 예외 처리 해야함
         if(user.getRole() != UserRoleType.ROLE_BUYER){
-            throw new IllegalArgumentException("이미 판매자거나 운영자인 회원입니다.");
+            System.out.println("이미 판매자거나 운영자인 회원입니다.");
+            return null;
         }
 
         AuthRequest request = new AuthRequest(user, RequestStatus.INPROGRESS);

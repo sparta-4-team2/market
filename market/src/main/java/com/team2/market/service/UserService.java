@@ -1,5 +1,6 @@
 package com.team2.market.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -115,5 +116,9 @@ public class UserService implements UserServiceInterface{
     public Page<OrderResponseDto> getAllOrders(String username, int page, int type) {
         User user = findByUsername(username);
         return orderService.getAllOrders(user, page, type);
+    }
+
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 }

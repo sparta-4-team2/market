@@ -97,4 +97,9 @@ public class SellerService {
 		return sellerRepository.findByUserName(username)
 			.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정 필요"));
 	}
+
+	// 테스트 더미 데이터 지원 메소드
+    public List<Seller> findAll() {
+        return sellerRepository.findAll();
+    }
 }

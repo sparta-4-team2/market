@@ -97,4 +97,8 @@ public class OrderService implements OrderServiceInterface {
     public Order saveOrder(User user, Post post) {
         return orderRepository.save(new Order(post, user));
     }
+
+    public List<Order> findAll() {
+        return orderRepository.findAll();
+    }
 }

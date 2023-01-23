@@ -26,7 +26,6 @@ public class Seller {
         joinColumns = @JoinColumn(name = "seller_id")
     )
     @MapKeyColumn(name ="post_id")
-    @Column
     private Map<Long, Post> postToSeller = new HashMap<>();
 
     public Seller(User user) {
