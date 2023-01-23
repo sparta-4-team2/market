@@ -8,12 +8,12 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class AuthGetBuyerResponseDto {
+public class GetBuyerInfoResponseDto {
 
     public String nickname;
     public UserRoleType role;
 
-    public AuthGetBuyerResponseDto(User user) {
+    public GetBuyerInfoResponseDto(User user) {
         this.nickname = user.getNickname();
         this.role = user.getRole();
     }

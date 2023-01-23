@@ -31,7 +31,7 @@ public class PostService implements PostServiceInterface {
         Seller seller = sellerService.findByUsername(user.getUsername());
 
         Post post = postRepository.save(new Post(requestDto, seller));
-        seller.addPost(post);
+        seller.addPost(post.getId(), post);
 
         return new PostCreateResponseDto(post);
     }

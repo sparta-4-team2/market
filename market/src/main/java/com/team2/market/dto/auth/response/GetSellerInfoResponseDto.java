@@ -11,18 +11,19 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class AuthGetSellerResponseDto {
+public class GetSellerInfoResponseDto {
 
     private Long userId;
     private String nickname;
     private Long sellerId; 
     private List<PostGetResponseDto> postlist;
 
-    public AuthGetSellerResponseDto(Seller seller) {
+    public GetSellerInfoResponseDto(Seller seller) {
         this.userId = seller.getUser().getId();
         this.nickname = seller.getUser().getNickname();
         this.sellerId = seller.getId();
-        this.postlist = seller.getPosts()
+        this.postlist = seller.getPostToSeller()
+                                .values()
                                 .stream()
                                 .map(PostGetResponseDto::new)
                                 .collect(Collectors.toList());

@@ -10,8 +10,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import com.team2.market.dto.auth.response.AuthChangeResponseDto;
-import com.team2.market.dto.auth.response.AuthGetBuyerResponseDto;
-import com.team2.market.dto.auth.response.AuthGetSellerResponseDto;
+import com.team2.market.dto.auth.response.GetBuyerInfoResponseDto;
+import com.team2.market.dto.auth.response.GetSellerInfoResponseDto;
 import com.team2.market.dto.auth.response.RequestAuthResponseDto;
 import com.team2.market.service.AuthService;
 
@@ -74,7 +74,7 @@ public class AuthController {
     public ResponseEntity<Map<String, Object>> getAllSellers
         (@RequestParam("page") int page) 
     {
-        Page<AuthGetSellerResponseDto> data = authService.getAllSellers(page);
+        Page<GetSellerInfoResponseDto> data = authService.getAllSellers(page);
 
         return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.AUTHCHANGE_OK, HttpStatus.OK);
     }
@@ -88,7 +88,7 @@ public class AuthController {
     public ResponseEntity<Map<String, Object>> getSellerInfo
         (@PathVariable Long sellerId) 
         {
-        AuthGetSellerResponseDto data = authService.getSellerInfo(sellerId);
+        GetSellerInfoResponseDto data = authService.getSellerInfo(sellerId);
 
         return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.AUTHCHANGE_OK, HttpStatus.OK);
     }
@@ -101,7 +101,7 @@ public class AuthController {
     public ResponseEntity<Map<String, Object>> getAllBuyers
         (@RequestParam("page") int page)
     {
-        Page<AuthGetBuyerResponseDto> data = authService.getAllBuyers(page);
+        Page<GetBuyerInfoResponseDto> data = authService.getAllBuyers(page);
 
         return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.GETALLBUYER_OK, HttpStatus.OK);
     }
@@ -113,7 +113,7 @@ public class AuthController {
      */
     @GetMapping("/user/{userId}")
     public ResponseEntity<Map<String, Object>> getBuyerInfo(@PathVariable Long userId) {
-        AuthGetBuyerResponseDto data = authService.getBuyerInfo(userId);
+        GetBuyerInfoResponseDto data = authService.getBuyerInfo(userId);
 
         return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.GETBUYERINFO_OK, HttpStatus.OK);
     }

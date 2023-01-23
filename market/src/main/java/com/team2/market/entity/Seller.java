@@ -5,8 +5,8 @@ import javax.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 @Entity
 @Getter
@@ -20,15 +20,21 @@ public class Seller {
     @OneToOne
     private User user;
 
-    @OneToMany(mappedBy = "seller")
-    private List<Post> posts = new ArrayList<>();
+    @ElementCollection
+    @CollectionTable(
+        name = "posttoseller",
+        joinColumns = @JoinColumn(name = "seller_id")
+    )
+    @MapKeyColumn(name ="post_id")
+    @Column
+    private Map<Long, Post> postToSeller = new HashMap<>();
 
     public Seller(User user) {
         this.user = user;
     }
 
-    public void addPost(Post post) {
-        this.posts.add(post);
+    public void addPost(Long postId, Post post) {
+        this.postToSeller.put(postId, post);
     }
 
     public Long getUserId() {

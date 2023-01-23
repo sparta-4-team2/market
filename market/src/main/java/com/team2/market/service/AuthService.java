@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.team2.market.dto.auth.response.AuthChangeResponseDto;
-import com.team2.market.dto.auth.response.AuthGetBuyerResponseDto;
-import com.team2.market.dto.auth.response.AuthGetSellerResponseDto;
+import com.team2.market.dto.auth.response.GetBuyerInfoResponseDto;
+import com.team2.market.dto.auth.response.GetSellerInfoResponseDto;
 import com.team2.market.dto.auth.response.RequestAuthResponseDto;
 import com.team2.market.entity.AuthRequest;
 import com.team2.market.entity.Seller;
@@ -74,38 +74,38 @@ public class AuthService implements AuthServiceInterface {
     // 유저 정보 프로필 참조 할듯?
     @Override
     @Transactional(readOnly = true)
-    public AuthGetBuyerResponseDto getBuyerInfo(Long userId) {
+    public GetBuyerInfoResponseDto getBuyerInfo(Long userId) {
         User user = userService.findById(userId);
         if (user.getRole() != UserRoleType.ROLE_BUYER)
             throw new IllegalArgumentException("고객이 아닙니다.");
 
-        return new AuthGetBuyerResponseDto(user);
+        return new GetBuyerInfoResponseDto(user);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<AuthGetBuyerResponseDto> getAllBuyers(int page) {
+    public Page<GetBuyerInfoResponseDto> getAllBuyers(int page) {
         PageRequest pageable = PageRequest.of(page,5,Sort.by(Sort.Direction.DESC, "id"));
         
         Page<User> userlist = userService.findAllByRole(UserRoleType.ROLE_BUYER, pageable);
-        return userlist.map(AuthGetBuyerResponseDto::new);
+        return userlist.map(GetBuyerInfoResponseDto::new);
     }
     
     // 판매자 정보 프로필 참조 할듯?
     @Override
     @Transactional(readOnly = true)
-    public AuthGetSellerResponseDto getSellerInfo(Long sellerId) {
+    public GetSellerInfoResponseDto getSellerInfo(Long sellerId) {
         Seller seller = sellerService.findById(sellerId);
 
-        return new AuthGetSellerResponseDto(seller);
+        return new GetSellerInfoResponseDto(seller);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<AuthGetSellerResponseDto> getAllSellers(int page) {
+    public Page<GetSellerInfoResponseDto> getAllSellers(int page) {
         PageRequest sortById = getPageRequest(page, "id");
         Page<Seller> sellers = sellerService.findAll(sortById);
-        return sellers.map(AuthGetSellerResponseDto::new);
+        return sellers.map(GetSellerInfoResponseDto::new);
     }
 
     private PageRequest getPageRequest(int page, String property) {

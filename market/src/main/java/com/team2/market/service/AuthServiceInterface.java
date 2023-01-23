@@ -10,9 +10,9 @@ public interface AuthServiceInterface {
     Page<RequestAuthResponseDto> getAllRequset(int page);
     AuthChangeResponseDto changeAuthorization(Long requestId);
     
-    AuthGetBuyerResponseDto getBuyerInfo(Long userId);
-    Page<AuthGetBuyerResponseDto> getAllBuyers(int page);
+    GetBuyerInfoResponseDto getBuyerInfo(Long userId);
+    Page<GetBuyerInfoResponseDto> getAllBuyers(int page);
     
-    AuthGetSellerResponseDto getSellerInfo(Long sellerId);
-    Page<AuthGetSellerResponseDto> getAllSellers(int page);
+    GetSellerInfoResponseDto getSellerInfo(Long sellerId);
+    Page<GetSellerInfoResponseDto> getAllSellers(int page);
 }
