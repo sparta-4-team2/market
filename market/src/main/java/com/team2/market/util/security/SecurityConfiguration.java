@@ -50,18 +50,18 @@ public class SecurityConfiguration {
 			.addFilterBefore(jwtVerificationFilter(), UsernamePasswordAuthenticationFilter.class)
 			.exceptionHandling().authenticationEntryPoint(jwtEntryPoint());
 
-			http.authorizeRequests(auth -> auth
-				.antMatchers("/api/signup,/api/login").permitAll()
-				.antMatchers("/api/users/profile").authenticated()
-				.antMatchers("/api/sellers/profile").hasRole("SELLER")
-				// 판매글 관리 권한
-				.antMatchers(HttpMethod.POST, "/api/posts").access("hasRole('SELLER')")
-				.antMatchers(HttpMethod.PUT, "/api/posts/**").access("hasRole('SELLER') or hasRole('ADMIN')")
-				.antMatchers(HttpMethod.DELETE, "/api/posts/**").access("hasRole('SELLER') or hasRole('ADMIN')")
-				// 관리자 권한
-				.antMatchers("/api/auth/admin/**").access("hasRole('ADMIN')")
-				
-			);
+		http.authorizeRequests(auth -> auth
+			.antMatchers("/api/signup,/api/login").permitAll()
+			.antMatchers("/api/users/profile").authenticated()
+			.antMatchers("/api/sellers/profile").hasRole("SELLER")
+			// 판매글 관리 권한
+			.antMatchers(HttpMethod.POST, "/api/posts").access("hasRole('SELLER')")
+			.antMatchers(HttpMethod.PUT, "/api/posts/**").access("hasRole('SELLER') or hasRole('ADMIN')")
+			.antMatchers(HttpMethod.DELETE, "/api/posts/**").access("hasRole('SELLER') or hasRole('ADMIN')")
+			// 관리자 권한
+			.antMatchers("/api/auth/admin/**").access("hasRole('ADMIN')")
+			
+		);
 		
 		http.logout()
 				.logoutUrl("/api/logout")

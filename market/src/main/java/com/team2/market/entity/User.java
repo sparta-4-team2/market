@@ -1,8 +1,5 @@
 package com.team2.market.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.*;
 
 import com.team2.market.dto.users.request.ProfileUpdateRequestDto;
@@ -35,10 +32,6 @@ public class User {
     @Column
     private String profileImg;
 
-    @OneToMany
-    private List<Order> orderlist = new ArrayList<>();
-
-
     public User(String username, String password, UserRoleType role) {
         this.username = username;
         this.password = password;
@@ -56,10 +49,6 @@ public class User {
 
     public void updateRole(UserRoleType role) {
         this.role = role;
-    }
-
-    public void addOrder(Order order) {
-        this.orderlist.add(order);
     }
 
     public boolean isAdmin() {

@@ -2,8 +2,8 @@ package com.team2.market.entity;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.persistence.*;
 
@@ -34,8 +34,14 @@ public class Post {
     @Column(nullable = false)
     private String contents;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
-    private List<Order> orderlist = new ArrayList<>();
+    @ElementCollection
+    @CollectionTable(
+        name = "ordertopost",
+        joinColumns = @JoinColumn(name = "post_id")
+    )
+    @MapKeyColumn(name ="user_id")
+    @Column
+    private Map<Long, Order> orderToPost = new HashMap<>();
 
     @ManyToOne
     @JoinColumn(name = "seller_id")
@@ -59,17 +65,16 @@ public class Post {
         this.status = PostStatus.STILL;
     }
 
-    // 영속성 컨텍스트에서 문제가 있는듯?
-    public void addOrder(Order order) {
-        this.orderlist.add(order);
-	}
-
     public void updatePost(PostUpdateRequestDto requestDto) {
         this.title = requestDto.getTitle();
         this.productName = requestDto.getProductName();
         this.price = requestDto.getPrice();
         this.contents = requestDto.getContents();
 
+    }
+
+    public void putOrderMap(Long userId, Order value) {
+        orderToPost.put(userId, value);
     }
 
     public boolean isFinish() {

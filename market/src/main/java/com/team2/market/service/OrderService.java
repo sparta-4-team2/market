@@ -51,7 +51,7 @@ public class OrderService implements OrderServiceInterface {
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "error"));
 
         if (!order.getPost().getSeller().getUser().getUsername().equals(user.getUsername())) { // method 화
-            throw new IllegalArgumentException("Authorization Error");
+            throw new IllegalArgumentException("Authorization Error"); // 인증 오류 예외처리
         }
 
         // order 주문상태 변경 -> 주문성공
@@ -87,18 +87,14 @@ public class OrderService implements OrderServiceInterface {
         return orders.map(OrderResponseDto::new);
     }
 
-    /** 구매자의 판매글에 해당 상품 구매 요청
+    /** 주문 Entity 저장 Repository 지원 메소드
      * @param user 구매를 원하는 유저
      * @param post 구매를 원하는 품목
      * @return 구매를 성공했을 경우, 주문 요청 정보를 반환해준다.
      * @exception FinishedPostException 해당 주문 요청이, 판매 종료된 글에 보내졌을경우 판매 종료를 알리는 예외처리
      */
     @Transactional
-    public OrderResponseDto sendOrderToSeller(User user, Post post) {
-        
-        Order order = orderRepository.save(new Order(post, user));
-        post.addOrder(order);
-        user.addOrder(order);
-        return new OrderResponseDto(order);
+    public Order saveOrder(User user, Post post) {
+        return orderRepository.save(new Order(post, user));
     }
 }

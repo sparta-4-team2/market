@@ -15,6 +15,7 @@ import com.team2.market.entity.Seller;
 import com.team2.market.entity.User;
 import com.team2.market.entity.types.UserRoleType;
 import com.team2.market.service.AuthService;
+import com.team2.market.service.BuyerService;
 import com.team2.market.service.OrderService;
 import com.team2.market.service.PostService;
 import com.team2.market.service.SellerService;
@@ -31,6 +32,7 @@ public class TestDataRunner implements ApplicationRunner {
     private final AuthService authService;
     private final PostService postService;
     private final OrderService orderService;
+    private final BuyerService buyerService;
     private final SellerService sellerService;
     
     @Override
@@ -63,12 +65,12 @@ public class TestDataRunner implements ApplicationRunner {
         Post post5 = createPost(new PostCreateRequestDto("제목5", "판매물5", 10000, "내용5"), testUser2);
         Post post6 = createPost(new PostCreateRequestDto("제목6", "판매물6", 10000, "내용6"), testUser2);
 
-        OrderResponseDto order1 = orderService.sendOrderToSeller(testUser3, post1);   
-        OrderResponseDto order2 = orderService.sendOrderToSeller(testUser4, post2);   
-        OrderResponseDto order3 = orderService.sendOrderToSeller(testUser5, post3);   
-        OrderResponseDto order4 = orderService.sendOrderToSeller(testUser3, post4);   
-        OrderResponseDto order5 = orderService.sendOrderToSeller(testUser4, post5);   
-        OrderResponseDto order6 = orderService.sendOrderToSeller(testUser5, post6);   
+        OrderResponseDto order1 = buyerService.sendOrderToSeller(testUser3, post1.getId());   
+        OrderResponseDto order2 = buyerService.sendOrderToSeller(testUser4, post2.getId());   
+        OrderResponseDto order3 = buyerService.sendOrderToSeller(testUser5, post3.getId());   
+        OrderResponseDto order4 = buyerService.sendOrderToSeller(testUser3, post4.getId());   
+        OrderResponseDto order5 = buyerService.sendOrderToSeller(testUser4, post5.getId());   
+        OrderResponseDto order6 = buyerService.sendOrderToSeller(testUser5, post6.getId());   
 
         orderService.processOrderRequest(order1.getOrderId(), testUser1);
         orderService.processOrderRequest(order4.getOrderId(), testUser2);

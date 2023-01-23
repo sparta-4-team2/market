@@ -18,7 +18,7 @@ import com.team2.market.dto.users.request.*;
 import com.team2.market.dto.users.response.*;
 import com.team2.market.service.BuyerService;
 import com.team2.market.service.UserService;
-
+import com.team2.market.util.security.CustomUserDetails;
 import com.team2.market.util.statics.DefaultResponseEntity;
 
 import lombok.RequiredArgsConstructor;
@@ -84,9 +84,9 @@ public class UserController {
 
 	@PostMapping("/posts/{postId}")
 	public ResponseEntity<Map<String, Object>> sendOrderToSeller(@PathVariable Long postId,
-		@AuthenticationPrincipal UserDetails userDetails) {
+		@AuthenticationPrincipal CustomUserDetails userDetails) {
 
-		OrderResponseDto responseDto = buyerService.sendOrderToSeller(userDetails.getUsername(), postId);
+		OrderResponseDto responseDto = buyerService.sendOrderToSeller(userDetails.getUser(), postId);
 
 		return DefaultResponseEntity.setResponseEntity(
 			responseDto, ResponseMessage.ORDER_OK, HttpStatus.OK);
