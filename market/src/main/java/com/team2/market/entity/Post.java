@@ -42,6 +42,7 @@ public class Post {
     // @MapKeyColumn(name ="user_id")
     // @Column
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Column
     private Map<Long, Order> orderToPost = new HashMap<>();
 
     @ManyToOne

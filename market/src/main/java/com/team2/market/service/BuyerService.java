@@ -28,7 +28,7 @@ public class BuyerService {
         }
         
         Order order = orderService.saveOrder(user, post);
-        post.putOrderMap(user.getId(), order);
+        post.putOrderMap(order.getId(), order);
 
         return new OrderResponseDto(order);
     }
