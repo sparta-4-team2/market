@@ -39,8 +39,9 @@ public class PostController {
     @GetMapping("/posts")
     public ResponseEntity<Map<String, Object>> getAllPost
         (@AuthenticationPrincipal CustomUserDetails userDetails,
-         @RequestParam("page") int page) {
-        Page<PostGetResponseDto> data = postService.getAllPost(userDetails.getUser(), page);
+         @RequestParam("page") int page,
+         @RequestParam("type") int type) {
+        Page<PostGetResponseDto> data = postService.getAllPost(userDetails.getUser(), page, type);
         return DefaultResponseEntity.setResponseEntity(data, ResponseMessage.POSTGETALL_OK, HttpStatus.OK);
     }
     

@@ -43,8 +43,8 @@ public class TestDataRunner implements ApplicationRunner {
     @Override
     @Transactional 
     public void run(ApplicationArguments args) throws Exception {
-        createUnitData();
-        // createLargeData();
+        // createUnitData();
+        createLargeData();
     }
 
     private void createUnitData() {
@@ -106,10 +106,10 @@ public class TestDataRunner implements ApplicationRunner {
         authService.changeAuthorization(requestId2);
         
         // 더미 데이터 유저 대량 생성
-        List<User> users = autoUserGenerate(10000);
+        List<User> users = autoUserGenerate(100);
         // 더미 판매자 신청 대량 생성
-        List<Long> requests = autoCreateRequest(users, 2000);
-        List<Seller> sellers = autoAuthChange(requests, 300);
+        List<Long> requests = autoCreateRequest(users, 30);
+        List<Seller> sellers = autoAuthChange(requests, 10);
 
         Post post1 = createPost(new PostCreateRequestDto("제목1", "판매물1", 10000, "내용1"), testUser1);
         Post post2 = createPost(new PostCreateRequestDto("제목2", "판매물2", 10000, "내용2"), testUser1);
@@ -118,15 +118,21 @@ public class TestDataRunner implements ApplicationRunner {
         Post post5 = createPost(new PostCreateRequestDto("제목5", "판매물5", 10000, "내용5"), testUser2);
         Post post6 = createPost(new PostCreateRequestDto("제목6", "판매물6", 10000, "내용6"), testUser2);
 
-        List<Post> posts = autoPostGenerate(sellers, 20000);
+        List<Post> posts = autoPostGenerate(sellers, 200);
         
         OrderResponseDto order1 = buyerService.sendOrderToSeller(testUser3, post1.getId());  
-        OrderResponseDto order4 = buyerService.sendOrderToSeller(testUser3, post4.getId());   
+        OrderResponseDto order2 = buyerService.sendOrderToSeller(testUser3, post4.getId());   
 
-        List<Order> orders = autoOrderRequestGenerate(users, posts, 5000);
+        List<Order> orders = autoOrderRequestGenerate(users, posts, 100);
+        autoProcessOrderRequest(orders, 30);
         
-        orderService.processOrderRequest(order1.getOrderId(), testUser1);
-        orderService.processOrderRequest(order4.getOrderId(), testUser2);
+    }
+
+    private void autoProcessOrderRequest(List<Order> orders, int size) {
+        for(int i=0; i<size; i++) {
+            Order order = orders.get(i);
+            orderService.processOrderRequest(order.getId(), order.getPost().getSeller().getUser());
+        }
     }
 
     private List<Order> autoOrderRequestGenerate(List<User> users, List<Post> posts, int size) {

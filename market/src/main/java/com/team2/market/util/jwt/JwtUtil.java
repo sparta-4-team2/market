@@ -4,8 +4,10 @@ package com.team2.market.util.jwt;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.team2.market.entity.types.UserRoleType;
 
@@ -58,6 +60,7 @@ public class JwtUtil {
     public String resolveToken(HttpServletRequest request) { // HttpServletRequest객체의 Header 안에 토큰이 들어있음
 
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER); // AUTHORIZATION_HEADER를 파라미터로 Header에 있는 Token 값을 가져온다
+        
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
             return bearerToken.substring(6);
         }

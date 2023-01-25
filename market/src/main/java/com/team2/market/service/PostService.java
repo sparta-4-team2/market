@@ -57,19 +57,29 @@ public class PostService implements PostServiceInterface {
     //전체 상품 조회
     @Transactional(readOnly = true)
     @Override
-    public Page<PostGetResponseDto> getAllPost(User user, int page) {
+    public Page<PostGetResponseDto> getAllPost(User user, int page, int type) {
+        PostStatus status = PostStatus.typeToStatus(type);
         PageRequest sortById = getPageRequest(page, "id");
-        Page<Post> posts = getAllPostOrderById(sortById);
+        Page<Post> posts;
+        if(status == PostStatus.ALL) {
+            posts = findAllPost(sortById);
+        } else { 
+            posts = findAllPostByIdAndStatus(sortById, status);
+        }
         return posts.map(PostGetResponseDto::new);
     }
 
+
+    private Page<Post> findAllPost(Pageable pageable) {
+        return postRepository.findAll(pageable);
+    }
 
     private PageRequest getPageRequest( int page, String property){
         return PageRequest.of(page, 5, Sort.by(Sort.Direction.ASC, property));
     }
 
-    private Page<Post> getAllPostOrderById(Pageable pageable) {
-        return postRepository.findAll(pageable);
+    private Page<Post> findAllPostByIdAndStatus(Pageable pageable, PostStatus status) {
+        return postRepository.findAllByStatus(pageable, status);
     }
 
     @Transactional  //게시글 수정
