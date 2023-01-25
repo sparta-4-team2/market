@@ -5,12 +5,10 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.team2.market.dto.orders.response.OrderResponseDto;
 import com.team2.market.dto.users.request.LoginRequestDto;
@@ -40,6 +38,7 @@ public class UserService implements UserServiceInterface{
     private static final String ADMIN_TOKEN = "ADMINTOKEN";
 
     @Override
+    @Transactional
     public void createUser(SignupRequestDto requestDto) {
         String username = requestDto.getUsername();
         String password = passwordEncoder.encode(requestDto.getPassword());
@@ -61,8 +60,9 @@ public class UserService implements UserServiceInterface{
     }
 
     @Override
+    @Transactional
     public String login(LoginRequestDto requestDto, HttpServletResponse response) {
-        User user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(() -> new UsernameNotFoundException("등록된 사용자가 없습니다."));
+        User user = findByUsername(requestDto.getUsername());
 
         if(!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
@@ -87,11 +87,10 @@ public class UserService implements UserServiceInterface{
     @Transactional(readOnly = true)
     public User findByUsername(String username) {
         return userRepository.findByUsername(username)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "세부사항 후에 추가"));
+            .orElseThrow(() -> new UsernameNotFoundException("등록된 사용자가 없습니다."));
     }
     
     /// UserRepository 지원함수
-
     public User save(User user) {
         return userRepository.save(user);
     }

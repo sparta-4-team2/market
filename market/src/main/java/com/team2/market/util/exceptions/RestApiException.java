@@ -1,4 +1,4 @@
-package com.team2.market.exception;
+package com.team2.market.util.exceptions;
 
 import lombok.Getter;
 import lombok.Setter;

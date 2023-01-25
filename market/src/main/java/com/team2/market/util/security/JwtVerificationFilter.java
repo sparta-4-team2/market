@@ -34,7 +34,7 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
 
 		if (token != null) {
 			if (!jwtUtil.validateToken(token)) {
-				throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유요하지 않은 토큰입니다.");
+				throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다.");
 			}
 
 			Claims claims = jwtUtil.getUserInfoFromToken(token);
