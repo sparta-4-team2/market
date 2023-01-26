@@ -60,6 +60,8 @@ public class JwtUtil {
     public String resolveToken(HttpServletRequest request) { // HttpServletRequest객체의 Header 안에 토큰이 들어있음
 
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER); // AUTHORIZATION_HEADER를 파라미터로 Header에 있는 Token 값을 가져온다
+
+        if (bearerToken.matches("LOGGED OUT")) return "LOGGED OUT";
         
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
             return bearerToken.substring(6);
